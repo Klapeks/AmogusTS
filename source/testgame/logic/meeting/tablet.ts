@@ -151,9 +151,7 @@ let tablet = {
     removeChangedTexture() {
         changedTexture = false;
     },
-    open() {
-        menu.show();
-    },
+    open() { menu.show(); },
     load() {
         tabletTexture = new Texture('voting/tablet.png');
         glassTexture = new Texture('voting/tablet_up.png');

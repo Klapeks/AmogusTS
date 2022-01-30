@@ -1,7 +1,5 @@
 import { tablet } from "./tablet";
 
-
-
 let voting = {
     isVoting: false,
     load() {

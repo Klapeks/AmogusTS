@@ -23,7 +23,8 @@ class EmergencyButton extends InteractableItem {
         this.setRange(range);
         if (!clicksound) clicksound = new Sound('voting/embutton.wav');
         if (!menu) {
-            menu = new TaskMenu(new Texture('tasks/emergencybutton/menu1.png'), {width: Screen.height, height: Screen.height});
+            menu = new TaskMenu(new Texture('tasks/emergencybutton/menu1.png'),
+                {width: Screen.height, height: Screen.height});
             menu.addClick({x: 793, y: 257, dx: 1151, dy: 604, fromto:true}, () => {
                 if (waitingHost) return;
                 if (voting.isVoting) return;

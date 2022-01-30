@@ -12,7 +12,6 @@ import { tablet } from "./tablet";
 import { voting } from "./voting";
 
 let table: StaticSprite, meetingText: StaticSprite, deadbodyText: StaticSprite;
-// let meetingTexture: Texture, deadbodyTexture: Texture;
 let amogusSprite: StaticSprite, additionSprite: StaticSprite, deadTexture: Texture;
 let reportSound: Sound, meetingSound: Sound;
 
