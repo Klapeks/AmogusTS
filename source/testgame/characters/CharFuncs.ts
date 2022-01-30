@@ -16,7 +16,6 @@ type AmogusTextures = {
     idle: Texture,
     eject: Texture,
     walk: SplitingTexture,
-    // walk: Array<Texture>,
     dead: SplitingTexture,
     vent: Array<Texture>,
     meeting: SplitingTexture,

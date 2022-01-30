@@ -8,7 +8,6 @@ import { tablet } from "./tablet";
 
 let redSprite: StaticSprite, callSprite: StaticSprite;
 let calltime = 260; // in milis
-// calltime = 1000;
 
 let caller = {
     load() {
@@ -45,7 +44,6 @@ let caller = {
             callSprite.setSize(Screen.width, Screen.height);
             oncall();
         }, calltime);
-        // setTimeout(oncall, calltime);
         setTimeout(() => {
             callSprite.hidden = true;
             Game.getScene().removeUpperSprite(callSprite, redSprite);

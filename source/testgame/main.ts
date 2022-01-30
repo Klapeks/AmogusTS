@@ -18,7 +18,6 @@ async function update() {
     dsc = 0;
     if (Game.hasKey('keym')) dsc+=10;
     if (Game.hasKey('keyn')) dsc-=10;
-    // if (Game.hasKey('keyz')) console.log(Game.getCamera().getLocation().x + " - " + Game.getCamera().getLocation().y);
     if (dsc!=0) {
         Game.getCamera().getResolution().add(dsc*1280/720, dsc);
     }
@@ -42,11 +41,7 @@ let testgame = {
             let border = new Sprite(new Texture('border.png'), new Location(-Screen.width/2, -Screen.height/2)).setSize(Screen.width, Screen.height);
             
             skeld.load();
-            // let map = new Sprite(new Texture('maps/skeld.png'), new Location(-Screen.width*mapsize/2, -Screen.height*mapsize/2))
-                // .setSize(Screen.width*mapsize, Screen.height*mapsize);
-    
-            // Game.getScene().addBackSprite(map);
-            // skeld.load();
+
             Game.getScene().addUpperSprite(border);
 
             logic.load();
@@ -55,7 +50,6 @@ let testgame = {
             // Game.getScene().addLight(new Light(new Location(-1092,-123), 50));
             Light.enableLights();
 
-            // game.getCamera().setPos(new Location(750, 40));
             Game.eventListeners.onUpdate = update;
         })
     }

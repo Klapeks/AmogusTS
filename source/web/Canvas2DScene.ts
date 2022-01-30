@@ -112,11 +112,6 @@ class Canvas2DScene extends Scene {
             }
             ctx.scale(-1,1);
             ctx.translate(dx, 0);
-            // this._ctx.scale(-1,1);
-            // this._ctx.translate(Screen.width-x, y);
-            // if (rotation) {
-            //     this._ctx.rotate(rotation);
-            // }
             if (s) ctx.drawImage(image, s.x, s.y, s.width, s.height, 0, 0, -dx, dy);
             else ctx.drawImage(image, 0, 0, -dx, dy);
         } else {
@@ -132,7 +127,6 @@ class Canvas2DScene extends Scene {
         ctx.restore();
     }
     filterImage(image: any, filter: (data: any) => any) {
-        // console.log(image);
         let canvas = document.createElement('canvas');
         if (image.width == 0) return image;
         canvas.width = image.width;
@@ -268,9 +262,4 @@ class Canvas2DScene extends Scene {
     //     }
     // }
 }
-/*
-    getCenter(): Location {
-        return new Location(this._loc.x + Screen.width/2, this._loc.y + Screen.height/2, this._loc.yaw);
-    }
-*/
 export { Canvas2DScene };

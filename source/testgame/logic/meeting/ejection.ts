@@ -16,7 +16,6 @@ let darkness: StaticSprite,
 
 let soundText: Sound, soundKick: Sound;
 
-// let lastButton: number = 0;
 let ejectTexts = {
     subsize: 70,
     mainsize: 80,
@@ -35,7 +34,6 @@ let ejectTimings = [ // in ms
     5200, // Закрытие
     5500  // Конец
 ];
-// let timeratio = 0;
 
 let ejections = {
     load() {

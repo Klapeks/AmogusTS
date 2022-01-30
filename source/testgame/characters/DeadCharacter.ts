@@ -18,15 +18,7 @@ class DeadCharacter {
 
         Game.getScene().addDynamicSprite(this._sprite);
         this.playDeath();
-        // this._animation = character.getTextures().dead.length;
     }
-    // private _animation = 0;
-    // updateDeath() {
-    //     if (this._animation==0) return;
-    //     this._animation-=0.4;
-    //     if (this._animation<0) this._animation = 0;
-    //     this._sprite.setTexture(this._character.getTextures().dead[this._character.getTextures().dead.length - Math.floor(this._animation) - 1])
-    // }
     playDeath() {
         const dead = this._character.getTextures().dead;
         for (let i = 0; i < this._character.getTextures().dead.amount; i++){

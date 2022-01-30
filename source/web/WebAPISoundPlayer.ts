@@ -2,7 +2,7 @@ import { ISoundPlayer, SoundsUtils } from "../engine/Sound";
 
 var win: any = window;
 window.AudioContext = win.AudioContext||win.webkitAudioContext;
-if (!window.AudioContext) alert("ЬЕДА БЛЯ")
+if (!window.AudioContext) alert("Ваш браузер не поддерживает WebAudioAPI")
 
 let ctx = new AudioContext();
 let gainNode = ctx.createGain();
