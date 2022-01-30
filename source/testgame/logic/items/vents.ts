@@ -42,7 +42,6 @@ class Vents extends InteractableItem {
     directions: Array<Vents>;
     use(): void {
         logic_buttons.setCooldown(0.6);
-        // let nloc = this.getSprite().getCenter();
         if (Characters.main.ventilation) Characters.main.outVent();
         else Characters.main.jumpVent(this);
     }
@@ -72,8 +71,9 @@ class VentArrow {
         this._toVent = to;
         if (!textures.arrow?.getPath()) vent_logic.nload();
         const direction = vent_logic.getDirection(from, to);
-        this._sprite = new Sprite(textures.arrow, new Location(from.getLocation().x + 300*Math.cos(direction), from.getLocation().y + 300*Math.sin(direction), direction))
-        // this._sprite = new Sprite(textures.arrow, new Location(from.getLocation().x, from.getLocation().y))
+        this._sprite = new Sprite(textures.arrow,
+                    new Location(from.getLocation().x + 300*Math.cos(direction),
+                    from.getLocation().y + 300*Math.sin(direction), direction))
                     .setSize(128, 128);
         this._sprite.upperThanDark = true;
         Game.getScene().addUpperSprite(this._sprite);
@@ -155,26 +155,6 @@ let vent_logic = {
             }
         });
     }
-    // getMinVent(from: Vents, to: Vents[], fromdegree: number, todegree: number, prioriy: "x" | "y"): Vents {
-    //     let _direct: number;
-    //     let _thevent: Vents = null;
-    //     // console.log()
-    //     for (let vent of to) {
-    //         if (from===vent) continue;
-    //         _direct = vent_logic.getDirection(from,vent)*1000;
-    //         // console.log(_direct, fromdegree, todegree, " - ", _direct/1000*180/Math.PI, fromdegree/1000*180/Math.PI, todegree/1000*180/Math.PI)
-    //         if (fromdegree >= todegree ? (fromdegree <= _direct || _direct <= todegree) : (fromdegree <= _direct && _direct <= todegree)) {
-    //             // console.log("true")
-    //             if (!_thevent) _thevent = vent;
-    //             else if (prioriy==="x") {
-    //                 if (Math.abs(from.getLocation().x - vent.getLocation().x) >= Math.abs(from.getLocation().x - _thevent.getLocation().x)) _thevent = vent;
-    //             } else if (prioriy==="y") {
-    //                 if (Math.abs(from.getLocation().y - vent.getLocation().y) >= Math.abs(from.getLocation().y - _thevent.getLocation().y)) _thevent = vent;
-    //             }
-    //         }
-    //     }
-    //     return _thevent;
-    // }
 }
 
 export {Vents, vent_logic, VentArrow}

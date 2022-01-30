@@ -18,7 +18,6 @@ class KA_Alien extends KillAnimation {
             crewmateTexture: textures.crewkillanimation.alien,
             killSound: new Sound('kill/alien.wav')
         });
-        // super(textures.crewkillanimation.alien, {width: 512, height: 256, amount: 20});
     }
     getImpostorTexture(impostor: Character): Texture {
         return impostor.getTextures().killanimations.alien;
