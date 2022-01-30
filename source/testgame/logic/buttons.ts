@@ -113,9 +113,6 @@ let logic_buttons = {
                         usecooldown = 0.3;
                         nt.use();
                     }
-                    // nt.getLocation().x = qx;
-                    // nt.getLocation().y = qy;
-                    // console.log(logic_map.getNearTask());
                 })
                 .setSelected(new Texture('buttons/use.png'));
         usebutton.hidden = true;

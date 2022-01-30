@@ -10,10 +10,6 @@ import { Characters } from "../charslog";
 import { caller } from "../meeting/caller";
 import { killanimation_logic } from "./ka_logic";
 
-// type FrameInfo = {
-//     width: number, height: number, multiply?: number, amount: number,
-//     time?: number, waiting?: number
-// };
 type FramesInfo = {
     multiply?: number,
     impostor: BiLocation,
