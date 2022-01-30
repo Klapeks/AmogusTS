@@ -2,13 +2,12 @@ import { Game } from "../../../engine/Game";
 import { Location } from "../../../engine/Location";
 import { ApearableMenu } from "../../../engine/Menu";
 import { Screen } from "../../../engine/Screen";
-import { Sprite, StaticSprite } from "../../../engine/Sprite";
+import { StaticSprite } from "../../../engine/Sprite";
 import { MultiTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { CharacterFuncs } from "../../characters/CharFuncs";
 import { textures } from "../../textures";
 import { Characters } from "../charslog";
-import { gamelogic } from "../gamelogic";
 import { ejections } from "./ejection";
 
 let tabletTexture: Texture, glassTexture: Texture, nameplatesT: Texture;

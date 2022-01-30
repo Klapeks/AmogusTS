@@ -16,12 +16,7 @@ import { role_angel } from "../roles/angel";
 let logic = {
     load(){
         logic_character.load();
-        // logic_kill.load();
         logic_buttons.load();
-
-        // logic_vents.load();
-
-        // logic_task.load();
         Joystick.create(new Texture('buttons/joystick.png'),new Texture('buttons/joystickbutton.png'));
         meeting.load();
         voting.load();
@@ -33,12 +28,7 @@ let logic = {
     },
     update() {
         logic_character.update();
-        // logic_kill.update();
         logic_buttons.update();
-
-        // logic_vents.update();
-
-        // logic_task.update();
         meeting.update();
         voting.update();
         ejections.update();

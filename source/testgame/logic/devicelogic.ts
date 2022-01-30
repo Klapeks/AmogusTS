@@ -1,6 +1,6 @@
 import { Game } from "../../engine/Game";
 import { Screen } from "../../engine/Screen";
-import { Sprite, StaticSprite } from "../../engine/Sprite"
+import { StaticSprite } from "../../engine/Sprite"
 import { Texture } from "../../engine/Texture";
 
 let pleaseRotateDevice: StaticSprite;

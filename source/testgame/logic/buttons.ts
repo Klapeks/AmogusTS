@@ -2,7 +2,6 @@ import { Button, ButtonFuncs } from "../../engine/Button";
 import { Game } from "../../engine/Game";
 import { Location } from "../../engine/Location";
 import { MenusUtils } from "../../engine/Menu";
-import { Screen } from "../../engine/Screen";
 import { Sprite, StaticSprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
 import { config } from "../config";

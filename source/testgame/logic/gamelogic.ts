@@ -1,6 +1,4 @@
 import { Character } from "../characters/Character";
-import { Map } from "./maps/map";
-import { logic_map } from "./maps/maplogic";
 
 class GameEventListener<T> {
     events: Array<(t: T) => boolean | void> = new Array();
@@ -22,12 +20,6 @@ let gamelogic = {
     eventListeners: {
         onkill: new GameEventListener<{character: Character, killer?: Character}>(),
         onmove: new GameEventListener<Character>(),
-        // onmapload: new GameEventListener<void>(),
-        // addMapLoadEvent(event: () => void) {
-        //     if (!logic_map.getMap()) {
-        //         gamelogic.eventListeners.onmapload.addEvent(event);
-        //     } else event();
-        // }
     }
 }
 
