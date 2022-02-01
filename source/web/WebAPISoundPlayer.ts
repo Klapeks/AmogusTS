@@ -1,16 +1,23 @@
-import { ISoundPlayer, SoundsUtils } from "../engine/Sound";
+import { ISoundPlayer, SoundsUtils, SoundType } from "../engine/Sound";
 
 var win: any = window;
 window.AudioContext = win.AudioContext||win.webkitAudioContext;
 if (!window.AudioContext) alert("Ваш браузер не поддерживает WebAudioAPI")
 
 let ctx = new AudioContext();
-let gainNode = ctx.createGain();
-gainNode.connect(ctx.destination);
+let gainNodes = new Map<SoundType, GainNode>()
+// let gainNode = ctx.createGain();
+// gainNode.connect(ctx.destination);
 
 class WebAPISoundPlayer implements ISoundPlayer {
-    play(sound: AudioBuffer, vol?: number): void {
-        gainNode.gain.value = vol || SoundsUtils.volume;
+    play(sound: AudioBuffer, type: SoundType = "default"): void {
+        if (!gainNodes.has(type)) {
+            const gainNode = ctx.createGain();
+            gainNode.connect(ctx.destination);
+            gainNodes.set(type, gainNode);
+        }
+        const gainNode = gainNodes.get(type);
+        gainNode.gain.value = SoundsUtils.getVolume(type);
         let source = ctx.createBufferSource();
         source.buffer = sound;
         source.connect(gainNode);

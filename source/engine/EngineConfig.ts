@@ -1,6 +1,10 @@
 
 let EngineConfig = {
-    hide_sprites_under_dark: true
+    hide_sprites_under_dark: true,
 }
 
-export {EngineConfig};
+let GameConfig = {
+    volume: 0.1
+}
+
+export {EngineConfig, GameConfig};
