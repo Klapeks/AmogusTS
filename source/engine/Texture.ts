@@ -1,3 +1,4 @@
+import { Color } from "./Color";
 import { Game } from "./Game";
 
 function image_on_load(texture: Texture, image: any) {
@@ -52,11 +53,7 @@ class MultiTexture extends Texture {
     constructor(...text : (Texture | string)[]) {
         super (null,null)
         for (let t of text) {
-            if (typeof t === "string") {
-                this._textures.push(new Texture(t));
-            } else {
-                this._textures.push(t);
-            }
+            this._textures.push(typeof t === "string" ? new Texture(t) : t);
         }
         // this._textures = text;
     }
@@ -68,6 +65,13 @@ class MultiTexture extends Texture {
     }
     setID(id: number) {
         this._textureID = id;
+    }
+}
+class OnecolorTexture extends Texture {
+    color: Color;
+    constructor(color: Color){
+        super(null);
+        this.color = color;
     }
 }
 class TextTexture extends Texture {
@@ -112,4 +116,4 @@ class TextTexture extends Texture {
 type SplitingTexture = {texture: Texture, width: number, height: number, amount_per_line: number, amount: number};
 let NullTexture = new Texture(null);
 
-export {Texture, TextTexture, TextureFuncs, NullTexture, SplitingTexture, MultiTexture};
+export {Texture, TextTexture, TextureFuncs, NullTexture, SplitingTexture, MultiTexture, OnecolorTexture};

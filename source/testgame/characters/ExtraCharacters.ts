@@ -1,9 +1,9 @@
+import { Color } from "../../engine/Color";
 import { Location } from "../../engine/Location";
 import { Texture } from "../../engine/Texture";
 import { Retexturing } from "../../engine/utils/Retexturing";
 import { textures } from "../textures";
 import { Character } from "./Character";
-import { Color } from "./CharFuncs";
 
 class SelectedCharacter extends Character {
     constructor(location?:Location) {
@@ -23,7 +23,9 @@ class SelectedCharacter extends Character {
         this._textures = {
             idle: this.cloneFiltering(textures.amogus.idle),
             walk: newwalk,
-            dead: null, vent: null, meeting: null, eject: null,
+            static: null,
+            dead: null, vent: null,
+            meeting: null, eject: null,
             killanimations: null
         }
         this.idle();

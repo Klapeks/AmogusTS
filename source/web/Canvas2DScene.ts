@@ -7,7 +7,7 @@ import { Scene } from "../engine/Scene";
 import { Screen } from "../engine/Screen";
 import { Splitting, Sprite, StaticSprite } from "../engine/Sprite";
 import { SuperMath } from "../engine/SuperMath";
-import { TextTexture, Texture } from "../engine/Texture";
+import { OnecolorTexture, TextTexture, Texture } from "../engine/Texture";
 import { config } from "../testgame/config";
 
 let _lx: number, _ly: number, _lw: number, _lh: number;
@@ -77,19 +77,36 @@ class Canvas2DScene extends Scene {
                 }
                 Canvas2DScene.drawText(ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh)
             }
+            if (sprite.getTexture() instanceof OnecolorTexture) {
+                const {r,g,b} = (sprite.getTexture() as OnecolorTexture).color;
+                const rotation = sprite.getLocation().yaw;
+                this._ctx.save();
+                if (!Number.isNaN(sprite.opacity)) ctx.filter = `opacity(${sprite.opacity})`
+                this._ctx.fillStyle = `rgb(${r},${g},${b})`;
+                this._ctx.translate(_lx, _ly);
+                if (rotation) {
+                    this._ctx.translate(_lw/2, _ly/2);
+                    this._ctx.rotate(rotation);
+                    this._ctx.translate(-_lw/2, -_ly/2);
+                }
+                this._ctx.fillRect(0, 0, _lw, _lh);
+                this._ctx.restore();
+            }
             return;
         } else {
             if (!img.geIsLoaded) return;
             if (EngineConfig.hide_sprites_under_dark && !isBack){
-                Canvas2DScene.drawImage(this._hideindark_ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw);
+                Canvas2DScene.drawImage(this._hideindark_ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.opacity);
                 if (sprite.isHideInDark()) return;
             }
-            Canvas2DScene.drawImage(ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw);
+            Canvas2DScene.drawImage(ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.opacity);
         }
     }
 
-    static drawText(ctx: CanvasRenderingContext2D, tt: TextTexture, x: number, y: number, dx: number, dy: number) {
+    static drawText(ctx: CanvasRenderingContext2D, tt: TextTexture, x: number, y: number, dx: number, dy: number, opacity?: number) {
         if (!ctx) return;
+        ctx.save();
+        if (!Number.isNaN(opacity)) ctx.filter = `opacity(${opacity})`;
         ctx.font = `${tt.fontsize}px ${tt.font}`;
         ctx.textAlign = tt.align as CanvasTextAlign;
         if (tt.outline.color && tt.outline.width) {
@@ -99,10 +116,12 @@ class Canvas2DScene extends Scene {
         }
         ctx.fillStyle = tt.color;
         ctx.fillText(tt.text, x, y, dx);
+        ctx.restore();
     }
-    static drawImage(ctx: CanvasRenderingContext2D, image: any, x: number, y: number, dx: number, dy: number, s: Splitting | null, rotation: number) {
+    static drawImage(ctx: CanvasRenderingContext2D, image: any, x: number, y: number, dx: number, dy: number, s: Splitting | null, rotation: number, opacity?: number) {
         if (!ctx) return;
         ctx.save();
+        if (!Number.isNaN(opacity)) ctx.filter = `opacity(${opacity})`;
         if (dx < 0) {
             ctx.translate(x, y);
             if (rotation) {

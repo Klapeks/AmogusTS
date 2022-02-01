@@ -103,6 +103,11 @@ class Sprite {
         this._hideInDark = b;
         return this;
     }
+    opacity: number;
+    setOpacity(opacity: number){
+        this.opacity = opacity;
+        return this;
+    }
 }
 
 class StaticSprite extends Sprite {

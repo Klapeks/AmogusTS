@@ -1,20 +1,13 @@
+import { Color } from "../../engine/Color";
 import { Game } from "../../engine/Game";
 import { Size } from "../../engine/Location";
 import { SplitingTexture, Texture } from "../../engine/Texture";
 
-type Color = {r:number, g:number, b:number};
-let HexColor = (hex: string): Color => {
-    if (hex.charAt(0) == '#') hex = hex.substr(1);
-    return {
-        r: parseInt(`${hex.charAt(0)}${hex.charAt(1)}`, 16),
-        g: parseInt(`${hex.charAt(2)}${hex.charAt(3)}`, 16),
-        b: parseInt(`${hex.charAt(4)}${hex.charAt(5)}`, 16)
-    };
-}
 type CharacterColor = {mask:Color, foreground: Color, background: Color};
 type AmogusTextures = {
     idle: Texture,
     eject: Texture,
+    static: Texture,
     walk: SplitingTexture,
     dead: SplitingTexture,
     vent: Array<Texture>,
@@ -59,4 +52,4 @@ let CharacterFuncs = {
     }
 };
 
-export {CharacterFuncs, CharacterColor, AmogusTextures, Color, HexColor}
+export {CharacterFuncs, CharacterColor, AmogusTextures}

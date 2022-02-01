@@ -12,9 +12,13 @@ import { Game } from "../../engine/Game";
 import { Screen } from "../../engine/Screen";
 import { killanimation_logic } from "./kill/ka_logic";
 import { role_angel } from "../roles/angel";
+import { starting } from "./meeting/starting";
+import { start } from "repl";
+import { Role } from "../characters/Role";
 
 let logic = {
     load(){
+        starting.load();
         logic_character.load();
         logic_buttons.load();
         Joystick.create(new Texture('buttons/joystick.png'),new Texture('buttons/joystickbutton.png'));
@@ -50,6 +54,9 @@ let logic = {
                 cd = false;
             }, 2000);
             role_angel.playSave(Characters.main);
+        }
+        if (Game.hasKey("digit3")){
+            starting.show(new Role("crewmate", "crewmate").setColor({r:0,g:255,b:255}))
         }
     }
 }

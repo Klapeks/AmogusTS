@@ -15,10 +15,7 @@ let tabletTexture: Texture, glassTexture: Texture, nameplatesT: Texture;
 let tabletSize = {width: Screen.width*0.95, height: Screen.height*0.95};
 let plateSize = {width: 272*tabletSize.width/1020, height: 64*tabletSize.height/570};
 
-let sounds: {
-    select: Sound,
-    vote: Sound,
-}
+let sounds: { select: Sound, vote: Sound }
 
 class Nameplate {
     private _character: Character;

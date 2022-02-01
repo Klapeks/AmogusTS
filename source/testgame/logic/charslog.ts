@@ -1,3 +1,4 @@
+import { HexColor } from "../../engine/Color";
 import { Game } from "../../engine/Game";
 import { Joystick } from "../../engine/Joystick";
 import { Light } from "../../engine/Light";
@@ -5,7 +6,6 @@ import { LinkedLocation, Location } from "../../engine/Location";
 import { Sprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
-import { Color, HexColor } from "../characters/CharFuncs";
 import { SelectedCharacter } from "../characters/ExtraCharacters";
 import { MainCharacter } from "../characters/MainCharacter";
 import { config } from "../config";

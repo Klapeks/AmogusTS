@@ -13,7 +13,7 @@ const defaultHitboxes = [
 ];
 class MainCharacter extends Character {
     private _role: string = "none";
-    private _hitboxpoints:number[] = [];
+    private _hitboxpoints: number[] = [];
     
     constructor(id: number, location?: Location) {
         super(id, location)

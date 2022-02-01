@@ -3,7 +3,12 @@ let config = {
     speed: 9,
     deadrange: 300,
     taskrange: 200,
-    killcooldown: 5, /* in sec */
+    killcooldown: 5, // in sec
+    starting_time: {
+        apear_opacity_times: 20,
+        apear: 1000,
+        sum: 4000 // in ms
+    },
     graphic: {
         light_radius_iteration: 5, 
         light_angle_iteration: 2,

@@ -13,7 +13,9 @@ let textures: {
 } = {
     character_ratio: 0.8,
     amogus: {
-        idle: null, walk: null, dead: null, eject: null,
+        idle: null, walk: null,
+        dead: null, eject: null,
+        static: null,
         vent: new Array(),
         meeting: null,
         killanimations: {
@@ -33,6 +35,7 @@ function loadTextures() {
     setTimeout(() => {
         textures.missingo = new Texture(`missingo.png`);
         textures.amogus.eject = new Texture(`amogus/eject.png`);
+        textures.amogus.static = new Texture(`amogus/static.png`);
     }, multiply*wait++);
     setTimeout(() => {
         textures.amogus.dead = {

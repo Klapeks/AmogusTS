@@ -1,14 +1,13 @@
+import { Color } from "../../engine/Color";
 import { Game } from "../../engine/Game";
 import { Joystick } from "../../engine/Joystick";
 import { LinkedLocation, Location } from "../../engine/Location";
 import { Screen } from "../../engine/Screen";
 import { Sprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
-import { Retexturing } from "../../engine/utils/Retexturing";
-import { config } from "../config";
 import { Vents, vent_logic } from "../logic/items/vents";
 import { textures } from "../textures";
-import { AmogusTextures, CharacterColor, CharacterFuncs, Color } from "./CharFuncs";
+import { AmogusTextures, CharacterColor, CharacterFuncs } from "./CharFuncs";
 
 class Character {
     protected _id: number;
@@ -26,6 +25,7 @@ class Character {
         this._color = {mask, foreground, background};
         this._textures = {
             idle: CharacterFuncs.cloneFiltering(textures.amogus.idle, this._color),
+            static: CharacterFuncs.cloneFiltering(textures.amogus.static, this._color),
             eject: CharacterFuncs.cloneFiltering(textures.amogus.eject, this._color),
             walk: CharacterFuncs.cloneFilteringS(textures.amogus.walk, this._color),
             dead: CharacterFuncs.cloneFilteringS(textures.amogus.dead, this._color),
