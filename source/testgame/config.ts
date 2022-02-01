@@ -6,9 +6,9 @@ let config = {
     killcooldown: 5, // in sec
     starting_time: {
         apear_main_iteration_time: 25,
-        apear_main: 1000,
+        apear_main: 600,
         apear_iteration_time: 25,
-        apear: 1250,
+        apear: 1000,
         sum: 4000 // in ms
     },
     graphic: {

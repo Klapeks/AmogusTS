@@ -95,7 +95,7 @@ let Game = {
     addKey(key: string): void {
         if (!key) return;
         if (!Game.hasKey(key)) {
-            console.log(key);
+            // console.log(key);
             keys.push(key.toLowerCase());
         }
     },

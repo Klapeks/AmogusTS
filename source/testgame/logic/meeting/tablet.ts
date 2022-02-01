@@ -7,6 +7,7 @@ import { StaticSprite } from "../../../engine/Sprite";
 import { MultiTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { CharacterFuncs } from "../../characters/CharFuncs";
+import { RoleFuncs } from "../../roles/roles";
 import { textures } from "../../textures";
 import { Characters } from "../charslog";
 import { ejections } from "./ejection";
@@ -192,7 +193,9 @@ let tablet = {
                         sounds.vote.play();
                         ///Change it
                         const nick = nameplate.getCharacter().getNickname() || `Абобус ${nameplate.getId()}`
-                        ejections.eject(`${nick} не был sussy baka`, "Осталось еще 2 компостира",
+                        ejections.eject(
+                                `${nick} был ${nameplate.getCharacter().getRole().name}`,
+                                `Осталось еще ${RoleFuncs.getImpostors(true).length} компостира`,
                                 nameplate.getCharacter().getTextures().eject);
                         setTimeout(() => {
                             acceptButton.hidden = true;

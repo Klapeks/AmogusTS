@@ -6,6 +6,7 @@ import { Screen } from "../../engine/Screen";
 import { Sprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
 import { Vents, vent_logic } from "../logic/items/vents";
+import { Role, Roles } from "../roles/roles";
 import { textures } from "../textures";
 import { AmogusTextures, CharacterColor, CharacterFuncs } from "./CharFuncs";
 
@@ -160,6 +161,17 @@ class Character {
     getNickname() {
         return this._nickname;
     }
+    
+    protected _role: Role = Roles.Crewmate;
+    getRole() {
+        return this._role;
+    }
+    setRole(role: Role) {
+        this._role = role;
+        return this;
+    }
+
+    isAlive: boolean = true;
 
     static generateNicknameTexture(nickname: string, fontsize = 32, align = "center") {
         return new TextTexture(nickname, 'Comic Sans MS, Comic Sans')

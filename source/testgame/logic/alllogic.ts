@@ -1,7 +1,6 @@
 import { logic_buttons } from "./buttons";
 import { Characters, logic_character } from "./charslog"
 import { ejections } from "./meeting/ejection";
-import { logic_kill } from "./kill";
 import { voting } from "./meeting/voting";
 import { meeting } from "./meeting/meeting";
 import { Texture } from "../../engine/Texture";
@@ -13,8 +12,7 @@ import { Screen } from "../../engine/Screen";
 import { killanimation_logic } from "./kill/ka_logic";
 import { role_angel } from "../roles/angel";
 import { starting } from "./meeting/starting";
-import { start } from "repl";
-import { Role } from "../characters/Role";
+import { Roles } from "../roles/roles";
 
 let logic = {
     load(){
@@ -55,9 +53,15 @@ let logic = {
             }, 2000);
             role_angel.playSave(Characters.main);
         }
-        if (Game.hasKey("digit3")){
-            starting.show(new Role("crewmate", "crewmate").setColor({r:0,g:255,b:255}))
-        }
+        if (Game.hasKey("digit1")) starting.show(Roles.Crewmate);
+        if (Game.hasKey("digit2")) starting.show(Roles.Impostor);
+        if (Game.hasKey("digit3")) starting.show(Roles.Arsonist);
+        if (Game.hasKey("digit4")) starting.show(Roles.Clown);
+        if (Game.hasKey("digit5")) starting.show(Roles.Melok);
+        if (Game.hasKey("digit6")) starting.show(Roles.Medium);
+        if (Game.hasKey("digit7")) starting.show(Roles.Medic);
+        if (Game.hasKey("digit8")) starting.show(Roles.Shapeshifter);
+        if (Game.hasKey("digit9")) starting.show(Roles.Sheriff);
     }
 }
 

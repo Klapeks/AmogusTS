@@ -12,7 +12,6 @@ const defaultHitboxes = [
     92, 223
 ];
 class MainCharacter extends Character {
-    private _role: string = "none";
     private _hitboxpoints: number[] = [];
     
     constructor(id: number, location?: Location) {
@@ -28,12 +27,6 @@ class MainCharacter extends Character {
             this._hitboxpoints[i] = defaultHitboxes[i]*this._sprite.width/256;
             this._hitboxpoints[i+1] = defaultHitboxes[i+1]*this._sprite.height/256;
         }
-    }
-    get role() {
-        return this._role;
-    }
-    set role(role: string) {
-        this._role = role;
     }
 }
 

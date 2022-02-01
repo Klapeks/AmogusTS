@@ -72,10 +72,10 @@ class Canvas2DScene extends Scene {
         if (!img) {
             if (sprite.getTexture() instanceof TextTexture) {
                 if (EngineConfig.hide_sprites_under_dark && !isBack){
-                    Canvas2DScene.drawText(this._hideindark_ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh)
+                    Canvas2DScene.drawText(this._hideindark_ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.opacity)
                     if (sprite.isHideInDark()) return;
                 }
-                Canvas2DScene.drawText(ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh)
+                Canvas2DScene.drawText(ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.opacity)
             }
             if (sprite.getTexture() instanceof OnecolorTexture) {
                 const {r,g,b} = (sprite.getTexture() as OnecolorTexture).color;

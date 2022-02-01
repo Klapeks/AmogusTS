@@ -35,7 +35,7 @@ let logic_buttons = {
     selectUseButton(b: boolean) {
         if (b) usebutton.select();
         else usebutton.unselect();
-        if (Characters.main.role=="impostor") {
+        if (Characters.main.getRole().type === "impostor") {
             usebutton.hidden = !b;
             sabotagebutton.hidden = b;
         }

@@ -3,18 +3,18 @@ import { Game } from "../../../engine/Game";
 import { LinkedLocation, Location } from "../../../engine/Location";
 import { Screen } from "../../../engine/Screen";
 import { Sound } from "../../../engine/Sound";
-import { NullSprite, Sprite, StaticSprite } from "../../../engine/Sprite";
-import { OnecolorTexture, Texture } from "../../../engine/Texture";
+import { StaticSprite } from "../../../engine/Sprite";
+import { OnecolorTexture, TextTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
-import { Role } from "../../characters/Role";
 import { config } from "../../config";
+import { Role, Roles } from "../../roles/roles";
 import { Characters } from "../charslog";
 import { gamelogic } from "../gamelogic";
 
 let isStarting = false;
 
 let roundstartSound: Sound;
-let blackRect: StaticSprite;
+let backcolor: Texture;
 let dark: {
     left: StaticSprite,
     left_sq: StaticSprite
@@ -25,15 +25,16 @@ let dark: {
 let charactersLocation = {
     centerx: Screen.half_width,
     centery: Screen.half_height*4/3,
-    dy: 15, dx: 70,
+    dy: 30, dx: 70,
     mainSize: 500,
     size: 400,
+    dsize: 10
 }
 
 let createSprite = (character: Character, i: number): StaticSprite => {
-    const x = charactersLocation.centerx - i*charactersLocation.dx;
-    const y = charactersLocation.centery - Math.abs(i)*charactersLocation.dy;
-    const s = i===0 ? charactersLocation.mainSize : charactersLocation.size;
+    const x = charactersLocation.centerx - i*charactersLocation.dx + i*charactersLocation.dsize - (i?i/Math.abs(i)*charactersLocation.dx/2:0);
+    const y = charactersLocation.centery - Math.abs(i)*charactersLocation.dy - (i===0?charactersLocation.dy/2:0);
+    const s = i===0 ? charactersLocation.mainSize : (charactersLocation.size - Math.abs(i)*charactersLocation.dsize);
     return new StaticSprite(character.getTextures().static)
             .setSize(s*(i<0?1:-1),s)
             .setLocationByCenter(x,y)
@@ -42,9 +43,8 @@ let createSprite = (character: Character, i: number): StaticSprite => {
 let starting = {
     load() {
         roundstartSound = new Sound('roundstart.wav', 'effects');
-        blackRect = new StaticSprite(new OnecolorTexture(RgbColor(0,0,0)), new Location(0,0))
-                    .setSize(Screen.width, Screen.height);
         gamelogic.eventListeners.onmove.addEvent(t => !isStarting);
+        backcolor = new Texture('starting/crewmate.png');
         const darkT = new Texture('starting/dark.png');
         const darkT2 = new OnecolorTexture(RgbColor(0,0,0));
         dark = {
@@ -68,44 +68,91 @@ let starting = {
         dark.right.setLocationByCenter(Screen.half_width-200,Screen.half_height);
         dark.left.setLocationByCenter(Screen.half_width+200,Screen.half_height);
 
-        let characterSprites = new Array<StaticSprite>();
-        let mainCharSprite = createSprite(Characters.main, 0).setOpacity(0);
+        const backColorTT = new Texture(backcolor.getPath(), null, () => {
+            backColorTT.setImage(Game.getScene().filterImage(backColorTT.getImage(), (imgdata: any) => {
+                const data = imgdata.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    if (data[i+3]===0) continue;
+                    if (role.type === "impostor") {
+                        data[i]=255;
+                        data[i+1] = 0;
+                        data[i+2] = 0;
+                    } else if (role.type === "neutral") {
+                        data[i] = role.color.r;
+                        data[i+1] = role.color.g;
+                        data[i+2] = role.color.b;
+                    } else {
+                        data[i] = 0;
+                        data[i+1] = 255;
+                        data[i+2] = 255;
+                    }
+                }
+                return imgdata;
+            }));
+        });
+        const backcolorSprite = new StaticSprite(backColorTT).setSize(512*3, 256*3)
+                    .setLocationByCenter(Screen.half_width, Screen.height*2/3);
+        const blackRect = new StaticSprite(new OnecolorTexture(RgbColor(0,0,0)), new Location(0,0))
+                .setSize(Screen.width, Screen.height);
 
-        for (let i = 0; i < Characters.another.length; i+=2){
-            characterSprites.push(createSprite(Characters.another[i], i+2))
-            if (Characters.another.length > i+1) {
-                characterSprites.push(createSprite(Characters.another[i+1], -i-2))
+        const roleText = new StaticSprite(new TextTexture(role.name, 'arial')
+                    .setColor(`rgb(${role.color.r},${role.color.g},${role.color.b})`)
+                    .setFontSize(200).setAlign('center'))
+                    .setSize(Screen.width, 0)
+                    .setLocation(Screen.half_width, 275)
+                    .setOpacity(0);
+
+        const characterSprites = new Array<StaticSprite>();
+        const mainCharSprite = createSprite(Characters.main, 0).setOpacity(0);
+
+        switch (role.type) {
+            case "impostor": {
+                let k = 0;
+                for (let i = 0; i < Characters.another.length; i+=2){
+                    characterSprites.push(createSprite(Characters.another[i], i+2))
+                    if (Characters.another.length > i+1) {
+                        characterSprites.push(createSprite(Characters.another[i+1], -i-2))
+                    }
+                }
+                break;
+            }
+            case "neutral": {
+                if (role === Roles.Melok) {
+                    mainCharSprite.setSize(mainCharSprite.width/2, mainCharSprite.height/2)
+                            .setLocationByCenter(charactersLocation.centerx,  charactersLocation.centery)
+                }
+                break;
+            }
+            default: {
+                for (let i = 0; i < Characters.another.length; i+=2){
+                    characterSprites.push(createSprite(Characters.another[i], i+2))
+                    if (Characters.another.length > i+1) {
+                        characterSprites.push(createSprite(Characters.another[i+1], -i-2))
+                    }
+                }
+                break;
             }
         }
 
-        Game.getScene().addUpperSprite(blackRect, ...characterSprites.reverse(), ...Object.values(dark), mainCharSprite);
+        Game.getScene().addUpperSprite(blackRect, backcolorSprite, 
+                ...characterSprites.reverse(), ...Object.values(dark),
+                mainCharSprite, roleText);
 
         const dap = config.starting_time.apear_iteration_time/config.starting_time.apear;
         for (let i = 0; i < config.starting_time.apear; i+=config.starting_time.apear_iteration_time) {
             setTimeout(() => {
                 dark.left.getLocation().x -= Screen.half_width*dap;
                 dark.right.getLocation().x += Screen.half_width*dap;
-            }, config.starting_time.apear_main+i);
+            }, config.starting_time.apear_main/2 + i);
         }
         const dap2 = config.starting_time.apear_main_iteration_time/config.starting_time.apear_main;
         for (let i = 0; i < config.starting_time.apear_main; i+=config.starting_time.apear_main_iteration_time) {
             setTimeout(() => {
                 mainCharSprite.opacity += dap2;
+                roleText.opacity += dap2;
+                roleText.getLocation().y += dap*25;
             }, i);
         }
-
-        // for (let i = 0; i < config.starting_time.apear_opacity_times; i++) {
-        //     setTimeout(() => {
-        //         characterSprites.forEach(ch => {
-        //             ch.opacity = i*delta_apear;
-        //         });
-        //     }, i*delta_apear*config.starting_time.apear);
-        // }
-        // setTimeout(() => {
-        //     characterSprites.forEach(ch => {
-        //         ch.opacity = 1;
-        //     });
-        // }, config.starting_time.apear);
 
         setTimeout(() => {
             // Game.getScene().removeUpperSprite(blackRect, characterSprite);
@@ -115,9 +162,10 @@ let starting = {
 
 
         setTimeout(() => {
-            Game.getScene().removeUpperSprite(blackRect, ...characterSprites, ...Object.values(dark), mainCharSprite);
+            Game.getScene().removeUpperSprite(blackRect, backcolorSprite, 
+                    ...characterSprites, ...Object.values(dark),
+                    mainCharSprite, roleText);
             isStarting = false;
-            characterSprites = characterSprites.filter(f=>false);
         }, config.starting_time.sum);
     }
 }

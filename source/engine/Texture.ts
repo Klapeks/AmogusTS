@@ -39,6 +39,7 @@ class Texture {
     }
     setImage(image: any) {
         this._image = image;
+        return this;
     }
     getPath(){
         return this._path;
