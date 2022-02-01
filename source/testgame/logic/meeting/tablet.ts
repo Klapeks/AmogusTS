@@ -2,6 +2,7 @@ import { Game } from "../../../engine/Game";
 import { Location } from "../../../engine/Location";
 import { ApearableMenu } from "../../../engine/Menu";
 import { Screen } from "../../../engine/Screen";
+import { Sound } from "../../../engine/Sound";
 import { StaticSprite } from "../../../engine/Sprite";
 import { MultiTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
@@ -13,6 +14,11 @@ import { ejections } from "./ejection";
 let tabletTexture: Texture, glassTexture: Texture, nameplatesT: Texture;
 let tabletSize = {width: Screen.width*0.95, height: Screen.height*0.95};
 let plateSize = {width: 272*tabletSize.width/1020, height: 64*tabletSize.height/570};
+
+let sounds: {
+    select: Sound,
+    vote: Sound,
+}
 
 class Nameplate {
     private _character: Character;
@@ -156,6 +162,10 @@ let tablet = {
         tabletTexture = new Texture('voting/tablet.png');
         glassTexture = new Texture('voting/tablet_up.png');
         nameplatesT = new Texture('buttons/nameplates.png');
+        sounds = {
+            vote: new Sound("voting/votescreen_vote.wav", "effects"),
+            select: new Sound("voting/votescreen_select.wav", "gui"),
+        }
 
         acceptButton = new StaticSprite(
             new MultiTexture('buttons/accept.png', 'buttons/accept_showed.png'),
@@ -182,6 +192,8 @@ let tablet = {
                     size: acceptButton
                 })) {
                     if (!ejections.isEjecting){
+                        sounds.vote.play();
+                        ///Change it
                         const nick = nameplate.getCharacter().getNickname() || `Абобус ${nameplate.getId()}`
                         ejections.eject(`${nick} не был sussy baka`, "Осталось еще 2 компостира",
                                 nameplate.getCharacter().getTextures().eject);
@@ -193,8 +205,10 @@ let tablet = {
                     }
                     return;
                 }
+                sounds.select.play();
                 acceptButton.setLocation(nameplate.getLocation().x+375, nameplate.getLocation().y+10);
             } else {
+                sounds.select.play();
                 acceptButton.setLocation(nameplate.getLocation().x+375, nameplate.getLocation().y+10);
                 acceptButton.hidden = false;
                 Game.getScene().addUpperSprite(acceptButton);
