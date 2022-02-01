@@ -5,8 +5,10 @@ let config = {
     taskrange: 200,
     killcooldown: 5, // in sec
     starting_time: {
-        apear_opacity_times: 20,
-        apear: 1000,
+        apear_main_iteration_time: 25,
+        apear_main: 1000,
+        apear_iteration_time: 25,
+        apear: 1250,
         sum: 4000 // in ms
     },
     graphic: {
