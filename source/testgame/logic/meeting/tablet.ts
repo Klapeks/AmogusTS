@@ -20,13 +20,15 @@ let sounds: { select: Sound, vote: Sound }
 
 class Nameplate {
     private _character: Character;
+    private _id: number;
     constructor(character: Character) {
+        this._id = Nameplate.last_number++;
         this._character = character;
     }
     updateLocation(tabletLocation: Location) {
         if (this.nameplate) {
-            this.nameplate.getLocation().x = (this._character.getId()%3)*(plateSize.width+25) + 210;
-            this.nameplate.getLocation().y = Math.floor(this._character.getId()/3)*(plateSize.height+25) + tabletLocation.y + 180;
+            this.nameplate.getLocation().x = (this._id%3)*(plateSize.width+25) + 210;
+            this.nameplate.getLocation().y = Math.floor(this._id/3)*(plateSize.height+25) + tabletLocation.y + 180;
             this.icon.getLocation().x = this.nameplate.getLocation().x-20;
             this.icon.getLocation().y = this.nameplate.getLocation().y-28;
             if (this.nickname) {
@@ -47,7 +49,7 @@ class Nameplate {
     icon: StaticSprite;
     nickname: StaticSprite;
     createSprite() {
-        if (this.nameplate) return;
+        if (this.nameplate) return this;
         this.nameplate = new StaticSprite(nameplatesT, new Location(-500,-500))
                     .setSize(plateSize.width, plateSize.height)
                     .setSplitting(2, 10, 272, 64);
@@ -60,6 +62,7 @@ class Nameplate {
                             .setLocation(-500,-500).setSize(plateSize.width,40);
         }
         Game.getScene().addUpperSprite(this.nameplate, this.icon, this.nickname);
+        return this;
     }
     removeSpirte() {
         Game.getScene().removeUpperSprite(this.nameplate, this.icon, this.nickname);
@@ -76,6 +79,8 @@ class Nameplate {
     getLocation(){
         return this.nameplate.getLocation();
     }
+
+    static last_number = 0;
 }
 
 
@@ -91,21 +96,21 @@ class TabletMenu extends ApearableMenu {
     show() {
         tablet.tryChangeTexture();
         if (this.isShowed || this._sprite) return;
+        Nameplate.last_number = 0;
         super.show();
         this._glass = new StaticSprite(glassTexture)
                 .setSize(this._sprite.width, this._sprite.height)
                 .setLocation(this._sprite.getLocation().x,
                             this._sprite.getLocation().y);
         Game.getScene().addUpperSprite(this._glass);
-        Characters.another.forEach(ch => {
-            const np = new Nameplate(ch);
-            np.createSprite();
-            this.nameplates.push(np);
+        this.nameplates.push(new Nameplate(Characters.main).createSprite());
+        Characters.another.filter(ch => {
+            if (!ch.isAlive) return true;
+            this.nameplates.push(new Nameplate(ch).createSprite());
+            return false;
+        }).forEach(ch => {
+            this.nameplates.push(new Nameplate(ch).createSprite());
         });
-        const np = new Nameplate(Characters.main);
-        np.createSprite();
-        this.nameplates.push(np);
-
         this._selectedNameplate = new StaticSprite(nameplatesT, this.nameplates[0].getLocation().clone())
                         .setSize(plateSize.width, plateSize.height)
                         .setSplitting(2, 78, 272, 64);

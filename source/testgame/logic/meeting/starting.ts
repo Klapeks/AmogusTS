@@ -12,8 +12,6 @@ import { Role, Roles } from "../../roles/roles";
 import { Characters } from "../charslog";
 import { GameLogic } from "../gamelogic";
 
-let isStarting = false;
-
 let roundstartSound: Sound;
 let backcolor: Texture;
 let dark: {
@@ -42,9 +40,10 @@ let createSprite = (character: Character, i: number): StaticSprite => {
 }
 
 let starting = {
+    isShowed: false,
     load() {
         roundstartSound = new Sound('roundstart.wav', 'effects');
-        GameLogic.eventListeners.onmove.addEvent(t => !isStarting);
+        GameLogic.eventListeners.onmove.addEvent(t => !starting.isShowed);
         backcolor = new Texture('starting/crewmate.png');
         const darkT = new Texture('starting/dark.png');
         const darkT2 = new OnecolorTexture(RgbColor(0,0,0));
@@ -56,14 +55,14 @@ let starting = {
         }
         dark.right_sq = new StaticSprite(darkT2,
                 new LinkedLocation(dark.right.getLocation(), {dx:dark.right.width, dy:0}))
-                .setSize(Screen.half_width,Screen.height);
+                .setSize(Screen.half_width+200,Screen.height);
         dark.left_sq = new StaticSprite(darkT2,
-                new LinkedLocation(dark.left.getLocation(), {dx:-Screen.half_width, dy:0}))
-                .setSize(Screen.half_width,Screen.height);
+                new LinkedLocation(dark.left.getLocation(), {dx:-Screen.half_width-200, dy:0}))
+                .setSize(Screen.half_width+200,Screen.height);
     },
     show(role: Role) {
-        if (isStarting) return;
-        isStarting = true;
+        if (starting.isShowed) return;
+        starting.isShowed = true;
         roundstartSound.play();
 
         dark.right.setLocationByCenter(Screen.half_width-200,Screen.half_height);
@@ -108,11 +107,15 @@ let starting = {
 
         switch (role.type) {
             case "impostor": {
-                let k = 0;
-                for (let i = 0; i < Characters.another.length; i+=2){
-                    characterSprites.push(createSprite(Characters.another[i], i+2))
-                    if (Characters.another.length > i+1) {
-                        characterSprites.push(createSprite(Characters.another[i+1], -i-2))
+                let k = -3;
+                for (let ch of Characters.another) {
+                    if (ch.getRole().type !== "impostor") continue;
+                    if (k > 0) {
+                        characterSprites.push(createSprite(ch, k))
+                        k=-k-3
+                    }else if (k < 0) {
+                        characterSprites.push(createSprite(ch, k))
+                        k=-k;
                     }
                 }
                 break;
@@ -164,11 +167,13 @@ let starting = {
 
         setTimeout(() => {
             darking.show(0);
-            darking.hide();
-            Game.getScene().removeUpperSprite(blackRect, backcolorSprite, 
-                    ...characterSprites, ...Object.values(dark),
-                    mainCharSprite, roleText);
-            isStarting = false;
+            setTimeout(() => {
+                darking.hide();
+                Game.getScene().removeUpperSprite(blackRect, backcolorSprite, 
+                        ...characterSprites, ...Object.values(dark),
+                        mainCharSprite, roleText);
+                starting.isShowed = false;
+            }, 1);
         }, config.starting_time.sum);
     }
 }

@@ -19,6 +19,7 @@ let logic_kill = {
                 killer.getLocation().set(character.getLocation().x,character.getLocation().y);
             }
         }
+        character.isAlive = false;
         character.hidden = true;
         deadChars.push(new DeadCharacter(character));
     },

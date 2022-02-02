@@ -8,12 +8,11 @@ let pleaseRotateDevice: StaticSprite;
 let logic_device = {
     load() {
         Game.eventListeners.addRezise((w,h)=>{
-            if (w/h < 1) pleaseRotateDevice.hidden=false;
-            else pleaseRotateDevice.hidden=true; 
+            if (w/h < 1) Game.getScene().addUpperSprite(pleaseRotateDevice);
+            else Game.getScene().removeUpperSprite(pleaseRotateDevice); 
         });
         pleaseRotateDevice = new StaticSprite(new Texture('warns/devicerot_ru.png')).setSize(Screen.width, Screen.height);
-        pleaseRotateDevice.hidden = true;
-        Game.getScene().addUpperSprite(pleaseRotateDevice);
+        pleaseRotateDevice.priority = Infinity;
     }
 }
 

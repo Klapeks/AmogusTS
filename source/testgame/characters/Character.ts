@@ -1,4 +1,4 @@
-import { Color } from "../../engine/Color";
+import { Color, HexColor } from "../../engine/Color";
 import { Game } from "../../engine/Game";
 import { Joystick } from "../../engine/Joystick";
 import { LinkedLocation, Location } from "../../engine/Location";
@@ -22,7 +22,9 @@ class Character {
             .setTexture(textures.missingo)
             .setHideInDark(true);
     }
-    setColor(foreground: Color, background: Color, mask: Color = {r:120,g:200,b:220}) {
+    setColor(foreground: Color | string, background: Color | string, mask: Color = {r:120,g:200,b:220}) {
+        if (typeof foreground === "string") foreground = HexColor(foreground);
+        if (typeof background === "string") background = HexColor(background);
         this._color = {mask, foreground, background};
         this._textures = {
             idle: CharacterFuncs.cloneFiltering(textures.amogus.idle, this._color),
@@ -163,11 +165,36 @@ class Character {
     }
     
     protected _role: Role = Roles.Crewmate;
+    private _roleplateSprite: Sprite;
     getRole() {
         return this._role;
     }
     setRole(role: Role) {
         this._role = role;
+        if (this._isShowedRoleplate) this.showRoleplate();
+        return this;
+    }
+    protected _isShowedRoleplate = false;
+    showRoleplate() {
+        this._isShowedRoleplate = true;
+        if (!this._role) return;
+        if (!this._roleplateSprite){
+            this._roleplateSprite = new Sprite(Character.generateNicknameTexture('none', 25),
+                new LinkedLocation(this.getLocation(), {dx:256*textures.character_ratio/2,dy:-30}))
+                .setSize(Screen.width/2,50)
+                .setHideInDark(this._sprite.isHideInDark());
+            this._roleplateSprite.hidden = true;
+        }
+        (this._roleplateSprite.getTexture() as TextTexture).setColor(this._role.toCSS()).setText(this._role.name);
+        if (this._roleplateSprite.hidden) {
+            this._roleplateSprite.hidden = false;
+            Game.getScene().addUpperSprite(this._roleplateSprite);
+        }
+    }
+    hideRoleplate() {
+        this._isShowedRoleplate = false;
+        this._roleplateSprite.hidden = true;
+        Game.getScene().removeUpperSprite(this._roleplateSprite);
         return this;
     }
 

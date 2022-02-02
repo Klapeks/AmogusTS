@@ -12,7 +12,7 @@ import { Screen } from "../../engine/Screen";
 import { killanimation_logic } from "./kill/ka_logic";
 import { role_angel } from "../roles/angel";
 import { starting } from "./meeting/starting";
-import { randomRoles, Roles } from "../roles/roles";
+import { randomRoles, RoleFuncs, Roles } from "../roles/roles";
 import { MainMenu } from "../gui/mainmenu";
 
 let logic = {
@@ -56,8 +56,17 @@ let logic = {
             role_angel.playSave(Characters.main);
         }
         if (Game.hasKey("digit1")) {
-            let roles = Object.values(Roles);
-            starting.show(roles[Math.round(Math.random()*(roles.length-1))]);
+            if (starting.isShowed) return;
+            
+            RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
+                if (i===0){
+                    Characters.main.setRole(role);
+                    return;
+                }
+                Characters.another[i-1].setRole(role);
+                Characters.another[i-1].showRoleplate();
+            });
+            starting.show(Characters.main.getRole());
         }
         if (Game.hasKey("digit0")) {
             if (cd) return;

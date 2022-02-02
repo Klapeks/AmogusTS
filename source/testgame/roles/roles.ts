@@ -26,6 +26,9 @@ class Role {
         this.description = desc;
         return this;
     }
+    toCSS(): string {
+        return `rgb(${this.color.r},${this.color.g},${this.color.b})`
+    }
 }
 
 let Roles = {
@@ -40,15 +43,21 @@ let Roles = {
     Swapper: new Role("Swapper", "crewmate").setVisual('C0FF00'),  // Сваппер
     Sheriff: new Role("Sheriff", "crewmate").setVisual('FFA500'),  // Шериф
     Medic: new Role("Medic", "crewmate").setVisual('C6FFFB'),  // Медик
+    Altruist: new Role("Altruist", "crewmate").setVisual('E7472F'),  // Альтруист - умирает но возраждает
 
     Shapeshifter: new Role("Shapeshifter", "impostor").setVisual('9A1F27'),  // Оборотень
+    Camouflager: new Role("Camouflager", "impostor").setVisual('029717'),  // Камуфляжер
+    Vanisher: new Role("Vanisher", "impostor").setVisual('FFFFFF'),  // Невидимка
     Janitor: new Role("Janitor", "impostor").setVisual('FF0000'),  // Санитар
     Saran4a: new Role("Saran4a", "impostor").setVisual('737373'),  // Саранча
     Sniper: new Role("Sniper", "impostor").setVisual('FF4822'),  // Снайпер
 
+    Executioner: new Role("Executioner", "neutral").setVisual('1DD579'),  // Палач
     Arsonist: new Role("Arsonist", "neutral").setVisual('FF9100'),  // Спалахуйка
+    Shifter: new Role("Shifter", "neutral").setVisual('CC874D'),  // Снитчара - пиздить роли
     Clown: new Role("Clown", "neutral").setVisual('FF0099'),  // Клоун
     Melok: new Role("Melok", "neutral").setVisual('FF9DF0'),  // Милок
+    VIP: new Role("VIP", "neutral").setVisual('00FF00'),  //ВИП
 }
 
 let RoleFuncs = {
@@ -57,47 +66,33 @@ let RoleFuncs = {
         if (Characters.main.getRole().type==="impostor") imps.push(Characters.main);
         return imps;
     },
-}
-
-let getRandomRoles = (amount: number, impostors: number, neutral: number): Role[] => {
-    let roles = new Array<Role>();
-    let f = (arr: Role[]) => arr.splice(Math.round(Math.random()*(arr.length-1)), 1)[0];
+    random(amount: number, impostors = config.roles.imposters, neutral = config.roles.neutral): Role[] {
+        let roles = new Array<Role>();
+        let f = (arr: Role[]) => arr.splice(Math.round(Math.random()*(arr.length-1)), 1)[0];
+        
+        let suproles = Object.values(Roles).filter(r=>r.type==="impostor");
+        for (let i = 0; i < impostors; i++) {
+            roles.push(f(suproles));
+        }
+        suproles = Object.values(Roles).filter(r=>r.type==="neutral");
+        for (let i = 0; i < neutral; i++) {
+            if (Math.random() < config.roles.neutral_chance) roles.push(f(suproles));
+        }
+        suproles = Object.values(Roles).filter(r=>r.type==="crewmate");
+        while(roles.length < amount) {
+            roles.push(f(suproles));
+        }
     
-    let suproles = Object.values(Roles).filter(r=>r.type==="impostor");
-    for (let i = 0; i < impostors; i++) {
-        roles.push(f(suproles));
+        for (let i = roles.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [roles[i], roles[j]] = [roles[j], roles[i]];
+        }
+        return roles;
     }
-    suproles = Object.values(Roles).filter(r=>r.type==="neutral");
-    for (let i = 0; i < neutral; i++) {
-        if (Math.random() < config.roles.neutral_chance) roles.push(f(suproles));
-    }
-    suproles = Object.values(Roles).filter(r=>r.type==="crewmate");
-    while(roles.length < amount) {
-        roles.push(f(suproles));
-    }
-
-    // let suproles = Object.values(Roles).filter(r=>r.type==="impostor");
-    // for (let i = 0; i < impostors; i++) {
-    //     roles.push(suproles[Math.round(Math.random()*(suproles.length-1))]);
-    // }
-    // suproles = Object.values(Roles).filter(r=>r.type!=="impostor");
-    // for (let i = 0; i < amount-impostors; i++) {
-    //     roles.unshift(suproles[Math.round(Math.random()*(suproles.length-1))]);
-    //     if (roles[0].type==="neutral") {
-    //         neutral++;
-    //         if (neutral >= maxneutral) 
-    //             suproles = suproles.filter(r=>r.type!=="neutral");
-    //     }
-    // }
-    for (let i = roles.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [roles[i], roles[j]] = [roles[j], roles[i]];
-    }
-    return roles;
 }
 
 var randomRoles = (amount = 10, impostors = config.roles.imposters, neutral = config.roles.neutral): void => {
-    const roles = getRandomRoles(amount, impostors, neutral);
+    const roles = RoleFuncs.random(amount, impostors, neutral);
     let a = '';
     roles.forEach((r, i)=>{
         a+=`${i+1}. `

@@ -54,10 +54,10 @@ class SpriteArray {
     }
 
     static PriorityFilter: SpriteFilter = (now: Sprite, next: Sprite) => {
-        return next.priority - now.priority; // 3 - 5
+        return next.priority - now.priority;
     }
     static PosFilter: SpriteFilter = (now: Sprite, next: Sprite) => {
-        return next.getLocation().y - now.getLocation().y; // 3 - 5
+        return next.getLocation().y - now.getLocation().y;
     }
 }
 

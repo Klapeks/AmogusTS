@@ -1,5 +1,6 @@
 import { Character } from "../characters/Character";
 import { RoleFuncs, Roles } from "../roles/roles";
+import { Characters } from "./charslog";
 import { starting } from "./meeting/starting";
 
 class GameEventListener<T> {
@@ -27,8 +28,10 @@ let GameLogic = {
     startGame() {
         GameLogic.isGameStarted = true;
         console.log('game go brrrrrrrrrrrrrrrrrrrrrr');
-        let roles = Object.values(Roles);
-        starting.show(roles[Math.round(Math.random()*(roles.length-1))]);
+        const roles = Object.values(Roles);
+        const role = roles[Math.round(Math.random()*(roles.length-1))];
+        Characters.main.setRole(role);
+        starting.show(role);
     }
 }
 
