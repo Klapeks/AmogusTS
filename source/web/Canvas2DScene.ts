@@ -6,7 +6,7 @@ import { BiLocation } from "../engine/Location";
 import { Scene } from "../engine/Scene";
 import { Screen } from "../engine/Screen";
 import { Splitting, Sprite, StaticSprite } from "../engine/Sprite";
-import { SuperMath } from "../engine/SuperMath";
+import { SuperMath } from "../engine/utils/SuperMath";
 import { OnecolorTexture, TextTexture, Texture } from "../engine/Texture";
 import { config } from "../testgame/config";
 

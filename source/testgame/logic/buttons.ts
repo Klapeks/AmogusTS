@@ -142,6 +142,7 @@ let logic_buttons = {
                     else fullscreenbutton.unselect();
                 })
                 .setSelected(new Texture('buttons/nofullscreen.png'));
+        fullscreenbutton.getSprite().priority = 999;
 
         ButtonFuncs.addButton(sabotagebutton, killbutton, reportbutton, fullscreenbutton, usebutton);
         Game.getScene().addUpperSprite(killcooldownText);

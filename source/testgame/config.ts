@@ -17,6 +17,11 @@ let config = {
         light_opacity: 0.45,//0.4
         light_blur: '15px',
         // light_blur: '0px'
+    },
+    roles: {
+        imposters: 2,
+        neutral: 1,
+        neutral_chance: 0.4
     }
 }
 

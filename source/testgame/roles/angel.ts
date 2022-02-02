@@ -4,7 +4,7 @@ import { Sprite } from "../../engine/Sprite";
 import { Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 import { Characters } from "../logic/charslog";
-import { gamelogic } from "../logic/gamelogic";
+import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
 
 let saveTexture: Texture, saveBlowTexture: Texture;
@@ -20,7 +20,7 @@ let role_angel = {
         saveSound = new Sound('roles/angel/killsave.wav');
         saveTexture = new Texture('roles/angel/killsave.png');
         saveBlowTexture = new Texture('roles/angel/killsave_blow.png');
-        gamelogic.eventListeners.onkill.addEvent(({character, killer}) => {
+        GameLogic.eventListeners.onkill.addEvent(({character, killer}) => {
             if (character === Characters.another[1]) {
                 const kiloc = killer.getLocation();
                 const crloc = character.getLocation();
@@ -32,7 +32,7 @@ let role_angel = {
             }
             return true;
         })
-        gamelogic.eventListeners.onmove.addEvent(character => {
+        GameLogic.eventListeners.onmove.addEvent(character => {
             if (character === Characters.main) return !role_angel.isSaveAnimation;
             return true;
         })

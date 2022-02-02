@@ -6,7 +6,7 @@ import { Sprite, StaticSprite } from "../../../engine/Sprite";
 import { Texture } from "../../../engine/Texture";
 import { logic_buttons } from "../buttons";
 import { Characters } from "../charslog";
-import { gamelogic } from "../gamelogic";
+import { GameLogic } from "../gamelogic";
 import { voting } from "../meeting/voting";
 
 let isLoaded = false;
@@ -17,7 +17,7 @@ class TaskMenu extends ApearableMenu {
     constructor(texture: Texture, size: Size){
         super(texture, size);
         if (!isLoaded){
-            gamelogic.eventListeners.onmove.addEvent(ch => {
+            GameLogic.eventListeners.onmove.addEvent(ch => {
                 if (ch===Characters.main) return MenusUtils.isNoMenu();
                 return true;
             })

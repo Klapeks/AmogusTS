@@ -5,6 +5,62 @@ import { Screen } from "./Screen";
 import { Sprite, StaticSprite } from "./Sprite";
 import { Texture } from "./Texture";
 
+type SpriteFilter = (value: Sprite, next: Sprite) => number;
+
+class SpriteArray {
+    next: SpriteArray;
+    sprite: Sprite;
+    constructor(sprite?: Sprite) {
+        if (sprite) this.sprite = sprite;
+    }
+    add(sprite: Sprite, filter: SpriteFilter = SpriteArray.PriorityFilter){
+        if (!this.sprite){
+            this.sprite = sprite;
+            return this;
+        }
+        let f = filter(this.sprite, sprite);
+        if (f < 0) {
+            [this.sprite, sprite] = [sprite, this.sprite];
+            if (!this.next){
+                this.next = new SpriteArray(sprite);
+                return this;
+            }
+            let newnext = new SpriteArray(sprite);
+            newnext.next = this.next;
+            this.next = newnext;
+            return this;
+        }
+
+        if (!this.next){
+            this.next = new SpriteArray(sprite);
+            return this;
+        }
+        this.next.add(sprite, filter);
+    }
+    remove(sprite: Sprite) {
+        if (!this.next) {
+            if (this.sprite === sprite)
+                this.sprite = null;
+            return;
+        }
+        if (this.sprite !== sprite) {this.next.remove(sprite); return;}
+        this.sprite = this.next.sprite;
+        this.next = this.next.next;
+        return;
+    }
+    forEach(f: (sprite: Sprite) => void) {
+        if (this.sprite) f(this.sprite);
+        if (this.next) this.next.forEach(f);
+    }
+
+    static PriorityFilter: SpriteFilter = (now: Sprite, next: Sprite) => {
+        return next.priority - now.priority; // 3 - 5
+    }
+    static PosFilter: SpriteFilter = (now: Sprite, next: Sprite) => {
+        return next.getLocation().y - now.getLocation().y; // 3 - 5
+    }
+}
+
 class TreeSprite {
     right: TreeSprite;
     left: TreeSprite;
@@ -29,9 +85,9 @@ class TreeSprite {
 }
 
 abstract class Scene {
-    protected _sprites_back: Array<Sprite> = new Array();
+    protected _sprites_back: SpriteArray = new SpriteArray();
     protected _sprites_dynamic: Array<Sprite> = new Array();
-    protected _sprites_upper: Array<Sprite> = new Array();
+    protected _sprites_upper: SpriteArray = new SpriteArray();
     protected _lights: Array<Light> = new Array();
 
     protected _camera: Camera = new Camera();
@@ -45,21 +101,27 @@ abstract class Scene {
         this._sprites_dynamic = this._sprites_dynamic.filter(p=>!sprite.includes(p));
     }
     removeUpperSprite(...sprite: Sprite[]) {
-        this._sprites_upper = this._sprites_upper.filter(p=>!sprite.includes(p));
+        for (let s of sprite) {
+            if(!s) continue;
+            this._sprites_upper.remove(s);
+        }
     }
     addDynamicSprite(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(s) this._sprites_dynamic.push(s);
+            if(!s) continue;
+            this._sprites_dynamic.push(s);
         }
     }
     addBackSprite(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(s) this._sprites_back.push(s);
+            if(!s) continue;
+            this._sprites_back.add(s);
         }
     }
     addUpperSprite(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(s) this._sprites_upper.push(s);
+            if(!s) continue;
+            this._sprites_upper.add(s);
         }
     }
     addLight(...lights: Light[]): void {
@@ -82,7 +144,7 @@ abstract class Scene {
     }
     drawSprites(): void {
         this._sprites_back.forEach((sprite) => this.drawSprite(sprite, true));
-        
+
         let ts: TreeSprite;
         for (let sprite of this._sprites_dynamic) {
             if (ts) ts.add(new TreeSprite(sprite));
@@ -91,14 +153,35 @@ abstract class Scene {
         ts.foreach((sprite) => {
             this.drawSprite(sprite)
         });
-        const static_upper = new Array();
+
+        const upper_than_dark = new Array<Sprite>();
         this._sprites_upper.forEach((sprite) => {
-            if (sprite.upperThanDark) static_upper.push(sprite);
+            if (sprite.upperThanDark) upper_than_dark.push(sprite);
             else this.drawSprite(sprite)
-        });
+        })
         if (Light.isLightsEnable()) this.drawLights();
-        static_upper.forEach(sprite => this.drawSprite(sprite));
+        upper_than_dark.forEach(sprite => this.drawSprite(sprite));
     }
+    // drawSprites(): void {
+    //     this._sprites_back.forEach((sprite) => this.drawSprite(sprite, true));
+        
+    //     let ts: TreeSprite;
+    //     for (let sprite of this._sprites_dynamic) {
+    //         if (ts) ts.add(new TreeSprite(sprite));
+    //         else ts = new TreeSprite(sprite);
+    //     }
+    //     ts.foreach((sprite) => {
+    //         this.drawSprite(sprite)
+    //     });
+
+    //     const upper_than_dark = this._sprites_upper.filter((sprite) => {
+    //         if (sprite.upperThanDark) return true;
+    //         this.drawSprite(sprite)
+    //         return false;
+    //     })
+    //     if (Light.isLightsEnable()) this.drawLights();
+    //     upper_than_dark.forEach(sprite => this.drawSprite(sprite));
+    // }
     abstract drawSprite(sprite: Sprite, isBack?: boolean): void;
     abstract filterImage(image: any, filter: (data:any)=>any): any;
     abstract getImageData(image: any): Uint8ClampedArray;

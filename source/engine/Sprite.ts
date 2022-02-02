@@ -1,4 +1,5 @@
-import { Location, Size } from "./Location";
+import { HitboxLocation, Location, Size } from "./Location";
+import { Screen } from "./Screen";
 import { Texture } from "./Texture";
 
 type Splitting = {x: number, y: number, width: number, height: number};
@@ -67,12 +68,12 @@ class Sprite {
     set height(h: number) {
         this._size.height = h;
     }
-    // set location(loc: Location) {
-    //     this._loc = loc;
-    // }
-    // get location() {
-    //     return this._loc;
-    // }
+    getHitboxPos(): HitboxLocation {
+        return {
+            location: this._loc,
+            size: {width: this.width, height: this.height}
+        };
+    }
     setLocationByCenter(x: number, y: number) {
         this._loc.x = x - Math.abs(this.width)/2;
         this._loc.y = y - Math.abs(this.height)/2;
@@ -108,6 +109,12 @@ class Sprite {
         this.opacity = opacity;
         return this;
     }
+    
+    priority = 0;
+    setPriority(priority: number) {
+        this.priority = priority;
+        return this;
+    }
 }
 
 class StaticSprite extends Sprite {
@@ -128,7 +135,11 @@ class StaticSprite extends Sprite {
         return this._margin;
     }
 }
+let FullscreenSprite = (texture: Texture | string): StaticSprite => {
+    return new StaticSprite(typeof texture === "string" ? new Texture(texture) : texture)
+            .setSize(Screen.width, Screen.height);
+}
 
 let NullSprite: Sprite = new Sprite(null);
 
-export { Sprite, Splitting, StaticSprite, NullSprite };
+export { Sprite, Splitting, StaticSprite, NullSprite, FullscreenSprite};

@@ -1,4 +1,6 @@
 import { Character } from "../characters/Character";
+import { RoleFuncs, Roles } from "../roles/roles";
+import { starting } from "./meeting/starting";
 
 class GameEventListener<T> {
     events: Array<(t: T) => boolean | void> = new Array();
@@ -12,15 +14,22 @@ class GameEventListener<T> {
             answer = event(t);
             if (typeof answer === "boolean" && answer === false) return false;
         }
-        return true;
+        return GameLogic.isGameStarted;
     }
 }
 
-let gamelogic = {
+let GameLogic = {
     eventListeners: {
         onkill: new GameEventListener<{character: Character, killer?: Character}>(),
         onmove: new GameEventListener<Character>(),
+    },
+    isGameStarted: false,
+    startGame() {
+        GameLogic.isGameStarted = true;
+        console.log('game go brrrrrrrrrrrrrrrrrrrrrr');
+        let roles = Object.values(Roles);
+        starting.show(roles[Math.round(Math.random()*(roles.length-1))]);
     }
 }
 
-export {gamelogic, GameEventListener}
+export {GameLogic, GameEventListener}

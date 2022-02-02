@@ -7,9 +7,10 @@ import { StaticSprite } from "../../../engine/Sprite";
 import { OnecolorTexture, TextTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { config } from "../../config";
+import { darking } from "../../gui/darking";
 import { Role, Roles } from "../../roles/roles";
 import { Characters } from "../charslog";
-import { gamelogic } from "../gamelogic";
+import { GameLogic } from "../gamelogic";
 
 let isStarting = false;
 
@@ -43,7 +44,7 @@ let createSprite = (character: Character, i: number): StaticSprite => {
 let starting = {
     load() {
         roundstartSound = new Sound('roundstart.wav', 'effects');
-        gamelogic.eventListeners.onmove.addEvent(t => !isStarting);
+        GameLogic.eventListeners.onmove.addEvent(t => !isStarting);
         backcolor = new Texture('starting/crewmate.png');
         const darkT = new Texture('starting/dark.png');
         const darkT2 = new OnecolorTexture(RgbColor(0,0,0));
@@ -162,6 +163,8 @@ let starting = {
 
 
         setTimeout(() => {
+            darking.show(0);
+            darking.hide();
             Game.getScene().removeUpperSprite(blackRect, backcolorSprite, 
                     ...characterSprites, ...Object.values(dark),
                     mainCharSprite, roleText);

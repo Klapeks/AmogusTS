@@ -12,7 +12,8 @@ import { Screen } from "../../engine/Screen";
 import { killanimation_logic } from "./kill/ka_logic";
 import { role_angel } from "../roles/angel";
 import { starting } from "./meeting/starting";
-import { Roles } from "../roles/roles";
+import { randomRoles, Roles } from "../roles/roles";
+import { MainMenu } from "../gui/mainmenu";
 
 let logic = {
     load(){
@@ -29,6 +30,7 @@ let logic = {
         logic_device.load();
     },
     update() {
+        MainMenu.update();
         logic_character.update();
         logic_buttons.update();
         meeting.update();
@@ -53,15 +55,18 @@ let logic = {
             }, 2000);
             role_angel.playSave(Characters.main);
         }
-        if (Game.hasKey("digit1")) starting.show(Roles.Crewmate);
-        if (Game.hasKey("digit2")) starting.show(Roles.Impostor);
-        if (Game.hasKey("digit3")) starting.show(Roles.Arsonist);
-        if (Game.hasKey("digit4")) starting.show(Roles.Clown);
-        if (Game.hasKey("digit5")) starting.show(Roles.Melok);
-        if (Game.hasKey("digit6")) starting.show(Roles.Medium);
-        if (Game.hasKey("digit7")) starting.show(Roles.Medic);
-        if (Game.hasKey("digit8")) starting.show(Roles.Shapeshifter);
-        if (Game.hasKey("digit9")) starting.show(Roles.Sheriff);
+        if (Game.hasKey("digit1")) {
+            let roles = Object.values(Roles);
+            starting.show(roles[Math.round(Math.random()*(roles.length-1))]);
+        }
+        if (Game.hasKey("digit0")) {
+            if (cd) return;
+            cd = true;
+            setTimeout(() => {
+                cd = false;
+            }, 2000);
+            randomRoles();
+        }
     }
 }
 

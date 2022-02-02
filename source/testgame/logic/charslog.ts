@@ -11,7 +11,7 @@ import { MainCharacter } from "../characters/MainCharacter";
 import { config } from "../config";
 import { Roles } from "../roles/roles";
 import { textures } from "../textures";
-import { gamelogic } from "./gamelogic";
+import { GameLogic } from "./gamelogic";
 import { Vents, vent_logic } from "./items/vents";
 import { killanimation_logic } from "./kill/ka_logic";
 import { logic_map } from "./maps/maplogic";
@@ -28,6 +28,7 @@ let cooldownVladDown = false;
 
 let logic_character = {
     update() {
+        if (!GameLogic.isGameStarted) return;
         if (voting.isVoting) return;
         if (killanimation_logic.isAnimationPlaying) return;
         if (Characters.main.ventilation?.directions) {
@@ -147,8 +148,9 @@ let logic_character = {
         return _colorofmap && _colorofmap[3] > 250;
     },
     updateMoveCharacter(character: MainCharacter, direction: {x: number, y:number}) {
+        if (!GameLogic.isGameStarted) return;
         if (character.isVentedAnim) return;
-        if (!gamelogic.eventListeners.onmove.check(character)) return;
+        if (!GameLogic.eventListeners.onmove.check(character)) return;
         // if (character.state === "vent") return;
         const deltaSpeed = config.speed * Game.deltaTime*58.8;
         direction.x *= deltaSpeed;

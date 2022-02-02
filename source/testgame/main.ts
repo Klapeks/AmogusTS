@@ -6,6 +6,7 @@ import { Scene } from "../engine/Scene";
 import { Screen } from "../engine/Screen";
 import { Sprite } from "../engine/Sprite";
 import { Texture } from "../engine/Texture";
+import { MainMenu } from "./gui/mainmenu";
 import { logic } from "./logic/alllogic";
 import { Characters } from "./logic/charslog";
 import { skeld } from "./logic/maps/skeld";
@@ -34,17 +35,16 @@ let testgame = {
         let loadingscreen = new Texture("loadingscreen.png");
         loadingscreen.onload = () => {
             Game.getScene().drawTextureFullScreen(loadingscreen);
+            MainMenu.load();
             loadTextures();
         };
         Game.eventListeners.addLoad(() => {
             Game.getCamera().getResolution().set(Game.getCamera().getResolution().x*0.85, Game.getCamera().getResolution().y*0.85);
             let border = new Sprite(new Texture('border.png'), new Location(-Screen.width/2, -Screen.height/2)).setSize(Screen.width, Screen.height);
-            
             skeld.load();
-
             Game.getScene().addUpperSprite(border);
-
             logic.load();
+            MainMenu.show();
 
             // Game.getScene().addLight(new Light(new Location(-1257,-1599), 250));
             // Game.getScene().addLight(new Light(new Location(-1092,-123), 50));

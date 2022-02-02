@@ -4,7 +4,6 @@ import { Sprite } from "../../../engine/Sprite";
 import { Texture } from "../../../engine/Texture";
 import { Task } from "../items/tasks/task";
 import { Vents } from "../items/vents";
-import { gamelogic } from "../gamelogic";
 import { EmergencyButton } from "../meeting/emergencybutton";
 
 // type Pos
