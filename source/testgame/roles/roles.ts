@@ -4,30 +4,53 @@ import { config } from "../config";
 import { Characters } from "../logic/charslog";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
+interface RoleSettings {
+    name: string;
+    color: Color;
+    type: RoleType;
+    select?: "any" | "crewmate";
+    description?: string;
+};
 class Role {
-    readonly name: string;
-    description: string;
-    color: Color = {r:255, g:255, b:255};
-    readonly type: RoleType = "crewmate";
+    private id: string;
+    private settings: RoleSettings;
     
-    constructor(name: string, type:RoleType = "crewmate") {
-        this.name = name;
-        this.type = type;
+    constructor(id: string, type:RoleType = "crewmate") {
+        this.id = id.toLowerCase();
+        this.settings = {
+            name: id,
+            color: {r:255, g:255, b:255},
+            type: type,
+        }
+    }
+    get name() {
+        return this.settings.name;
+    }
+    get color() {
+        return this.settings.color;
+    }
+    get type() {
+        return this.settings.type;
     }
     setColor(color: Color){
-        this.color = color;
+        this.settings.color = color;
+        return this;
+    }
+    setSettings(settings: RoleSettings){
+        this.settings = settings;
         return this;
     }
     setVisual(hexcolor: string, titlePath?: string) {
-        this.color = HexColor(hexcolor);
+        this.settings.color = HexColor(hexcolor);
         return this;
     }
     setDescription(desc: string) {
-        this.description = desc;
+        this.settings.description = desc;
         return this;
     }
     toCSS(): string {
-        return `rgb(${this.color.r},${this.color.g},${this.color.b})`
+        const {r,g,b} = this.settings.color;
+        return `rgb(${r},${g},${b})`
     }
 }
 
