@@ -6,6 +6,7 @@ import { Sprite, StaticSprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
 import { config } from "../config";
 import { Characters, logic_character } from "./charslog";
+import { GameLogic } from "./gamelogic";
 import { TaskMenu } from "./items/TaskMenu";
 import { logic_kill } from "./kill";
 import { logic_map } from "./maps/maplogic";
@@ -82,6 +83,7 @@ let logic_buttons = {
                 .setSize(200,200)
                 .setAltKey('KeyQ')
                 .setClick(() => {
+                    if (!GameLogic.isGameStarted) return;
                     if (voting.isVoting) return;
                     if (Characters.main.isVentedAnim) return;
                     if (killcooldown>0) return;
@@ -97,6 +99,7 @@ let logic_buttons = {
                 .setMargin({x: -50, y: -50})
                 .setSize(200,200)
                 .setClick(() => {
+                    if (!GameLogic.isGameStarted) return;
                     if (voting.isVoting) return;
                     console.log("sabotage go brrrrr");
                 });
@@ -106,6 +109,7 @@ let logic_buttons = {
                 .setSize(200,200)
                 .setAltKey('KeyE')
                 .setClick(() => {
+                    if (!GameLogic.isGameStarted) return;
                     if (usecooldown>0) return;
                     const nt = logic_map.getNearInteractable();
                     if (nt) {
@@ -120,6 +124,7 @@ let logic_buttons = {
                 .setSize(200,200)
                 .setAltKey('KeyR')
                 .setClick(() => {
+                    if (!GameLogic.isGameStarted) return;
                     if (voting.isVoting) return;
                     const dc = logic_kill.getDeadNear(Characters.main.getLocation());
                     if (!dc) return;

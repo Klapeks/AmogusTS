@@ -71,7 +71,6 @@ let logic_character = {
         Characters.main = new MainCharacter(0, new Location(189, -806));
         Characters.main.setColor({r:3,g:255,b:220},{r:0,g:172,b:190});
         Characters.main.setNickname("Klapeks");
-        Characters.main.showRoleplate();
         // Characters.main.getSprite().width/=2;
         // Characters.main.getSprite().height/=2;
         selection = new SelectedCharacter();
@@ -85,11 +84,6 @@ let logic_character = {
         Characters.another.push(new Character(5, new Location(700,-1550)).setColor({r:0,g:255,b:0},{r:0,g:255,b:0}).setNickname("huy"));
         Characters.another.push(new Character(6, new Location(500,-1300)).setColor({r:0,g:0,b:255},{r:0,g:0,b:255}).setNickname("Аболтус"));
         Characters.another.push(new Character(7, new Location(800,-1300)).setColor("C51111","7A0838").setNickname("Vladik"));
-
-        RoleFuncs.random(Characters.another.length).forEach((role, i) => {
-            Characters.another[i].setRole(role);
-            Characters.another[i].showRoleplate();
-        });
         
 
 

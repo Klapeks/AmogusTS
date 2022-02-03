@@ -14,6 +14,7 @@ class SpriteArray {
         if (sprite) this.sprite = sprite;
     }
     add(sprite: Sprite, filter: SpriteFilter = SpriteArray.PriorityFilter){
+        if (this.sprite===sprite) return this;
         if (!this.sprite){
             this.sprite = sprite;
             return this;
@@ -108,7 +109,7 @@ abstract class Scene {
     }
     addDynamicSprite(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(!s) continue;
+            if(!s || this._sprites_dynamic.includes(s)) continue;
             this._sprites_dynamic.push(s);
         }
     }

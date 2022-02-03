@@ -3,7 +3,7 @@ import { Camera } from "./Camera";
 import { Scene } from "./Scene";
 import { Texture } from "./Texture";
 
-type MouseClickEvent = (x: number, y:number) => boolean | void;
+type MouseClickEvent = (x: number, y:number) => void;
 type ResizeEvent = (x: number, y:number) => void;
 type SomeEvent = () => void;
 
@@ -45,8 +45,8 @@ let Game = {
         async onUpdate(): Promise<void> {},
         callMouseClick(x: number, y: number) {
             for (let m of events_mouseclick) {
-                const a = m(x,y);
-                if (typeof a === "boolean" && a===false) return;
+                m(x,y);
+                // if (typeof a === "boolean" && a===false) return;
             }
         },
         callResize(w: number, h: number) {

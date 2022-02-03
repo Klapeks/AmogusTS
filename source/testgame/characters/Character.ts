@@ -138,6 +138,9 @@ class Character {
     set hidden(b: boolean){
         this._sprite.hidden = b;
         if (this._nicknameSprite) this._nicknameSprite.hidden = b;
+        if (this._roleplateSprite) {
+            if(this._isShowedRoleplate) this._roleplateSprite.hidden = b;
+        }
     }
     get hidden() {
         return this._sprite.hidden;
@@ -175,6 +178,9 @@ class Character {
         return this;
     }
     protected _isShowedRoleplate = false;
+    isRoleplateShows() {
+        return this._isShowedRoleplate;
+    }
     showRoleplate() {
         this._isShowedRoleplate = true;
         if (!this._role) return;
@@ -193,6 +199,7 @@ class Character {
     }
     hideRoleplate() {
         this._isShowedRoleplate = false;
+        if (!this._roleplateSprite) return this;
         this._roleplateSprite.hidden = true;
         Game.getScene().removeUpperSprite(this._roleplateSprite);
         return this;

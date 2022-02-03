@@ -1,5 +1,5 @@
 import { Game } from "../../../engine/Game";
-import { Location } from "../../../engine/Location";
+import { LinkedLocation, Location } from "../../../engine/Location";
 import { ApearableMenu } from "../../../engine/Menu";
 import { Screen } from "../../../engine/Screen";
 import { Sound } from "../../../engine/Sound";
@@ -12,7 +12,7 @@ import { textures } from "../../textures";
 import { Characters } from "../charslog";
 import { ejections } from "./ejection";
 
-let tabletTexture: Texture, glassTexture: Texture, nameplatesT: Texture;
+let tabletTexture: Texture, glassTexture: Texture, nameplatesT: Texture, deadmarkTexture: Texture;
 let tabletSize = {width: Screen.width*0.95, height: Screen.height*0.95};
 let plateSize = {width: 272*tabletSize.width/1020, height: 64*tabletSize.height/570};
 
@@ -29,46 +29,67 @@ class Nameplate {
         if (this.nameplate) {
             this.nameplate.getLocation().x = (this._id%3)*(plateSize.width+25) + 210;
             this.nameplate.getLocation().y = Math.floor(this._id/3)*(plateSize.height+25) + tabletLocation.y + 180;
-            this.icon.getLocation().x = this.nameplate.getLocation().x-20;
-            this.icon.getLocation().y = this.nameplate.getLocation().y-28;
-            if (this.nickname) {
-                this.nickname.getLocation().x = this.nameplate.getLocation().x+130;
-                this.nickname.getLocation().y = this.nameplate.getLocation().y+50;
-            }
         }
     }
     
     checkMouseMove(posX: number = Game.mouseinfo.posX, posY: number = Game.mouseinfo.posY): boolean {
         if (!this.nameplate) return false;
+        if (!this._character?.isAlive) return false;
         const loc = this.nameplate.getLocation();
         const secloc = {x: loc.x+this.nameplate.width, y:loc.y+this.nameplate.height};
         return loc.x <= posX && posX <= secloc.x && loc.y <= posY && posY <= secloc.y;
     }
 
-    nameplate: StaticSprite;
-    icon: StaticSprite;
-    nickname: StaticSprite;
+    charplate: Map<string, StaticSprite>;
+    get nameplate() { return this.charplate.get('nameplate'); }
     createSprite() {
-        if (this.nameplate) return this;
-        this.nameplate = new StaticSprite(nameplatesT, new Location(-500,-500))
-                    .setSize(plateSize.width, plateSize.height)
-                    .setSplitting(2, 10, 272, 64);
-        this.icon = new StaticSprite(this._character.getTextures().idle, new Location(-500,-500))
-                    .setSize(1.75*128*textures.character_ratio, 1.75*190/2*textures.character_ratio)
-                    .setSplitting(0,0,256,190);
+        if (this.charplate) return this;
+        this.charplate = new Map();
+        const nloc = new Location(-500,-500);
+        this.charplate.set('nameplate', 
+            new StaticSprite(nameplatesT, nloc)
+            .setSize(plateSize.width, plateSize.height)
+            .setSplitting(2, 10, 272, 64));
+        
+        this.charplate.set('icon', 
+            new StaticSprite(this._character.getTextures().idle,
+            new LinkedLocation(nloc, {dx:-20, dy:-28}))
+            .setSize(1.75*128*textures.character_ratio, 1.75*190/2*textures.character_ratio)
+            .setSplitting(0,0,256,190));
+
         const nick = this._character.getNickname();
         if (nick) {
-            this.nickname = new StaticSprite(Character.generateNicknameTexture(nick, 40, 'left'))
-                            .setLocation(-500,-500).setSize(plateSize.width,40);
+            this.charplate.set('nickname', 
+                new StaticSprite(Character.generateNicknameTexture(nick, 40, 'left'),
+                new LinkedLocation(nloc, {dx: 130, dy: 50}))
+                .setSize(plateSize.width,0));
         }
-        Game.getScene().addUpperSprite(this.nameplate, this.icon, this.nickname);
+        if (this._character.isRoleplateShows()) {
+            const npt = Character.generateNicknameTexture(this._character.getRole().name, 30, 'left');
+            npt.color = this._character.getRole().toCSS();
+            this.charplate.set('role', new StaticSprite(npt,
+                new LinkedLocation(nloc, {dx: 130, dy: 90}))
+                .setSize(plateSize.width,0));
+        }
+        if (!this._character.isAlive) {
+            this.nameplate.opacity = 0.7;
+            let _i = this.charplate.get('icon');
+            if (_i) _i.opacity = 0.9;
+            _i = this.charplate.get('nickname');
+            if (_i) _i.opacity = 0.9;
+            _i = this.charplate.get('role');
+            if (_i) _i.opacity = 0.9;
+            this.charplate.set('deadmark', 
+                new StaticSprite(deadmarkTexture,
+                new LinkedLocation(nloc, {dx: 20, dy: 20}))
+                .setSize(plateSize.height-25, plateSize.height-25));
+        }
+        this.charplate.forEach((sprite) => Game.getScene().addUpperSprite(sprite));
         return this;
     }
     removeSpirte() {
-        Game.getScene().removeUpperSprite(this.nameplate, this.icon, this.nickname);
-        this.nameplate = null;
-        this.icon = null;
-        this.nickname = null;
+        this.charplate.forEach((sprite) => Game.getScene().removeUpperSprite(sprite));
+        this.charplate = null;
     }
     getCharacter(){
         return this._character;
@@ -165,6 +186,7 @@ let tablet = {
         tabletTexture = new Texture('voting/tablet.png');
         glassTexture = new Texture('voting/tablet_up.png');
         nameplatesT = new Texture('buttons/nameplates.png');
+        deadmarkTexture = new Texture('voting/deadmark.png');
         sounds = {
             vote: new Sound("voting/votescreen_vote.wav", "effects"),
             select: new Sound("voting/votescreen_select.wav", "gui"),

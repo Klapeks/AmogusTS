@@ -25,7 +25,6 @@ let MainMenu = {
                     darking.hide(0);
                 }, darking.show());
             }
-            return false;
         })
     },
     update() {

@@ -26,12 +26,21 @@ let GameLogic = {
     },
     isGameStarted: false,
     startGame() {
-        GameLogic.isGameStarted = true;
-        console.log('game go brrrrrrrrrrrrrrrrrrrrrr');
-        const roles = Object.values(Roles);
-        const role = roles[Math.round(Math.random()*(roles.length-1))];
-        Characters.main.setRole(role);
+        RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
+            const ch = i===0 ? Characters.main : Characters.another[i-1]
+            ch.hideRoleplate();
+            ch.setRole(role);
+        });
+        const role = Characters.main.getRole();
         starting.show(role);
+        Characters.main.showRoleplate();
+        if (role.type === "impostor") {
+            for (let ch of Characters.another) {
+                if (ch.getRole().type==="impostor") ch.showRoleplate();
+            }
+        }
+
+        GameLogic.isGameStarted = true;
     }
 }
 

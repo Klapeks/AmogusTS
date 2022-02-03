@@ -126,7 +126,7 @@ class Map {
             return null;
         }
         if (x < 0 || y < 0) {
-            console.log(`${x} < 0  ||  ${y} < 0`);
+            // console.log(`${x} < 0  ||  ${y} < 0`);
             return null;
         }
         x = Math.floor(x * this._b.hitbox.width / this._b.size.width);
@@ -137,11 +137,11 @@ class Map {
         if (x >= this._b.hitbox.data.length-4) {
             return null;
         }
-        if (this._b.hitbox.data[x+3]) 
+        if (this._b.hitbox.data[x+3] > 200) 
             return [this._b.hitbox.data[x],
-                this._b.hitbox.data[x+1],
-                this._b.hitbox.data[x+2],
-                this._b.hitbox.data[x+3]]
+                    this._b.hitbox.data[x+1],
+                    this._b.hitbox.data[x+2],
+                    this._b.hitbox.data[x+3]]
         else return null; 
     }
     getHitboxColor(loc: {x: number, y: number}) {
