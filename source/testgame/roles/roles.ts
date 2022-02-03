@@ -58,15 +58,15 @@ let Roles = {
     Crewmate: new Role('Crewmate', "crewmate").setVisual('00FFFF'),  // Член экипажа
     Impostor: new Role("Impostor", "impostor").setVisual('FF0000'),  // Импостер
 
-    Angel: new Role('Angel', "crewmate").setVisual('00FFFF'),  // Ангел-Хранитель
-    Medium: new Role("Medium", "crewmate").setVisual('D09DFF'),  // Ясновидящий
     Detective: new Role("Detective", "crewmate").setVisual('C0FF00'),  // Детектив
+    Altruist: new Role("Altruist", "crewmate").setVisual('E7472F'),  // Альтруист - умирает но возраждает
     Engineer: new Role("Engineer", "crewmate").setVisual('92BAC3'),  // Инженер
     Capitan: new Role("Capitan", "crewmate").setVisual('65B1F9'),  // Капитан
     Swapper: new Role("Swapper", "crewmate").setVisual('C0FF00'),  // Сваппер
     Sheriff: new Role("Sheriff", "crewmate").setVisual('FFA500'),  // Шериф
+    Medium: new Role("Medium", "crewmate").setVisual('D09DFF'),  // Ясновидящий
+    Angel: new Role('Angel', "crewmate").setVisual('00FFFF'),  // Ангел-Хранитель
     Medic: new Role("Medic", "crewmate").setVisual('C6FFFB'),  // Медик
-    Altruist: new Role("Altruist", "crewmate").setVisual('E7472F'),  // Альтруист - умирает но возраждает
 
     Shapeshifter: new Role("Shapeshifter", "impostor").setVisual('9A1F27'),  // Оборотень
     Camouflager: new Role("Camouflager", "impostor").setVisual('029717'),  // Камуфляжер

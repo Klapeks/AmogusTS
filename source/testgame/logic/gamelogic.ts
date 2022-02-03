@@ -5,7 +5,10 @@ import { starting } from "./meeting/starting";
 
 class GameEventListener<T> {
     events: Array<(t: T) => boolean | void> = new Array();
-    constructor() {}
+    private _checkable: boolean;
+    constructor(checkable = true) {
+        this._checkable = checkable;
+    }
     addEvent(event: (t: T) => boolean | void) {
         this.events.push(event);
     }
@@ -13,7 +16,8 @@ class GameEventListener<T> {
         let answer: boolean | void;
         for (let event of this.events) {
             answer = event(t);
-            if (typeof answer === "boolean" && answer === false) return false;
+            if (this._checkable && typeof answer === "boolean" 
+                    && answer === false) return false;
         }
         return GameLogic.isGameStarted;
     }
@@ -23,6 +27,7 @@ let GameLogic = {
     eventListeners: {
         onkill: new GameEventListener<{character: Character, killer?: Character}>(),
         onmove: new GameEventListener<Character>(),
+        onreset: new GameEventListener<void>(),
     },
     isGameStarted: false,
     startGame() {
