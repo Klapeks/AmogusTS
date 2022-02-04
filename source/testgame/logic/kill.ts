@@ -34,4 +34,4 @@ let logic_kill = {
     }
 }
 
-export {logic_kill};
+export { logic_kill };

@@ -2,57 +2,8 @@ import { Color, HexColor } from "../../engine/Color";
 import { Character } from "../characters/Character";
 import { config } from "../config";
 import { Characters } from "../logic/charslog";
-
-type RoleType = "crewmate" | "impostor" | "neutral"
-interface RoleSettings {
-    name: string;
-    color: Color;
-    type: RoleType;
-    select?: "any" | "crewmate";
-    description?: string;
-};
-class Role {
-    private id: string;
-    private settings: RoleSettings;
-    
-    constructor(id: string, type:RoleType = "crewmate") {
-        this.id = id.toLowerCase();
-        this.settings = {
-            name: id,
-            color: {r:255, g:255, b:255},
-            type: type,
-        }
-    }
-    get name() {
-        return this.settings.name;
-    }
-    get color() {
-        return this.settings.color;
-    }
-    get type() {
-        return this.settings.type;
-    }
-    setColor(color: Color){
-        this.settings.color = color;
-        return this;
-    }
-    setSettings(settings: RoleSettings){
-        this.settings = settings;
-        return this;
-    }
-    setVisual(hexcolor: string, titlePath?: string) {
-        this.settings.color = HexColor(hexcolor);
-        return this;
-    }
-    setDescription(desc: string) {
-        this.settings.description = desc;
-        return this;
-    }
-    toCSS(): string {
-        const {r,g,b} = this.settings.color;
-        return `rgb(${r},${g},${b})`
-    }
-}
+import { logic_kill } from "../logic/kill";
+import { Role } from "./role";
 
 let Roles = {
     Crewmate: new Role('Crewmate', "crewmate").setVisual('00FFFF'),  // Член экипажа
@@ -128,4 +79,4 @@ var randomRoles = (amount = 10, impostors = config.roles.imposters, neutral = co
 }
 
 
-export {Roles, RoleFuncs, Role, RoleType, randomRoles};
+export {Roles, RoleFuncs, randomRoles};

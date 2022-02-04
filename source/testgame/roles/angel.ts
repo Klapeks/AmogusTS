@@ -22,7 +22,7 @@ let role_angel = {
         saveTexture = new Texture('roles/angel/killsave.png');
         saveBlowTexture = new Texture('roles/angel/killsave_blow.png');
         GameLogic.eventListeners.onkill.addEvent(({character, killer}) => {
-            if (character === Characters.another[1]) {
+            if (savedCharacter && character === savedCharacter) {
                 const kiloc = killer.getLocation();
                 const crloc = character.getLocation();
                 role_angel.playSave(character,
@@ -38,7 +38,7 @@ let role_angel = {
             return true;
         })
         GameLogic.eventListeners.onreset.addEvent(() => {
-            savedCharacter = undefined;
+            // savedCharacter = undefined;
         })
     },
     playSave(character: Character, reverse: boolean = false, degrees: number = 0) {

@@ -3,7 +3,7 @@ let config = {
     speed: 9,
     deadrange: 300,
     taskrange: 200,
-    killcooldown: 5, // in sec
+    killcooldown: 25, // in sec
     starting_time: {
         apear_main_iteration_time: 25,
         apear_main: 600,

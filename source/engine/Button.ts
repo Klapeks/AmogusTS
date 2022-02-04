@@ -8,7 +8,7 @@ import { Texture } from "./Texture";
 
 
 class Button {
-    private _sprite: StaticSprite;
+    protected _sprite: StaticSprite;
     private _texture: Texture;
     private _seltexture: Texture;
     constructor(texture: Texture, location: Location = new Location(0,0)) {
@@ -46,12 +46,12 @@ class Button {
     click() {
         this._onclick();
     }
-    private _onclick: () => void = () => {};
+    protected _onclick: () => void = () => {};
     setClick(f:()=>void){
         this._onclick = f;
         return this;
     }
-    private _isselected = false;
+    protected _isselected = false;
     setSelected(texture: Texture) {
         this._seltexture = texture;
         return this;

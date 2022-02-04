@@ -6,7 +6,8 @@ import { Screen } from "../../engine/Screen";
 import { Sprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
 import { Vents, vent_logic } from "../logic/items/vents";
-import { Role, Roles } from "../roles/roles";
+import { Role } from "../roles/role";
+import { Roles } from "../roles/roles";
 import { textures } from "../textures";
 import { AmogusTextures, CharacterColor, CharacterFuncs } from "./CharFuncs";
 

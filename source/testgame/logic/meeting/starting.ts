@@ -8,7 +8,8 @@ import { OnecolorTexture, TextTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { config } from "../../config";
 import { darking } from "../../gui/darking";
-import { Role, Roles } from "../../roles/roles";
+import { Role } from "../../roles/role";
+import { Roles } from "../../roles/roles";
 import { Characters } from "../charslog";
 import { GameLogic } from "../gamelogic";
 

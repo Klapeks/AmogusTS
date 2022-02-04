@@ -17,6 +17,17 @@ let Retexturing = {
             }
             return imgdata;
         });
+    },
+    gray(image: any){
+        return Game.getScene().filterImage(image, (imgdata: any) => {
+            const data = imgdata.data;
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i+3] == 0) continue;
+                data[i] = data[i+1] = data[i+2] 
+                    = Math.round((data[i]+data[i+1]+data[i+2])/3);
+            }
+            return imgdata;
+        });
     }
 }
 

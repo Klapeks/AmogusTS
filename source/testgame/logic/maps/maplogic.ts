@@ -51,10 +51,15 @@ let logic_map = {
         if (_mininteract) {
             _mininteract.select();
             if (_wasminint) {
-                logic_buttons.selectUseButton(true);
+                logic_buttons.InteractButton.setState(0);
+                logic_buttons.InteractButton.select();
             }
         } else if (_wasminint) {
-            logic_buttons.selectUseButton(false);
+            if (Characters.main.getRole().type === "impostor") {
+                logic_buttons.InteractButton.setState(-1);
+            } else {
+                logic_buttons.InteractButton.unselect();
+            }
         }
         mapNow.update();
         // logic_map.mapNow.tasks;
