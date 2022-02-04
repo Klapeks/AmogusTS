@@ -1,5 +1,6 @@
 import { Character } from "../characters/Character";
 import { RoleFuncs, Roles } from "../roles/roles";
+import { logic_buttons } from "./buttons";
 import { Characters } from "./charslog";
 import { starting } from "./meeting/starting";
 
@@ -36,6 +37,7 @@ let GameLogic = {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
             ch.hideRoleplate();
             ch.setRole(role);
+            ch.showRoleplate();
         });
         const role = Characters.main.getRole();
         starting.show(role);
@@ -44,6 +46,22 @@ let GameLogic = {
             for (let ch of Characters.another) {
                 if (ch.getRole().type==="impostor") ch.showRoleplate();
             }
+        }
+        
+        if (role.action) {
+            logic_buttons.ActionButton.hidden = false;
+            logic_buttons.ActionButton.setState(role.action.button_state || 0);
+        } else {
+            logic_buttons.ActionButton.hidden = true;
+        }
+        if (role.type === "impostor") {
+            logic_buttons.InteractButton.defaultState = 1;
+            logic_buttons.InteractButton.setState(1);
+            logic_buttons.InteractButton.select();
+        } else {
+            logic_buttons.InteractButton.defaultState = 0;
+            logic_buttons.InteractButton.setState(0);
+            logic_buttons.InteractButton.unselect();
         }
 
         GameLogic.isGameStarted = true;

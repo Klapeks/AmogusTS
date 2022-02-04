@@ -41,6 +41,9 @@ let role_angel = {
             // savedCharacter = undefined;
         })
     },
+    save(character: Character) {
+        savedCharacter = character;
+    },
     playSave(character: Character, reverse: boolean = false, degrees: number = 0) {
         const sumamount = saveTextureInfo.amount + saveBlowTextureInfo.amount;
         character.idle();
@@ -86,6 +89,7 @@ let role_angel = {
         setTimeout(() => {
             blowshield.hidden = true;
             Game.getScene().removeDynamicSprite(shield, blowshield);
+            savedCharacter = undefined;
         }, time);
     }
 }

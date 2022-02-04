@@ -6,6 +6,7 @@ import { Sprite, StaticSprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
 import { Retexturing } from "../../engine/utils/Retexturing";
 import { config } from "../config";
+import { RoleFuncs } from "../roles/roles";
 import { Characters, logic_character } from "./charslog";
 import { GameLogic } from "./gamelogic";
 import { TaskMenu } from "./items/TaskMenu";
@@ -163,13 +164,15 @@ let logic_buttons = {
                         && !Characters.main.isVentedAnim;
                 })
                 .setClick(() => {
+                    if (!Characters.main.getRole().action) return;
                     let ch = logic_character.trySelectCharacter();
                     if (ch) {
-                        logic_kill.kill(ch, Characters.main, true);
+                        Characters.main.getRole().action.act(ch);
                         actionButton.cooldown(config.killcooldown);
                     }
                 });
         actionButton.unselect();
+        RoleFuncs.load();
 
         interactButton = new UseButton(new Texture('buttons/use.png'), new Location(200,200))
                 .setMargin({x: -50, y: -50})
@@ -224,12 +227,6 @@ let logic_buttons = {
         fullscreenbutton.getSprite().priority = 999;
 
         ButtonFuncs.addButton(actionButton, reportButton, interactButton, fullscreenbutton);
-
-
-        ////// REMOVE THIS
-        interactButton.defaultState = 1;
-        interactButton.setState(1);
-        interactButton.select();
     }
 }
 

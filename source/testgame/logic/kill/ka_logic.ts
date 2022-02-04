@@ -1,5 +1,6 @@
 import { Game } from "../../../engine/Game";
 import { Sound } from "../../../engine/Sound";
+import { Character } from "../../characters/Character";
 import { Characters } from "../charslog";
 import { KA_Alien } from "./kat_alien";
 import { KillAnimation } from "./killanimations";
@@ -22,6 +23,9 @@ let killanimation_logic = {
         Game.eventListeners.addDone(() => {
             allAnimations.forEach(a => a.onGameStarted());
         })
+    },
+    play(killer: Character) {
+        allAnimations[0].play(killer);
     },
     update() {
         if (Game.hasKey('keyl')) {

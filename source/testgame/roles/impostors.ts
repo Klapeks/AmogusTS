@@ -9,7 +9,7 @@ const ImpostorAction: RoleAction = {
         logic_kill.kill(ch, Characters.main, true);
     },
     cooldown: config.killcooldown,
-    button_texture: 'buttons/kill.png'
+    button_state: 0
 }
 
 class ImpostorRole extends Role {

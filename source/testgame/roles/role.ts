@@ -1,4 +1,5 @@
 import { Color, HexColor } from "../../engine/Color";
+import { Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
@@ -6,7 +7,8 @@ interface RoleAction {
     select: "any" | "notimpostor",
     act: (ch: Character) => void,
     cooldown: number,
-    button_texture: string
+    button_texture?: string | Texture,
+    button_state?: number
 }
 
 class Role {
@@ -60,6 +62,13 @@ class Role {
     action: RoleAction;
     setAction(act: RoleAction){
         this.action = act;
+        return this;
+    }
+
+    onload: () => void;
+    setOnLoad(f: () => void) {
+        this.onload = f;
+        return this;
     }
 }
 

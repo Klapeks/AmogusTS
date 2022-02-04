@@ -26,7 +26,6 @@ let logic = {
         voting.load();
         ejections.load();
         killanimation_logic.load();
-        role_angel.load();
 
         logic_device.load();
     },
