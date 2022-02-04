@@ -33,6 +33,8 @@ let GameLogic = {
     },
     isGameStarted: false,
     startGame() {
+        logic_buttons.ActionButton.cooldown(0);
+        logic_buttons.InteractButton.cooldown(0);
         GameLogic.eventListeners.onreset.check();
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
@@ -42,6 +44,7 @@ let GameLogic = {
             ch.setRole(role);
 
             ch.isAlive = true;
+            ch.hidden = false;
             if (ch.deadbody) {
                 ch.deadbody.delete();
                 ch.deadbody = null;
