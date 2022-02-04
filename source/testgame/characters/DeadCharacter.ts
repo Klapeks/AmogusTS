@@ -25,6 +25,7 @@ class DeadCharacter {
         const dead = this._character.getTextures().dead;
         for (let i = 0; i < this._character.getTextures().dead.amount; i++){
             setTimeout(() => {
+                if (!this._sprite) return;
                 this._sprite.setSplitting(
                     i%dead.amount_per_line*dead.width,
                     Math.floor(i/dead.amount_per_line)*dead.height,
