@@ -24,6 +24,7 @@ const roles_impostors = {
     Impostor: new ImpostorRole('Impostor').settings({ color: 'FF0000', name: "Импостер" }),
     Shapeshifter: new ImpostorRole("Shapeshifter").settings({ color: '9A1F27', name: "Оборотень" }),  // Оборотень
     Camouflager: new ImpostorRole("Camouflager").settings({ color: '029717', name: "Камуфляжер" }),  // Камуфляжер
+    Freezer: new ImpostorRole("Freezer").settings({ color: 'C9CAFF', name: "Холодильник" }),  // Холодильник
     Vanisher: new ImpostorRole("Vanisher").settings({ color: 'FFFFFF', name: "Невидимка" }),  // Невидимка
     Janitor: new ImpostorRole("Janitor").settings({ color: 'FF0000', name: "Санитар" }),  // Санитар
     Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча" }),  // Саранча

@@ -9,12 +9,24 @@ import { MainCharacter } from "../characters/MainCharacter";
 import { GameLogic } from "../logic/gamelogic";
 import { Game } from "../../engine/Game";
 import { role_medic } from "./special/role_medic";
+import { Sound } from "../../engine/Sound";
 
+let detectiveSound: Sound;
 
 const roles_crew = {
     Crewmate: new Role('Crewmate').setVisual('00FFFF'),  // Член экипажа
 
-    Detective: new Role("Detective").setVisual('C0FF00'),  // Детектив
+    Detective: new Role("Detective").setVisual('C0FF00').setAction({
+        button_texture: [0,0],
+        cooldown: 5,
+        select: "any",
+        act: (ch) => {
+            ch.showRoleplate();
+            detectiveSound?.play();
+        }
+    }).setOnLoad(() => {
+        detectiveSound = new Sound('roles/detective.wav');
+    }),  // Детектив
 
     Altruist: new Role("Altruist").setVisual('E7472F').setAction({
         button_texture: [2,0],
