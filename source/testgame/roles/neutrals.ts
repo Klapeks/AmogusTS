@@ -27,6 +27,7 @@ const roles_neutrals = {
                         killanimation_logic.play(killer);
                         return false;
                     }
+                    return true;
                 })
             }),  // Милок
 }

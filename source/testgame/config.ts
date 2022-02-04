@@ -12,9 +12,9 @@ let config = {
         sum: 4000 // in ms
     },
     roles: {
-        imposters: 2,
-        neutral: 1,
-        neutral_chance: 0.4
+        imposters: 3,
+        neutral: 2,
+        neutral_chance: 1 // 0.4
     }
 }
 

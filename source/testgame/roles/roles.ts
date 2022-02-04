@@ -86,6 +86,7 @@ let RoleFuncs = {
     },
     load() {
         for (let role of Object.values(Roles)) {
+            if (role.onload) role.onload()
             if (!role.action?.button_texture) continue;
             role.action.button_state = logic_buttons.ActionButton
                     .addState(role.action.button_texture, null);

@@ -6,7 +6,7 @@ import { starting } from "./meeting/starting";
 
 class GameEventListener<T> {
     events: Array<(t: T) => boolean | void> = new Array();
-    private _checkable: boolean;
+    private _checkable: boolean = true;
     constructor(checkable = true) {
         this._checkable = checkable;
     }
