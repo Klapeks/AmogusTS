@@ -8,55 +8,59 @@ interface RoleAction {
     cooldown: number,
     button_texture: string
 }
-interface RoleSettings {
-    name: string;
-    color: Color;
-    type: RoleType;
-    description?: string;
-    action?: RoleAction
-};
 
 class Role {
-    private id: string;
-    private settings: RoleSettings;
+    protected id: string;
     
-    constructor(id: string, type:RoleType = "crewmate") {
+    constructor(id: string) {
         this.id = id.toLowerCase();
-        this.settings = {
-            name: id,
-            color: {r:255, g:255, b:255},
-            type: type,
-        }
+        this.name = id;
     }
-    get name() {
-        return this.settings.name;
-    }
-    get color() {
-        return this.settings.color;
-    }
-    get type() {
-        return this.settings.type;
-    }
-    setColor(color: Color){
-        this.settings.color = color;
+    protected _type: RoleType = "crewmate";
+    get type() { return this._type; }
+
+    name: string;
+    setName(name: string) {
+        this.name = name;
         return this;
-    }
-    setSettings(settings: RoleSettings){
-        this.settings = settings;
-        return this;
-    }
-    setVisual(hexcolor: string, titlePath?: string) {
-        this.settings.color = HexColor(hexcolor);
-        return this;
-    }
+    } 
+    description: string;
     setDescription(desc: string) {
-        this.settings.description = desc;
+        this.description = desc;
         return this;
     }
+
+    color: Color = HexColor('FFFFFF');
+    setColor(color: Color | string) {
+        this.color = typeof color === "string" ? HexColor(color) : color;
+        return this;
+    } 
     toCSS(): string {
-        const {r,g,b} = this.settings.color;
+        const {r,g,b} = this.color;
         return `rgb(${r},${g},${b})`
+    }
+    setVisual(color: Color | string, titlePath?: string) {
+        this.setColor(color);
+        return this;
+    }
+
+    settings(set: {
+        color?: Color|string,
+        name?:string,
+        description?:string
+        action?: RoleAction
+    }) {
+        if (set.name) this.name = set.name;
+        if (set.color) this.setColor(set.color);
+        if (set.description) this.description = set.description;
+        if (set.action) this.setAction(set.action);
+        return this;
+    }
+
+    action: RoleAction;
+    setAction(act: RoleAction){
+        this.action = act;
     }
 }
 
-export {Role, RoleSettings, RoleAction, RoleType}
+export {Role, RoleAction, RoleType}
