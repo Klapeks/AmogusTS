@@ -5,7 +5,6 @@ import { Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
-import { logic_kill } from "../logic/kill";
 
 let saveTexture: Texture, saveBlowTexture: Texture;
 let saveTextureInfo = { width: 512, height: 288, amount: 19 }
@@ -14,8 +13,10 @@ let time = 1350; // in ms
 
 let saveSound: Sound;
 
+let savedCharacter: Character;
+
 let role_angel = {
-    isSaveAnimation: false,
+    isAnimationOnMain: false,
     load() {
         saveSound = new Sound('roles/angel/killsave.wav');
         saveTexture = new Texture('roles/angel/killsave.png');
@@ -33,17 +34,20 @@ let role_angel = {
             return true;
         })
         GameLogic.eventListeners.onmove.addEvent(character => {
-            if (character === Characters.main) return !role_angel.isSaveAnimation;
+            if (character === Characters.main) return !role_angel.isAnimationOnMain;
             return true;
+        })
+        GameLogic.eventListeners.onreset.addEvent(() => {
+            savedCharacter = undefined;
         })
     },
     playSave(character: Character, reverse: boolean = false, degrees: number = 0) {
         const sumamount = saveTextureInfo.amount + saveBlowTextureInfo.amount;
         character.idle();
         if (character===Characters.main) {
-            role_angel.isSaveAnimation = true;
+            role_angel.isAnimationOnMain = true;
             setTimeout(() => {
-                role_angel.isSaveAnimation = false;
+                role_angel.isAnimationOnMain = false;
             }, time*saveTextureInfo.amount/sumamount);
         }
         const loc = character.getCenter();

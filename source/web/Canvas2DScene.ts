@@ -8,7 +8,6 @@ import { Screen } from "../engine/Screen";
 import { Splitting, Sprite, StaticSprite } from "../engine/Sprite";
 import { SuperMath } from "../engine/utils/SuperMath";
 import { OnecolorTexture, TextTexture, Texture } from "../engine/Texture";
-import { config } from "../testgame/config";
 
 let _lx: number, _ly: number, _lw: number, _lh: number;
 
@@ -201,7 +200,7 @@ class Canvas2DScene extends Scene {
             }
             this._drawlight_ctx.save();
             this._drawlight_ctx.beginPath();
-            for (let i = 0; i < PI; i+=config.graphic.light_angle_iteration) {
+            for (let i = 0; i < PI; i+=EngineConfig.graphic.light_angle_iteration) {
                 if (this.checkLightFunction(light, i, res)) {
                     this._drawlight_ctx.lineTo(
                         light.radius*SuperMath.cos(i, 100)+_lx,
@@ -217,15 +216,15 @@ class Canvas2DScene extends Scene {
         if (EngineConfig.hide_sprites_under_dark) {
             this._hideindark_ctx.save();
             this._hideindark_ctx.globalCompositeOperation = "destination-out";
-            this._hideindark_ctx.filter = `blur(${config.graphic.light_blur})`;
+            this._hideindark_ctx.filter = `blur(${EngineConfig.graphic.light_blur})`;
             this._hideindark_ctx.drawImage(this._drawlight_canvas, -100, -100, Screen.width+200, Screen.height+200);
             this._hideindark_ctx.restore()
             this._ctx.drawImage(this._hideindark_canvas, 0, 0, Screen.width, Screen.height);
         }
 
         this._ctx.save();
-        this._ctx.filter = `opacity(${config.graphic.light_opacity})`;
-        this._ctx.filter += ` blur(${config.graphic.light_blur})`;
+        this._ctx.filter = `opacity(${EngineConfig.graphic.light_opacity})`;
+        this._ctx.filter += ` blur(${EngineConfig.graphic.light_blur})`;
         this._ctx.drawImage(this._drawlight_canvas, -100, -100, Screen.width+200, Screen.height+200);
 
         // this._ctx.drawImage(this._drawlight_canvas, 0, 0, Screen.width, Screen.height);
@@ -236,7 +235,7 @@ class Canvas2DScene extends Scene {
         _lcos = SuperMath.cos(i, 100);
         _lsin = SuperMath.sin(i, 100);
         let hider = false;
-        for (let radius = 0; radius <= light.radius*1.17; radius+=config.graphic.light_radius_iteration) {
+        for (let radius = 0; radius <= light.radius*1.17; radius+=EngineConfig.graphic.light_radius_iteration) {
             _llx = light.getLocation().x - this.darkness_map.location.x + radius*_lcos;
             _lly = light.getLocation().y - this.darkness_map.location.y + radius*_lsin;
             _llx *= this.darkness_map.separate.sx;

@@ -27,10 +27,11 @@ let GameLogic = {
     eventListeners: {
         onkill: new GameEventListener<{character: Character, killer?: Character}>(),
         onmove: new GameEventListener<Character>(),
-        onreset: new GameEventListener<void>(),
+        onreset: new GameEventListener<void>(false),
     },
     isGameStarted: false,
     startGame() {
+        GameLogic.eventListeners.onreset.check();
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
             ch.hideRoleplate();

@@ -11,13 +11,6 @@ let config = {
         apear: 1000,
         sum: 4000 // in ms
     },
-    graphic: {
-        light_radius_iteration: 5, 
-        light_angle_iteration: 2,
-        light_opacity: 0.45,//0.4
-        light_blur: '15px',
-        // light_blur: '0px'
-    },
     roles: {
         imposters: 2,
         neutral: 1,
