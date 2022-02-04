@@ -169,16 +169,17 @@ let logic_buttons = {
                         && !Characters.main.isVentedAnim;
                 })
                 .setClick(() => {
-                    if (!Characters.main.getRole().action?.act) return;
-                    if (!Characters.main.getRole().canSelectSomeone()) {
-                        Characters.main.getRole().action.act(null);
-                        actionButton.cooldown(config.killcooldown);
+                    const role = Characters.main.getRole();
+                    if (!role.action?.act) return;
+                    if (!role.canSelectSomeone()) {
+                        role.action.act(null);
+                        actionButton.cooldown(role.action.cooldown);
                         return;
                     }
                     let ch = logic_character.trySelectCharacter();
                     if (ch) {
-                        Characters.main.getRole().action.act(ch);
-                        actionButton.cooldown(config.killcooldown);
+                        role.action.act(ch);
+                        actionButton.cooldown(role.action.cooldown);
                     }
                 });
         actionButton.unselect();

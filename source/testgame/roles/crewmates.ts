@@ -20,7 +20,7 @@ const roles_crew = {
 
     General: new Role("General").setVisual('00B17A').setAction({
         button_texture: [1,0],
-        cooldown: 5,
+        cooldown: 120,
         select: "noone",
         act: (ch) => {
             meeting.call(Characters.main, "meeting");

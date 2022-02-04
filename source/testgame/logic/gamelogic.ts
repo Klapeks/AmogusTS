@@ -38,7 +38,7 @@ let GameLogic = {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
             ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
-            ch.setRole(i===0 ? Roles.Sheriff : role)
+            ch.setRole(i===0 ? Roles.General : role)
             // ch.setRole(role);
             // ch.showRoleplate();
         });
