@@ -5,6 +5,7 @@ import { MenusUtils } from "../../engine/Menu";
 import { Sprite, StaticSprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
 import { Retexturing } from "../../engine/utils/Retexturing";
+import { DeadCharacter } from "../characters/DeadCharacter";
 import { config } from "../config";
 import { RoleFuncs } from "../roles/roles";
 import { Characters, logic_character } from "./charslog";
@@ -133,16 +134,34 @@ let logic_buttons = {
             return actionButton.cooldown_time > 0;
         return interactButton.cooldown_time > 0
     },
+    buttonSelectUpdate(neardead: DeadCharacter) {
+        if (actionButton.cooldown_time > 0) {
+            actionButton.unselect();
+            return;
+        }
+        if (!Characters.main.getRole().canSelectSomeone()) {
+            actionButton.select();
+            return;
+        }
+        if (Characters.main.getRole().action.select === "deadbody") {
+            if (!neardead) {
+                actionButton.unselect();
+                return;
+            }
+            actionButton.select();
+        } else {
+            if (!logic_character.isSelectedCharacter()) {
+                actionButton.unselect();
+                return;
+            }
+            actionButton.select();
+        }
+    },
     update() {
         if (voting.isVoting) return;
-        if (Characters.main.getRole().canSelectSomeone()) {
-            if (actionButton.cooldown_time == 0 && logic_character.isSelectedCharacter()) actionButton.select();
-            else actionButton.unselect();
-        } else {
-            if (actionButton.cooldown_time == 0) actionButton.select();
-            else actionButton.unselect();
-        }
-        if (logic_kill.getDeadNear(Characters.main.getLocation())) reportButton.select()
+        const neardead = logic_kill.getDeadNear(Characters.main.getLocation());
+        logic_buttons.buttonSelectUpdate(neardead);
+        if (neardead) reportButton.select()
         else reportButton.unselect();
         
         actionButton.updateCD();
@@ -174,6 +193,14 @@ let logic_buttons = {
                     if (!role.canSelectSomeone()) {
                         role.action.act(null);
                         actionButton.cooldown(role.action.cooldown);
+                        return;
+                    }
+                    if (role.action.select === "deadbody") {
+                        let ch = logic_kill.getDeadNear(Characters.main.getLocation());
+                        if (ch) {
+                            role.action.act(ch.getCharacter());
+                            actionButton.cooldown(role.action.cooldown);
+                        }
                         return;
                     }
                     let ch = logic_character.trySelectCharacter();
@@ -218,8 +245,7 @@ let logic_buttons = {
                     if (!dc) return;
                     meeting.call(dc.getCharacter(), "dead");
                     dc.getCharacter().hidden = false;
-                    logic_kill.removeDead(dc);
-                    Game.getScene().removeDynamicSprite(dc.getSprite());
+                    dc.delete();
                 })
                 .setSelected(new Texture('buttons/report.png'));
         

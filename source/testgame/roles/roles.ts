@@ -6,6 +6,7 @@ import { roles_crew } from "./crewmates";
 import { roles_impostors } from "./impostors";
 import { roles_neutrals } from "./neutrals";
 import { Role } from "./role";
+import { role_medic } from "./special/role_medic";
 
 let Roles = { ...roles_crew, ...roles_impostors, ...roles_neutrals };
 
@@ -51,6 +52,9 @@ let RoleFuncs = {
                     .addState(role.action.button_texture, null);
             }
         }
+    },
+    update() {
+        role_medic.update();
     }
 }
 function genSplit(x: number, y: number, onload?: () => void) {

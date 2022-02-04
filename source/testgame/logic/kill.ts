@@ -6,7 +6,6 @@ import { config } from "../config";
 import { GameLogic } from "./gamelogic";
 import { killanimation_logic } from "./kill/ka_logic";
 
-let deadChars: Array<DeadCharacter> = new Array();
 
 let logic_kill = {
     kill(character: Character, killer?: Character, movekiller: boolean = true) {
@@ -21,16 +20,13 @@ let logic_kill = {
         }
         character.isAlive = false;
         character.hidden = true;
-        deadChars.push(new DeadCharacter(character));
+        DeadCharacter.allDeadBodies.push(new DeadCharacter(character));
     },
     getDeadNear(location: Location): DeadCharacter {
-        for (let dead of deadChars) {
+        for (let dead of DeadCharacter.allDeadBodies) {
             if (dead.getSprite().getLocation().distanceSquared(location) <= config.deadrange*config.deadrange) return dead;
         }
         return null;
-    },
-    removeDead(dead: DeadCharacter){
-        deadChars = deadChars.filter(d=>d!=dead);
     }
 }
 

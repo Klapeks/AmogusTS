@@ -3,6 +3,7 @@ import { Location } from "../../engine/Location";
 import { Sprite } from "../../engine/Sprite";
 import { Character } from "./Character";
 
+
 let timeOfDeath = 1000; //in Milis
 
 class DeadCharacter {
@@ -18,6 +19,7 @@ class DeadCharacter {
 
         Game.getScene().addDynamicSprite(this._sprite);
         this.playDeath();
+        this._character.deadbody = this;
     }
     playDeath() {
         const dead = this._character.getTextures().dead;
@@ -37,6 +39,14 @@ class DeadCharacter {
     getSprite(){
         return this._sprite;
     }
+    delete() {
+        DeadCharacter.allDeadBodies = DeadCharacter.allDeadBodies.filter(ch => ch!==this);
+        Game.getScene().removeDynamicSprite(this._sprite);
+        this._character.deadbody = null;
+        this._character = null;
+        this._sprite = null;
+    }
+    static allDeadBodies: Array<DeadCharacter> = new Array();
 }
 
 export {DeadCharacter};

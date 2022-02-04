@@ -15,6 +15,8 @@ import { starting } from "./meeting/starting";
 import { randomRoles, RoleFuncs, Roles } from "../roles/roles";
 import { MainMenu } from "../gui/mainmenu";
 import { GameLogic } from "./gamelogic";
+import { kill } from "process";
+import { logic_kill } from "./kill";
 
 let logic = {
     load(){
@@ -39,6 +41,8 @@ let logic = {
         killanimation_logic.update();
         
         logic_map.update();
+
+        RoleFuncs.update();
         
 
         if (Game.hasKey("keyk")){
@@ -66,6 +70,11 @@ let logic = {
                 cd = false;
             }, 2000);
             randomRoles();
+        }
+        if (Game.hasKey("digit3")) {
+            const ch = Characters.another[2];
+            if (!ch.isAlive) return;
+            logic_kill.kill(ch, ch, false);
         }
     }
 }

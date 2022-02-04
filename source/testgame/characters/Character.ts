@@ -10,6 +10,7 @@ import { Role } from "../roles/role";
 import { Roles } from "../roles/roles";
 import { textures } from "../textures";
 import { AmogusTextures, CharacterColor, CharacterFuncs } from "./CharFuncs";
+import { DeadCharacter } from "./DeadCharacter";
 
 class Character {
     protected _id: number;
@@ -210,6 +211,8 @@ class Character {
         Game.getScene().removeUpperSprite(this._roleplateSprite);
         return this;
     }
+
+    deadbody: DeadCharacter;
 
     isAlive: boolean = true;
 

@@ -4,7 +4,7 @@ import { Character } from "../characters/Character";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
 interface RoleAction {
-    select: "any" | "notimpostor" | "noone",
+    select: "any" | "notimpostor" | "noone" | "deadbody",
     act: (ch: Character) => void,
     cooldown: number,
     button_texture?: string | Texture | [number, number],
@@ -64,8 +64,11 @@ class Role {
         this.action = act;
         return this;
     }
-    canSelectSomeone() {
-        return this.action && this.action.select !== "noone";
+    canSelectSomeone(onlyalive = false) {
+        if (!this.action) return false;
+        if (this.action.select === "noone") return false;
+        if (onlyalive && this.action.select === "deadbody") return false;
+        return true;
     }
 
     onload: () => void;

@@ -38,8 +38,14 @@ let GameLogic = {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
             ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
-            ch.setRole(i===0 ? Roles.General : role)
-            // ch.setRole(role);
+            // ch.setRole(i===0 ? Roles.Altruist : role)
+            ch.setRole(role);
+
+            ch.isAlive = true;
+            if (ch.deadbody) {
+                ch.deadbody.delete();
+                ch.deadbody = null;
+            }
             // ch.showRoleplate();
         });
         const role = Characters.main.getRole();
