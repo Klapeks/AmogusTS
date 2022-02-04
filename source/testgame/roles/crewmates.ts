@@ -17,7 +17,7 @@ const roles_crew = {
     Detective: new Role("Detective").setVisual('C0FF00'),  // Детектив
 
     Altruist: new Role("Altruist").setVisual('E7472F').setAction({
-        button_texture: [0,0],
+        button_texture: [2,0],
         cooldown: 1,
         select: "deadbody",
         act: (ch) => {
@@ -65,7 +65,7 @@ const roles_crew = {
     }).setOnLoad(role_angel.load),  // Ангел-Хранитель
 
     Medic: new Role("Medic").setVisual('C6FFFB').setAction({
-        button_texture: [0,0],
+        button_texture: [2,0],
         cooldown: 1,
         select: "deadbody",
         act: (character) => {
