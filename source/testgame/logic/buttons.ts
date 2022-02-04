@@ -135,8 +135,13 @@ let logic_buttons = {
     },
     update() {
         if (voting.isVoting) return;
-        if (logic_character.isSelectedCharacter() && actionButton.cooldown_time == 0) actionButton.select();
-        else actionButton.unselect();
+        if (Characters.main.getRole().canSelectSomeone()) {
+            if (actionButton.cooldown_time == 0 && logic_character.isSelectedCharacter()) actionButton.select();
+            else actionButton.unselect();
+        } else {
+            if (actionButton.cooldown_time == 0) actionButton.select();
+            else actionButton.unselect();
+        }
         if (logic_kill.getDeadNear(Characters.main.getLocation())) reportButton.select()
         else reportButton.unselect();
         
@@ -164,7 +169,12 @@ let logic_buttons = {
                         && !Characters.main.isVentedAnim;
                 })
                 .setClick(() => {
-                    if (!Characters.main.getRole().action) return;
+                    if (!Characters.main.getRole().action?.act) return;
+                    if (!Characters.main.getRole().canSelectSomeone()) {
+                        Characters.main.getRole().action.act(null);
+                        actionButton.cooldown(config.killcooldown);
+                        return;
+                    }
                     let ch = logic_character.trySelectCharacter();
                     if (ch) {
                         Characters.main.getRole().action.act(ch);

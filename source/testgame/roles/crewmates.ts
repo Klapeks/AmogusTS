@@ -3,6 +3,7 @@ import { logic_kill } from "../logic/kill";
 import { killanimation_logic } from "../logic/kill/ka_logic";
 import { role_angel } from "./special/role_angel";
 import { Role } from "./role";
+import { meeting } from "../logic/meeting/meeting";
 
 const roles_crew = {
     Crewmate: new Role('Crewmate').setVisual('00FFFF'),  // Член экипажа
@@ -14,6 +15,15 @@ const roles_crew = {
     Engineer: new Role("Engineer").setVisual('92BAC3'),  // Инженер
 
     Capitan: new Role("Capitan").setVisual('65B1F9'),  // Капитан
+
+    General: new Role("General").setVisual('00B17A').setAction({
+        button_texture: 'roles/general_button.png',
+        cooldown: 5,
+        select: "noone",
+        act: (ch) => {
+            meeting.call(Characters.main, "meeting");
+        }
+    }),  // Генерал
 
     Swapper: new Role("Swapper").setVisual('C0FF00'),  // Сваппер
 
@@ -29,7 +39,7 @@ const roles_crew = {
 
     Medium: new Role("Medium").setVisual('D09DFF'),  // Ясновидящий
 
-    Angel: new Role('Angel').setVisual('00FFFF').setAction({
+    Angel: new Role('Angel').setVisual('73BAFF').setAction({
         button_texture: 'roles/angel/button.png',
         cooldown: 5,
         select: "any",

@@ -75,6 +75,9 @@ let logic_character = {
         // Characters.main.getSprite().height/=2;
         selection = new SelectedCharacter();
         selection.hidden = true;
+        GameLogic.eventListeners.onreset.addEvent(() => {
+            selection.hidden = true;
+        })
 
         
         Characters.another.push(new MainCharacter(1, new Location(200,-1300)).setColor({r:0,g:0,b:0},{r:0,g:0,b:0}));
@@ -108,6 +111,7 @@ let logic_character = {
 
     },
     updateSelect() {
+        if (!Characters.main.getRole().canSelectSomeone()) return;
         let character = logic_character.trySelectCharacter();
         if (character) logic_character.selectCharacter(character);
         else logic_character.unSelectCharacter();
@@ -136,7 +140,7 @@ let logic_character = {
         selection.hidden = true;
     },
     isSelectedCharacter(){
-        return !selection.getSprite().hidden;
+        return !selection.hidden;
     },
     isWall(iteration: number, addx:number, addy:number) {
         // return false;

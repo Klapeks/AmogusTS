@@ -49,8 +49,11 @@ let role_angel = {
     },
     save(character: Character) {
         savingSound.play();
+        if (savedCharacter) {
+            savedCharacter.setNicknameColor(HexColor('FFFFFF'));
+        }
         savedCharacter = character;
-        savedCharacter.setNicknameColor(HexColor('78BBFF'));
+        savedCharacter.setNicknameColor(HexColor('73BAFF'));
     },
     playSave(character: Character, reverse: boolean = false, degrees: number = 0) {
         const sumamount = saveTextureInfo.amount + saveBlowTextureInfo.amount;
