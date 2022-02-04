@@ -167,6 +167,11 @@ class Character {
     getNickname() {
         return this._nickname;
     }
+    setNicknameColor(color: Color) {
+        if (!this._nicknameSprite) return;
+        const {r,g,b} = color;
+        (this._nicknameSprite.getTexture() as TextTexture).setColor(`rgb(${r},${g},${b})`);
+    }
     
     protected _role: Role = Roles.Crewmate;
     private _roleplateSprite: Sprite;

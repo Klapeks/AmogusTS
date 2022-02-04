@@ -1,8 +1,10 @@
+import { HexColor } from "../../../engine/Color";
 import { Game } from "../../../engine/Game";
 import { Sound } from "../../../engine/Sound";
 import { Sprite } from "../../../engine/Sprite";
 import { Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
+import { SelectedCharacter } from "../../characters/ExtraCharacters";
 import { Characters } from "../../logic/charslog";
 import { GameLogic } from "../../logic/gamelogic";
 
@@ -12,6 +14,7 @@ let saveBlowTextureInfo = { width: 544, height: 544, amount: 8 }
 let time = 1350; // in ms
 
 let saveSound: Sound;
+let savingSound: Sound;
 
 let savedCharacter: Character;
 
@@ -19,6 +22,7 @@ let role_angel = {
     isAnimationOnMain: false,
     load() {
         saveSound = new Sound('roles/angel/killsave.wav');
+        savingSound = new Sound('roles/angel/saving.wav');
         saveTexture = new Texture('roles/angel/killsave.png');
         saveBlowTexture = new Texture('roles/angel/killsave_blow.png');
         GameLogic.eventListeners.onkill.addEvent(({character, killer}) => {
@@ -38,11 +42,15 @@ let role_angel = {
             return true;
         })
         GameLogic.eventListeners.onreset.addEvent(() => {
-            // savedCharacter = undefined;
+            if (savedCharacter){
+                // savedCharacter = undefined;
+            }
         })
     },
     save(character: Character) {
+        savingSound.play();
         savedCharacter = character;
+        savedCharacter.setNicknameColor(HexColor('78BBFF'));
     },
     playSave(character: Character, reverse: boolean = false, degrees: number = 0) {
         const sumamount = saveTextureInfo.amount + saveBlowTextureInfo.amount;
@@ -89,6 +97,7 @@ let role_angel = {
         setTimeout(() => {
             blowshield.hidden = true;
             Game.getScene().removeDynamicSprite(shield, blowshield);
+            savedCharacter.setNicknameColor(HexColor('FFFFFF'));
             savedCharacter = undefined;
         }, time);
     }

@@ -23,10 +23,7 @@ const roles_crew = {
         select: "any",
         act: (ch) => {
             logic_kill.kill(ch, Characters.main, ch.getRole().type!=="crewmate");
-            if (ch.getRole().type==="crewmate") {
-                killanimation_logic.play(Characters.main);
-            } else {
-            }
+            if (ch.getRole().type==="crewmate") killanimation_logic.play(Characters.main);
         }
     }),  // Шериф
 

@@ -6,14 +6,16 @@ import { textures } from "../textures";
 import { Character } from "./Character";
 
 class SelectedCharacter extends Character {
-    constructor(location?:Location) {
+    selcolor: Color;
+    constructor(location?:Location, color: Color = {r:255, g:150, b:0}) {
         super(-128, location);
         this.setColor(null, null, null);
+        this.selcolor = color;
     }
     
     protected cloneFiltering(texture: Texture): Texture {
         texture = new Texture(texture.getPath(),null,() => {
-            texture.setImage(Retexturing.oneColor(texture.getImage(), {r:255, g:150, b:0}, 50));
+            texture.setImage(Retexturing.oneColor(texture.getImage(), this.selcolor, 50));
         });
         return texture;
     }

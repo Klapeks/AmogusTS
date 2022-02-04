@@ -94,7 +94,9 @@ class TextTexture extends Texture {
         this.align = align;
         return this;
     }
-    setColor(color: string) {
+    setColor(color: string | Color) {
+        if (typeof color !== "string") 
+            color = `rgb(${color.r}, ${color.g}, ${color.b})`;
         this.color = color;
         return this;
     }

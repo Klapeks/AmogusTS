@@ -1,3 +1,4 @@
+import { HexColor } from "../../engine/Color";
 import { Character } from "../characters/Character";
 import { RoleFuncs, Roles } from "../roles/roles";
 import { logic_buttons } from "./buttons";
@@ -35,6 +36,7 @@ let GameLogic = {
         GameLogic.eventListeners.onreset.check();
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
+            ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
             ch.setRole(role);
             ch.showRoleplate();
@@ -43,8 +45,12 @@ let GameLogic = {
         starting.show(role);
         Characters.main.showRoleplate();
         if (role.type === "impostor") {
+            Characters.main.setNicknameColor(HexColor('FF0000'));
             for (let ch of Characters.another) {
-                if (ch.getRole().type==="impostor") ch.showRoleplate();
+                if (ch.getRole().type==="impostor") {
+                    ch.showRoleplate();
+                    ch.setNicknameColor(HexColor('FF0000'));
+                }
             }
         }
         
