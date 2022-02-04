@@ -29,7 +29,7 @@ const roles_neutrals = {
                     }
                     return true;
                 })
-            }),  // Милок
+            }), // Милок
 }
 
 export {roles_neutrals}

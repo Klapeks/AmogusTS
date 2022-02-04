@@ -1,10 +1,10 @@
-import { Game } from "../../engine/Game";
-import { Sound } from "../../engine/Sound";
-import { Sprite } from "../../engine/Sprite";
-import { Texture } from "../../engine/Texture";
-import { Character } from "../characters/Character";
-import { Characters } from "../logic/charslog";
-import { GameLogic } from "../logic/gamelogic";
+import { Game } from "../../../engine/Game";
+import { Sound } from "../../../engine/Sound";
+import { Sprite } from "../../../engine/Sprite";
+import { Texture } from "../../../engine/Texture";
+import { Character } from "../../characters/Character";
+import { Characters } from "../../logic/charslog";
+import { GameLogic } from "../../logic/gamelogic";
 
 let saveTexture: Texture, saveBlowTexture: Texture;
 let saveTextureInfo = { width: 512, height: 288, amount: 19 }

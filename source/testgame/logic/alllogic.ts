@@ -10,7 +10,7 @@ import { logic_map } from "./maps/maplogic";
 import { Game } from "../../engine/Game";
 import { Screen } from "../../engine/Screen";
 import { killanimation_logic } from "./kill/ka_logic";
-import { role_angel } from "../roles/angel";
+import { role_angel } from "../roles/special/role_angel";
 import { starting } from "./meeting/starting";
 import { randomRoles, RoleFuncs, Roles } from "../roles/roles";
 import { MainMenu } from "../gui/mainmenu";
