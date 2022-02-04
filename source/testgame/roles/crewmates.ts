@@ -4,6 +4,8 @@ import { killanimation_logic } from "../logic/kill/ka_logic";
 import { role_angel } from "./special/role_angel";
 import { Role } from "./role";
 import { meeting } from "../logic/meeting/meeting";
+import { SplittedTexture } from "../../engine/Texture";
+
 
 const roles_crew = {
     Crewmate: new Role('Crewmate').setVisual('00FFFF'),  // Член экипажа
@@ -17,7 +19,7 @@ const roles_crew = {
     Capitan: new Role("Capitan").setVisual('65B1F9'),  // Капитан
 
     General: new Role("General").setVisual('00B17A').setAction({
-        button_texture: 'roles/general_button.png',
+        button_texture: [1,0],
         cooldown: 5,
         select: "noone",
         act: (ch) => {
@@ -28,7 +30,7 @@ const roles_crew = {
     Swapper: new Role("Swapper").setVisual('C0FF00'),  // Сваппер
 
     Sheriff: new Role("Sheriff").setVisual('FFA500').setAction({
-        button_texture: 'roles/sheriff_kill.png',
+        button_texture: [0,1],
         cooldown: 5,
         select: "any",
         act: (ch) => {
@@ -40,7 +42,7 @@ const roles_crew = {
     Medium: new Role("Medium").setVisual('D09DFF'),  // Ясновидящий
 
     Angel: new Role('Angel').setVisual('73BAFF').setAction({
-        button_texture: 'roles/angel/button.png',
+        button_texture: [0,0],
         cooldown: 5,
         select: "any",
         act: (ch) => { role_angel.save(ch); }

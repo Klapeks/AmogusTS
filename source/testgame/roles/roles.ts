@@ -1,3 +1,4 @@
+import { SplittedTexture } from "../../engine/Texture";
 import { config } from "../config";
 import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
@@ -41,10 +42,19 @@ let RoleFuncs = {
         for (let role of Object.values(Roles)) {
             if (role.onload) role.onload()
             if (!role.action?.button_texture) continue;
-            role.action.button_state = logic_buttons.ActionButton
+            if (Array.isArray(role.action.button_texture)) {
+                const a = genSplit(...role.action.button_texture,() => {
+                    role.action.button_state = logic_buttons.ActionButton.addState(a, null);
+                });
+            } else {
+                role.action.button_state = logic_buttons.ActionButton
                     .addState(role.action.button_texture, null);
+            }
         }
     }
+}
+function genSplit(x: number, y: number, onload?: () => void) {
+    return new SplittedTexture('roles/buttons.png', {x:x*112, y:y*112, width:112,height:112}, null, onload);
 }
 
 var randomRoles = (amount = 10, impostors = config.roles.imposters, neutral = config.roles.neutral): void => {

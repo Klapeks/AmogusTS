@@ -1,5 +1,6 @@
 import { Color } from "./Color";
 import { Game } from "./Game";
+import { Splitting } from "./Sprite";
 
 function image_on_load(texture: Texture, image: any) {
     if (!texture.getPath().includes("/amogus/"))console.log(`Texture ${texture.getPath()} was loaded`);
@@ -46,6 +47,14 @@ class Texture {
     }
     getImage(): any {
         return this._image;
+    }
+}
+class SplittedTexture extends Texture {
+    constructor(path: string, splitting: Splitting, image?: any, onload?: ()=>void) {
+        super(path, image, () => {
+            this.setImage(Game.getScene().filterImage(this.getImage(), i=>i, splitting));
+            onload();
+        });
     }
 }
 class MultiTexture extends Texture {
@@ -119,4 +128,4 @@ class TextTexture extends Texture {
 type SplitingTexture = {texture: Texture, width: number, height: number, amount_per_line: number, amount: number};
 let NullTexture = new Texture(null);
 
-export {Texture, TextTexture, TextureFuncs, NullTexture, SplitingTexture, MultiTexture, OnecolorTexture};
+export {Texture, TextTexture, TextureFuncs, NullTexture, SplitingTexture, MultiTexture, OnecolorTexture, SplittedTexture};

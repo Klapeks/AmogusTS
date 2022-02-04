@@ -144,18 +144,31 @@ class Canvas2DScene extends Scene {
         }
         ctx.restore();
     }
-    filterImage(image: any, filter: (data: any) => any) {
+    filterImage(image: any, filter: (data: any) => any, splitting?: Splitting) {
         let canvas = document.createElement('canvas');
         if (image.width == 0) return image;
         canvas.width = image.width;
         canvas.height = image.height;
         let ctx = canvas.getContext('2d');
         ctx.drawImage(image, 0, 0);
-        ctx.putImageData(filter(ctx.getImageData(0, 0, canvas.width, canvas.height)), 0,0);
+        if (splitting) {
+            const data = filter(ctx.getImageData(splitting.x, splitting.y,
+                splitting.width, splitting.height));
+            canvas.remove();
+            canvas = document.createElement('canvas');
+            if (image.width == 0) return image;
+            canvas.width = splitting.width;
+            canvas.height = splitting.height;
+            ctx = canvas.getContext('2d');
+            console.log(splitting);
+            ctx.putImageData(data, 0, 0);
+        } else {
+            ctx.putImageData(filter(ctx.getImageData(0, 0, canvas.width, canvas.height)), 0,0);
+        }
         let img = new Image;
         img.src = canvas.toDataURL("image/png");
-        img.width = image.width;
-        img.height = image.height;
+        img.width = splitting ? splitting.width : image.width;
+        img.height = splitting ? splitting.height : image.height;
         Object.defineProperty(img, "geIsLoaded", {
             get: function () { return true; },
             enumerable: false,

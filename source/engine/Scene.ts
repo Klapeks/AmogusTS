@@ -2,7 +2,7 @@ import { Camera } from "./Camera";
 import { Light } from "./Light";
 import { BiLocation, Location, Point, Size } from "./Location";
 import { Screen } from "./Screen";
-import { Sprite, StaticSprite } from "./Sprite";
+import { Splitting, Sprite, StaticSprite } from "./Sprite";
 import { Texture } from "./Texture";
 
 type SpriteFilter = (value: Sprite, next: Sprite) => number;
@@ -184,7 +184,7 @@ abstract class Scene {
     //     upper_than_dark.forEach(sprite => this.drawSprite(sprite));
     // }
     abstract drawSprite(sprite: Sprite, isBack?: boolean): void;
-    abstract filterImage(image: any, filter: (data:any)=>any): any;
+    abstract filterImage(image: any, filter: (data:any)=>any, splitting?: Splitting): any;
     abstract getImageData(image: any): Uint8ClampedArray;
     abstract drawTextureFullScreen(texture: Texture): void;
     abstract drawLights(): void;

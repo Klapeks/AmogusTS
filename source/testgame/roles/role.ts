@@ -1,5 +1,5 @@
 import { Color, HexColor } from "../../engine/Color";
-import { Texture } from "../../engine/Texture";
+import { SplitingTexture, Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
@@ -7,7 +7,7 @@ interface RoleAction {
     select: "any" | "notimpostor" | "noone",
     act: (ch: Character) => void,
     cooldown: number,
-    button_texture?: string | Texture,
+    button_texture?: string | Texture | [number, number],
     button_state?: number
 }
 

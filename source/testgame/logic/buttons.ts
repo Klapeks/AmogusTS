@@ -29,7 +29,7 @@ class UseButton extends Button {
     addState(texture: Texture | string, onclick: () => void) {
         if (typeof texture === "string") texture = new Texture(texture);
         this._textures.push(texture);
-        const seltex = new Texture(texture.getPath(), null, () => {
+        const seltex = new Texture(texture.getPath(), texture.getImage(), () => {
             seltex.setImage(Retexturing.gray(seltex.getImage()));
         });
         this._unselectedtextures.push(seltex);

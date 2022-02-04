@@ -45,11 +45,7 @@ let testgame = {
             skeld.load();
             Game.getScene().addUpperSprite(border);
             logic.load();
-            if (true) {
-                GameLogic.startGame();
-            } else {
-                MainMenu.show();
-            }
+            MainMenu.show();
 
             // Game.getScene().addLight(new Light(new Location(-1257,-1599), 250));
             // Game.getScene().addLight(new Light(new Location(-1092,-123), 50));
