@@ -187,6 +187,7 @@ class Character {
         if (this._isShowedRoleplate) this.showRoleplate();
         return this;
     }
+
     protected _isShowedRoleplate = false;
     isRoleplateShows() {
         return this._isShowedRoleplate;

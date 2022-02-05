@@ -1,16 +1,11 @@
-import { HexColor } from "../../engine/Color";
 import { Game } from "../../engine/Game";
 import { Joystick } from "../../engine/Joystick";
 import { Light } from "../../engine/Light";
 import { LinkedLocation, Location } from "../../engine/Location";
-import { Sprite } from "../../engine/Sprite";
-import { TextTexture, Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 import { SelectedCharacter } from "../characters/ExtraCharacters";
 import { MainCharacter } from "../characters/MainCharacter";
 import { config } from "../config";
-import { RoleFuncs, Roles } from "../roles/roles";
-import { textures } from "../textures";
 import { GameLogic } from "./gamelogic";
 import { Vents, vent_logic } from "./items/vents";
 import { killanimation_logic } from "./kill/ka_logic";
@@ -53,42 +48,26 @@ let logic_character = {
             x: (Game.hasKey('numpad6')?1:0) - (Game.hasKey('numpad4')?1:0),
             y: (Game.hasKey('numpad5')?1:0) - (Game.hasKey('numpad8')?1:0)
         });
-        // logic_character.updateMoveCharacter(Characters.another[0] as MainCharacter, {
-        //     x: (Game.hasKey('keyj')?1:0) - (Game.hasKey('keyg')?1:0),
-        //     y: (Game.hasKey('keyh')?1:0) - (Game.hasKey('keyy')?1:0)
-        // });
         logic_character.updateSelect();
-
-        //delete it !!
-        // for (let ch of Characters.another) {
-        //     if (ch.getLocation().distanceSquared(Characters.main.getLocation()) < 500*500) {
-        //         if (ch.getLocation().x < Characters.main.getLocation().x) ch.getSprite().width = Math.abs(ch.getSprite().width)
-        //         else ch.getSprite().width = -Math.abs(ch.getSprite().width)
-        //     }
-        // }
     },
     load() {
         Characters.main = new MainCharacter(0, new Location(189, -806));
         Characters.main.setColor({r:3,g:255,b:220},{r:0,g:172,b:190});
         Characters.main.setNickname("Klapeks");
-        // Characters.main.getSprite().width/=2;
-        // Characters.main.getSprite().height/=2;
         selection = new SelectedCharacter();
         selection.hidden = true;
         GameLogic.eventListeners.onreset.addEvent(() => {
             selection.hidden = true;
         })
 
-        
-        Characters.another.push(new MainCharacter(1, new Location(200,-1300)).setColor({r:0,g:0,b:0},{r:0,g:0,b:0}));
+        Characters.another.push(new MainCharacter(1, new Location(500,-1800)).setColor({r:255,g:255,b:255},{r:255,g:255,b:255}).setNickname("aaaaaaaaaaaaaaaaaaaaaa"));
         Characters.another.push(new Character(2, new Location(-300,-1550)).setColor({r:0,g:0,b:0},{r:255,g:255,b:255}).setNickname("Skepalk"));
         Characters.another.push(new Character(3, new Location(200,-1800)).setColor({r:255,g:0,b:0},{r:255,g:0,b:0}).setNickname("1234"));
-        Characters.another.push(new Character(4, new Location(500,-1800)).setColor({r:255,g:255,b:255},{r:255,g:255,b:255}).setNickname("aaaaaaaaaaaaaaaaaaaaaa"));
+        Characters.another.push(new Character(4, new Location(200,-1300)).setColor({r:0,g:0,b:0},{r:0,g:0,b:0}));
         Characters.another.push(new Character(5, new Location(700,-1550)).setColor({r:0,g:255,b:0},{r:0,g:255,b:0}).setNickname("huy"));
         Characters.another.push(new Character(6, new Location(500,-1300)).setColor({r:0,g:0,b:255},{r:0,g:0,b:255}).setNickname("Аболтус"));
         Characters.another.push(new Character(7, new Location(800,-1300)).setColor("C51111","7A0838").setNickname("Vladik"));
         
-
 
         Characters.another.forEach(i => Game.getScene().addDynamicSprite(i.getSprite()));
         Game.getScene().addDynamicSprite(selection.getSprite());
@@ -128,12 +107,11 @@ let logic_character = {
         return undefined;
     },
     selectCharacter(character: Character) {
-        // selection.getSprite().l
         selection.getSprite().setLocation(character.getLocation().x, character.getLocation().y);
         selection.getSprite().setSize(character.getSprite().width,character.getSprite().height);
         selection.walkAnimationFrame = character.walkAnimationFrame;
         selection.getSprite().width = character.getSprite().width;
-        // selection.changeState(character.state);
+        selection.getSprite().margin = character.getSprite().margin;
         selection.hidden = false;
     },
     unSelectCharacter() {
@@ -154,12 +132,9 @@ let logic_character = {
         if (!GameLogic.isGameStarted) return;
         if (character.isVentedAnim) return;
         if (!GameLogic.eventListeners.onmove.check(character)) return;
-        // if (character.state === "vent") return;
         const deltaSpeed = config.speed * Game.deltaTime*58.8;
         direction.x *= deltaSpeed;
         direction.y *= deltaSpeed;
-        // if (game.hasKey('keyr')) console.log(game.getScene().getSprites());
-        // if (Game.hasKey('shiftleft')) { direction.x/=2; direction.y/=2; }
         if (direction.x!=0 || direction.y!=0) {
             if ((direction.x < 0 && character.getSprite().width > 0) || (direction.x > 0 && character.getSprite().width < 0)) {
                 character.getSprite().width = -character.getSprite().width;
@@ -207,7 +182,6 @@ let logic_character = {
             }
         } else {
             character.idle();
-            // impostor.setTexture(textures.amogus.idle);
         }
     },
 }

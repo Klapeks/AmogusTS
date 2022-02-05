@@ -115,14 +115,11 @@ class Sprite {
         this.priority = priority;
         return this;
     }
-}
 
-class StaticSprite extends Sprite {
-    private _margin = { x: 0, y: 0 };
-    constructor(texture: Texture, location: Location = new Location(0, 0)) {
-        super(texture, location);
-        this.upperThanDark = true;
-    }
+    // set _deprecated_change_location_object(location: Location) {
+    //     this._loc = location;
+    // }
+    private _margin: {x: number, y: number};
 
     setMargin(margin: {x:number, y:number}){
         this.margin = margin;
@@ -133,6 +130,14 @@ class StaticSprite extends Sprite {
     }
     get margin() {
         return this._margin;
+    }
+}
+
+class StaticSprite extends Sprite {
+    constructor(texture: Texture, location: Location = new Location(0, 0)) {
+        super(texture, location);
+        this.upperThanDark = true;
+        this.setMargin({ x: 0, y: 0 });
     }
 }
 let FullscreenSprite = (texture: Texture | string): StaticSprite => {

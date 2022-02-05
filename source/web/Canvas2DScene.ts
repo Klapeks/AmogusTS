@@ -66,6 +66,10 @@ class Canvas2DScene extends Scene {
             _ly = (sprite.getLocation().y - this._camera.getLocation().y)*res.dy + Screen.height/2;
             _lw = sprite.width*res.dx;
             _lh = sprite.height*res.dy;
+            if (sprite.margin) {
+                _lx += sprite.margin.x;
+                _ly += sprite.margin.y;
+            }
         }
         const ctx = EngineConfig.hide_sprites_under_dark && sprite.isHideInDark() ? this._hideindark_ctx : this._ctx;
         if (!img) {

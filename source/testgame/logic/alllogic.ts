@@ -59,11 +59,11 @@ let logic = {
             }, 2000);
             role_angel.playSave(Characters.main);
         }
-        if (Game.hasKey("digit1")) {
+        if (Game.hasKey("digit0")) {
             if (starting.isShowed) return;
             GameLogic.startGame();
         }
-        if (Game.hasKey("digit0")) {
+        if (Game.hasKey("digit9")) {
             if (cd) return;
             cd = true;
             setTimeout(() => {
@@ -71,7 +71,7 @@ let logic = {
             }, 2000);
             randomRoles();
         }
-        if (Game.hasKey("digit3")) {
+        if (Game.hasKey("digit8")) {
             const ch = Characters.another[2];
             if (!ch.isAlive) return;
             logic_kill.kill(ch, ch, false);

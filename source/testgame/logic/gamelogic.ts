@@ -40,8 +40,14 @@ let GameLogic = {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
             ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
-            ch.setRole(i===0 ? Roles.Vanisher : role)
-            // ch.setRole(role);
+            if (i===0) {
+                ch.setRole(Roles.Impostor);
+            } else if (i===1) {
+                // ch.setRole(Roles.Melok);
+            } else 
+            ch.setRole(role);
+
+            if (ch.getRole()?.onpick) ch.getRole().onpick(ch);
 
             ch.isAlive = true;
             ch.hidden = false;
@@ -49,7 +55,7 @@ let GameLogic = {
                 ch.deadbody.delete();
                 ch.deadbody = null;
             }
-            // ch.showRoleplate();
+            ch.showRoleplate();
         });
         const role = Characters.main.getRole();
         starting.show(role);

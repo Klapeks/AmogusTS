@@ -43,7 +43,7 @@ let role_angel = {
         })
         GameLogic.eventListeners.onreset.addEvent(() => {
             if (savedCharacter){
-                // savedCharacter = undefined;
+                savedCharacter = undefined;
             }
         })
     },

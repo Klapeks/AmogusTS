@@ -1,3 +1,4 @@
+import { Location } from "../../engine/Location";
 import { config } from "../config";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
@@ -29,6 +30,11 @@ const roles_neutrals = {
                     }
                     return true;
                 })
+            })
+            .setOnPick(ch => {
+                ch.getSprite().setMargin({x:ch.getSprite().width / 4.5, y:ch.getSprite().height / 2.5})
+                ch.getSprite().width /= 2;
+                ch.getSprite().height /= 2;
             }), // Милок
 }
 

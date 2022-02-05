@@ -70,6 +70,11 @@ class Role {
         this.onload = f;
         return this;
     }
+    onpick: (character: Character) => void;
+    setOnPick(f: (character: Character) => void) {
+        this.onpick = f;
+        return this;
+    }
 
     action: RoleAction;
     setAction(act: RoleAction){

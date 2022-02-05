@@ -95,7 +95,6 @@ class UseButton extends Button {
             new LinkedLocation(this._sprite.getLocation(),
                 {dx:this._sprite.margin.x < 0 ? -100 : 100,
                 dy:this._sprite.margin.y < 0 ? -125 : 125}))
-            // new LinkedLocation(this._sprite.getLocation(), {dx:-100, dy:-125}))
             .setMargin(this._sprite.margin)
             .setSize(200, 200);
         this.updateCD();
@@ -132,8 +131,6 @@ let reportButton: Button;
 let fullscreenbutton: Button;
 let additionalButton: Array<UseButton> = new Array();
 
-// let killcooldownText: Sprite;
-// let killcooldown = 0, usecooldown = 0,
 let anytimeout = false;
 
 let logic_buttons = {
@@ -201,7 +198,7 @@ let logic_buttons = {
         }
     },
     load() {
-        ['KeyZ', 'KeyX', 'KeyC'].forEach((key, i) => {
+        ['Digit1', 'Digit2', 'Digit3'].forEach((key, i) => {
             const b = new UseButton(new Texture('missingo.png'))
                     .setMargin({x: 50+i*250, y: -250})
                     .setSize(200,200)
