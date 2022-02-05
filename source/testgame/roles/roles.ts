@@ -44,7 +44,7 @@ let RoleFuncs = {
             if (role.onload) role.onload()
             if (!role.action?.button_texture) continue;
             if (Array.isArray(role.action.button_texture)) {
-                const a = genSplit(...role.action.button_texture,() => {
+                const a = genSplit(...role.action.button_texture,  () => {
                     role.action.button_state = logic_buttons.ActionButton.addState(a, null);
                 });
             } else {
@@ -58,7 +58,8 @@ let RoleFuncs = {
     }
 }
 function genSplit(x: number, y: number, onload?: () => void) {
-    return new SplittedTexture('roles/buttons_ru.png', {x:x*112, y:y*112, width:112,height:112}, null, onload);
+    return new SplittedTexture('roles/buttons_ru.png',
+        {x:x*112, y:y*112, width:112,height:112}, null, onload);
 }
 
 var randomRoles = (amount = 10, impostors = config.roles.imposters, neutral = config.roles.neutral): void => {

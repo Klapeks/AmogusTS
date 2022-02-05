@@ -6,6 +6,7 @@ import { Role } from "./role";
 import { meeting } from "../logic/meeting/meeting";
 import { role_medic } from "./special/role_medic";
 import { Sound } from "../../engine/Sound";
+import { HexColor } from "../../engine/Color";
 
 let detectiveSound: Sound;
 
@@ -19,6 +20,9 @@ const roles_crew = {
         act: (ch) => {
             ch.showRoleplate();
             detectiveSound?.play();
+            if (ch.getRole().type === "impostor") {
+                ch.setNicknameColor(HexColor('FF0000'))
+            }
         }
     }).setOnLoad(() => {
         detectiveSound = new Sound('roles/detective.wav');
