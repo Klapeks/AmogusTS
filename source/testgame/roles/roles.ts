@@ -42,14 +42,27 @@ let RoleFuncs = {
     load() {
         for (let role of Object.values(Roles)) {
             if (role.onload) role.onload()
-            if (!role.action?.button_texture) continue;
-            if (Array.isArray(role.action.button_texture)) {
-                const a = genSplit(...role.action.button_texture,  () => {
-                    role.action.button_state = logic_buttons.ActionButton.addState(a, null);
-                });
-            } else {
-                role.action.button_state = logic_buttons.ActionButton
-                    .addState(role.action.button_texture, null);
+            if (role.action?.button_texture) {
+                if (Array.isArray(role.action.button_texture)) {
+                    const a = genSplit(...role.action.button_texture,  () => {
+                        role.action.button_state = logic_buttons.ActionButton.addState(a, null);
+                    });
+                } else {
+                    role.action.button_state = logic_buttons.ActionButton
+                        .addState(role.action.button_texture, null);
+                }
+            }
+            if (role.additionalActions && role.additionalActions.length > 0) {
+                role.additionalActions.forEach((addact, i) => {
+                    if (Array.isArray(addact.button_texture)) {
+                        const a = genSplit(...addact.button_texture,  () => {
+                            addact.button_state = logic_buttons.AdditionalButton[i].addState(a, null);
+                        });
+                    } else {
+                        addact.button_state = logic_buttons.AdditionalButton[i]
+                            .addState(addact.button_texture, null);
+                    }
+                })
             }
         }
     },

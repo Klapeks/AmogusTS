@@ -10,6 +10,12 @@ interface RoleAction {
     button_texture?: string | Texture | [number, number],
     button_state?: number
 }
+interface AdditionalAction {
+    cooldown: number,
+    act: () => void,
+    button_texture?: string | Texture | [number, number],
+    button_state?: number
+}
 
 class Role {
     protected id: string;
@@ -59,6 +65,12 @@ class Role {
         return this;
     }
 
+    onload: () => void;
+    setOnLoad(f: () => void) {
+        this.onload = f;
+        return this;
+    }
+
     action: RoleAction;
     setAction(act: RoleAction){
         this.action = act;
@@ -71,9 +83,10 @@ class Role {
         return true;
     }
 
-    onload: () => void;
-    setOnLoad(f: () => void) {
-        this.onload = f;
+    additionalActions: Array<AdditionalAction>;
+    addAdditionalAction(action: AdditionalAction) {
+        if (!this.additionalActions) this.additionalActions = new Array();
+        this.additionalActions.push(action);
         return this;
     }
 }

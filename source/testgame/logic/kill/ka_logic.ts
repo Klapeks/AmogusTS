@@ -31,9 +31,6 @@ let killanimation_logic = {
         if (Game.hasKey('keyl')) {
             allAnimations[0].play(Characters.another[1]);
         }
-        if (Game.hasKey('keyx')) {
-            allAnimations[0].play(Characters.main);
-        }
     }
 }
 

@@ -24,6 +24,7 @@ class UseButton extends Button {
     private _nowtex: number = 0;
     constructor(defaultTexture: Texture, location: Location = new Location(0,0)) {
         super(defaultTexture, location);
+        this.resetModifiedCooldown();
         this.addState(defaultTexture, null);
         this.setState(0);
     }
@@ -51,6 +52,7 @@ class UseButton extends Button {
         return this;
     }
     click() {
+        if (this.hidden) return;
         if (this.cooldown_time) return;
         if (this.clickRule && !this.clickRule()) return;
         let f = this._onclicking[this._nowtex];
@@ -82,19 +84,30 @@ class UseButton extends Button {
             this.cooldown_time = 0;
             Game.getScene().removeUpperSprite(this.cooldown_text);
             this.cooldown_text = null;
+            this.modifiedCooldown.afterEnd();
             return;
         }
         this.cooldown_time = time;
         if (!this.cooldown_text && this._showcd) this.cooldown_text 
             = new StaticSprite(new TextTexture("", "arial")
-            .setFontSize(100).setColor("white")
+            .setFontSize(100).setColor(this.modifiedCooldown.color)
             .setAlign("center").setOutline('black', 10),
-            new LinkedLocation(this._sprite.getLocation(), {dx:-100, dy:-125}))
+            new LinkedLocation(this._sprite.getLocation(),
+                {dx:this._sprite.margin.x < 0 ? -100 : 100,
+                dy:this._sprite.margin.y < 0 ? -125 : 125}))
+            // new LinkedLocation(this._sprite.getLocation(), {dx:-100, dy:-125}))
             .setMargin(this._sprite.margin)
             .setSize(200, 200);
         this.updateCD();
 
         Game.getScene().addUpperSprite(this.cooldown_text);
+    }
+    modifiedCooldown: {color: string, afterEnd: () => void};
+    resetModifiedCooldown() {
+        this.setModifiedCooldown("white", () => {})
+    }
+    setModifiedCooldown(color: string, afterEnd: () => void) {
+        this.modifiedCooldown = {color, afterEnd};
     }
     updateCD() {
         if (!this.cooldown_time) return;
@@ -117,6 +130,7 @@ let actionButton: UseButton; // characters
 let interactButton: UseButton; // items
 let reportButton: Button;
 let fullscreenbutton: Button;
+let additionalButton: Array<UseButton> = new Array();
 
 // let killcooldownText: Sprite;
 // let killcooldown = 0, usecooldown = 0,
@@ -125,6 +139,7 @@ let anytimeout = false;
 let logic_buttons = {
     get ActionButton() { return actionButton; },
     get InteractButton() { return interactButton; },
+    get AdditionalButton() { return additionalButton; },
     setCooldown(seconds: number, button: "use" | "action" = "use") {
         if (button === "action") actionButton.cooldown(seconds);
         else interactButton.cooldown(seconds);
@@ -135,6 +150,14 @@ let logic_buttons = {
         return interactButton.cooldown_time > 0
     },
     buttonSelectUpdate(neardead: DeadCharacter) {
+
+        additionalButton.forEach(addbut => {
+            addbut.updateCD();
+            if (addbut.cooldown_time > 0) addbut.unselect();
+            else addbut.select();
+        })
+
+        actionButton.updateCD();
         if (actionButton.cooldown_time > 0) {
             actionButton.unselect();
             return;
@@ -159,12 +182,12 @@ let logic_buttons = {
     },
     update() {
         if (voting.isVoting) return;
+
         const neardead = logic_kill.getDeadNear(Characters.main.getLocation());
         logic_buttons.buttonSelectUpdate(neardead);
         if (neardead) reportButton.select()
         else reportButton.unselect();
         
-        actionButton.updateCD();
         interactButton.updateCD();
         if (interactButton.cooldown_time===0 && !MenusUtils.isNoMenu() 
             && (Game.hasKey("escape") || Game.hasKey("keye"))) {
@@ -178,6 +201,22 @@ let logic_buttons = {
         }
     },
     load() {
+        ['KeyZ', 'KeyX', 'KeyC'].forEach((key, i) => {
+            const b = new UseButton(new Texture('missingo.png'))
+                    .setMargin({x: 50+i*250, y: -250})
+                    .setSize(200,200)
+                    .setAltKey(key)
+                    .setClickRule(() => {
+                        return !voting.isVoting && GameLogic.isGameStarted;
+                    })
+                    .setClick(() => {
+                        const role = Characters.main.getRole();
+                        if (role.additionalActions.length <= i && !role.additionalActions[i]) return;
+                        role.additionalActions[i].act();
+                        b.cooldown(role.additionalActions[i].cooldown);
+                    });
+            additionalButton.push(b);
+        })
         actionButton = new UseButton(new Texture('buttons/kill.png'), new Location(200,200))
                 .setMargin({x: -300, y: -50})
                 .setSize(200,200)
@@ -210,7 +249,6 @@ let logic_buttons = {
                     }
                 });
         actionButton.unselect();
-        RoleFuncs.load();
 
         interactButton = new UseButton(new Texture('buttons/use.png'), new Location(200,200))
                 .setMargin({x: -50, y: -50})
@@ -233,6 +271,9 @@ let logic_buttons = {
         interactButton.addState('buttons/sabotage.png', () => {
             console.log('sabotage go brrrrrrrrrrr');
         })
+
+
+        RoleFuncs.load();
 
         reportButton = new Button(new Texture('buttons/noreport.png'), new Location(200,200))
                 .setMargin({x: -50, y: -300})
@@ -263,7 +304,7 @@ let logic_buttons = {
                 .setSelected(new Texture('buttons/nofullscreen.png'));
         fullscreenbutton.getSprite().priority = 999;
 
-        ButtonFuncs.addButton(actionButton, reportButton, interactButton, fullscreenbutton);
+        ButtonFuncs.addButton(actionButton, reportButton, interactButton, fullscreenbutton, ...additionalButton);
     }
 }
 

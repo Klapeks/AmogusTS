@@ -59,10 +59,12 @@ class Nameplate {
 
         const nick = this._character.getNickname();
         if (nick) {
-            this.charplate.set('nickname', 
-                new StaticSprite(Character.generateNicknameTexture(nick, 40, 'left'),
+            const nickplate = Character.generateNicknameTexture(nick, 40, 'left');
+            nickplate.setColor(this._character.getNicknameColor());
+            this.charplate.set('nickname', new StaticSprite(nickplate,
                 new LinkedLocation(nloc, {dx: 130, dy: 50}))
                 .setSize(plateSize.width,0));
+            
         }
         if (this._character.isRoleplateShows()) {
             const npt = Character.generateNicknameTexture(this._character.getRole().name, 30, 'left');

@@ -40,8 +40,8 @@ let GameLogic = {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
             ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
-            // ch.setRole(i===0 ? Roles.Impostor : role)
-            ch.setRole(role);
+            ch.setRole(i===0 ? Roles.Vanisher : role)
+            // ch.setRole(role);
 
             ch.isAlive = true;
             ch.hidden = false;
@@ -70,6 +70,15 @@ let GameLogic = {
         } else {
             logic_buttons.ActionButton.hidden = true;
         }
+
+        logic_buttons.AdditionalButton.forEach(a => {a.hidden = true;});
+        if (role.additionalActions && role.additionalActions.length > 0) {
+            role.additionalActions.forEach((addact, i) => {
+                logic_buttons.AdditionalButton[i].setState(addact.button_state || 0);
+                logic_buttons.AdditionalButton[i].hidden = false;
+            });
+        }
+
         if (role.type === "impostor") {
             logic_buttons.InteractButton.defaultState = 1;
             logic_buttons.InteractButton.setState(1);
