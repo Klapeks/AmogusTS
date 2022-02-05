@@ -90,17 +90,20 @@ let logic_character = {
 
     },
     updateSelect() {
-        if (!Characters.main.getRole().canSelectSomeone()) return;
-        let character = logic_character.trySelectCharacter();
+        const canselect = Characters.main.getRole().canSelectSomeone();
+        if (!canselect) return;
+        let character = logic_character.trySelectCharacter(true, canselect==="notimpostor");
         if (character) logic_character.selectCharacter(character);
         else logic_character.unSelectCharacter();
     },
-    trySelectCharacter(onlyAlive: boolean = true) {
+    trySelectCharacter(onlyAlive: boolean = true, excludeImpostors = false) {
         let character: Character = undefined;
         for (let ch of Characters.another) {
+            if (excludeImpostors && ch.getRole().type==="impostor") continue;
+            if (ch.hidden) continue;
             if (!character || Characters.main.distanceSquared(ch) < Characters.main.distanceSquared(character)) {
                 if (!onlyAlive) character = ch;
-                else if (!ch.hidden) character = ch;
+                else if (ch.isAlive) character = ch;
             }
         }
         if (character && Characters.main.getLocation().distanceSquared(character.getLocation()) < config.killrange*config.killrange) return character;

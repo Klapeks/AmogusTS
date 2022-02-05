@@ -156,7 +156,7 @@ let logic_buttons = {
             return;
         }
         const role = Characters.main.getRole();
-        if (!role.canSelectSomeone()) {
+        if (!role.canSelectSomeone(false, butid)) {
             button.select();
             return;
         }
@@ -214,7 +214,8 @@ let logic_buttons = {
                     .setClick(() => {
                         const role = Characters.main.getRole();
                         if (role.additionalActions.length <= i && !role.additionalActions[i]) return;
-                        if (!role.canSelectSomeone()) {
+                        const selection = role.canSelectSomeone(false, i);
+                        if (!selection) {
                             role.additionalActions[i].act(null);
                             additionalButton[i].cooldown(role.additionalActions[i].cooldown);
                             return;
@@ -227,7 +228,7 @@ let logic_buttons = {
                             }
                             return;
                         }
-                        let ch = logic_character.trySelectCharacter();
+                        let ch = logic_character.trySelectCharacter(true, selection === "notimpostor");
                         if (ch) {
                             role.additionalActions[i].act(ch);
                             additionalButton[i].cooldown(role.additionalActions[i].cooldown);
@@ -247,7 +248,8 @@ let logic_buttons = {
                 .setClick(() => {
                     const role = Characters.main.getRole();
                     if (!role.action?.act) return;
-                    if (!role.canSelectSomeone()) {
+                    const selection = role.canSelectSomeone(false, true);
+                    if (!selection) {
                         role.action.act(null);
                         actionButton.cooldown(role.action.cooldown);
                         return;
@@ -260,7 +262,7 @@ let logic_buttons = {
                         }
                         return;
                     }
-                    let ch = logic_character.trySelectCharacter();
+                    let ch = logic_character.trySelectCharacter(true, selection === "notimpostor");
                     if (ch) {
                         role.action.act(ch);
                         actionButton.cooldown(role.action.cooldown);

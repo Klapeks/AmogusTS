@@ -40,9 +40,10 @@ let GameLogic = {
             const ch = i===0 ? Characters.main : Characters.another[i-1]
             ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
-            // if (i===0) {
-            //     ch.setRole(Roles.Janitor);
-            // } else if (i===1) {
+            if (i===0) {
+                ch.setRole(Roles.Freezer);
+            } else
+            // if (i===1) {
             //     // ch.setRole(Roles.Melok);
             // } else 
             ch.setRole(role);

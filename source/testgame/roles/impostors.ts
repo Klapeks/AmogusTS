@@ -2,6 +2,7 @@ import { HexColor } from "../../engine/Color";
 import { config } from "../config";
 import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
+import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
 import { Role, RoleAction, RoleType } from "./role";
 
@@ -22,6 +23,8 @@ class ImpostorRole extends Role {
     }
 }
 
+let isFreeze = false;
+
 const roles_impostors = {
     Impostor: new ImpostorRole('Impostor').settings({ color: 'FF0000', name: "Импостер" }),
 
@@ -29,7 +32,28 @@ const roles_impostors = {
 
     Camouflager: new ImpostorRole("Camouflager").settings({ color: '029717', name: "Камуфляжер" }),  // Камуфляжер
 
-    Freezer: new ImpostorRole("Freezer").settings({ color: 'C9CAFF', name: "Холодильник" }),  // Холодильник
+    Freezer: new ImpostorRole("Freezer")
+        .settings({ color: 'C9CAFF', name: "Холодильник" })
+        .addAdditionalAction({
+            select: "noone",
+            cooldown: 10,
+            button_texture: [0,0],
+            act: () => {
+                isFreeze = true;
+                const b = logic_buttons.AdditionalButton[0];
+                b.setModifiedCooldown('#00FFFF', () => {
+                    isFreeze = false;
+                    Characters.main.getSprite().opacity = 1;
+                    b.resetModifiedCooldown();
+                    b.cooldown(30);
+                })
+            }
+        }).setOnLoad(()=>{
+            GameLogic.eventListeners.onmove.addEvent(ch => {
+                if (ch.getRole().type === "impostor") return true;
+                return !isFreeze;
+            })
+        }),  // Холодильник
 
     Vanisher: new ImpostorRole("Vanisher")
         .settings({ color: 'FFFFFF', name: "Невидимка" })
@@ -49,11 +73,11 @@ const roles_impostors = {
         }),  // Невидимка
 
     Janitor: new ImpostorRole("Janitor")
-        .settings({ color: 'FF0000', name: "Санитар" })
+        .settings({ color: 'DB006D', name: "Санитар" })
         .addAdditionalAction({
             select: "deadbody",
             cooldown: 25,
-            button_texture: [2, 1],
+            button_texture: [1, 2],
             act: (ch) => {
                 ch.deadbody?.delete();
             }

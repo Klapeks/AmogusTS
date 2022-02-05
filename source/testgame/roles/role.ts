@@ -5,8 +5,9 @@ import { logic_buttons } from "../logic/buttons";
 import { Characters, logic_character } from "../logic/charslog";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
+type RoleSelection = "any" | "notimpostor" | "noone" | "deadbody";
 interface RoleAction {
-    select: "any" | "notimpostor" | "noone" | "deadbody",
+    select: RoleSelection,
     act: (ch: Character) => void,
     cooldown: number,
     button_texture?: string | Texture | [number, number],
@@ -73,9 +74,6 @@ class Role {
     }
     onPick(character: Character) {
         if (this._onpick) this._onpick(character);
-        if (character !== Characters.main) return;
-        
-        logic_character.unSelectCharacter();
 
         if (this.type === "impostor") {
             Characters.main.setNicknameColor(HexColor('FF0000'));
@@ -86,6 +84,9 @@ class Role {
                 }
             }
         }
+        if (character !== Characters.main) return;
+        
+        logic_character.unSelectCharacter();
         
         if (this.action) {
             logic_buttons.ActionButton.hidden = false;
@@ -118,17 +119,27 @@ class Role {
         this.action = act;
         return this;
     }
-    canSelectSomeone(onlyalive = false) {
-        if (this.action) {
-            if (this.action.select === "any") return true;
-            if (this.action.select === "notimpostor") return true;
-            if (!onlyalive && this.action.select === "deadbody") return true;
-        }
-        if (this.additionalActions) 
-        for (let act of this.additionalActions) {
-            if (act.select === "any") return true;
-            if (act.select === "notimpostor") return true;
-            if (!onlyalive && act.select === "deadbody") return true;
+    canSelectSomeone(onlyalive = false, type: number | true | false = false): RoleSelection | false {
+        if (type===false || type===true) 
+            if (this.action) {
+                if (this.action.select === "any") return "any";
+                if (this.action.select === "notimpostor") return "notimpostor";
+                if (!onlyalive && this.action.select === "deadbody") return "deadbody";
+            }
+        if (this.additionalActions) {
+            if (type===false) {
+                for (let act of this.additionalActions) {
+                    if (act.select === "any") return "any";
+                    if (act.select === "notimpostor") return "notimpostor";
+                    if (!onlyalive && act.select === "deadbody") return "deadbody";
+                }
+            } else if (type!==true) {
+                if (type < 0 || type >= this.additionalActions.length) return false;
+                const act = this.additionalActions[type];
+                if (act.select === "any") return "any";
+                if (act.select === "notimpostor") return "notimpostor";
+                if (!onlyalive && act.select === "deadbody") return "deadbody";
+            }
         }
         return false;
     }
