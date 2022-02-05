@@ -45,7 +45,7 @@ let GameLogic = {
             ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
             // if (i===0) {
-            //     ch.setRole(Roles.Shifter);
+            //     ch.setRole(Roles.Engineer);
             // } else
             // if (i===1) {
             //     // ch.setRole(Roles.Melok);

@@ -34,6 +34,11 @@ class Role {
         this.description = desc;
         return this;
     }
+    usevents: boolean;
+    setUseVents(b: boolean) {
+        this.usevents = b;
+        return this;
+    }
 
     color: Color = HexColor('FFFFFF');
     setColor(color: Color | string) {
@@ -52,13 +57,15 @@ class Role {
     settings(set: {
         color?: Color|string,
         name?:string,
-        description?:string
-        action?: RoleAction
+        description?:string,
+        action?: RoleAction,
+        usevents?: boolean
     }) {
         if (set.name) this.name = set.name;
         if (set.color) this.setColor(set.color);
         if (set.description) this.description = set.description;
         if (set.action) this.setAction(set.action);
+        if (set.usevents) this.setUseVents(set.usevents);
         return this;
     }
 
@@ -75,8 +82,9 @@ class Role {
     onPick(character: Character) {
         if (this._onpick) this._onpick(character);
 
+        if (character !== Characters.main) return;
         if (this.type === "impostor") {
-            Characters.main.setNicknameColor(HexColor('FF0000'));
+            character.setNicknameColor(HexColor('FF0000'));
             for (let ch of Characters.another) {
                 if (ch.getRole().type==="impostor") {
                     ch.showRoleplate();
@@ -84,7 +92,6 @@ class Role {
                 }
             }
         }
-        if (character !== Characters.main) return;
         
         logic_character.unSelectCharacter();
         

@@ -41,6 +41,7 @@ class Vents extends InteractableItem {
     }
     directions: Array<Vents>;
     use(): void {
+        if (!Characters.main.getRole().usevents) return;
         logic_buttons.setCooldown(0.6);
         if (Characters.main.ventilation) Characters.main.outVent();
         else Characters.main.jumpVent(this);

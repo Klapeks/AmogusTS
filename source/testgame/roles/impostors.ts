@@ -24,6 +24,7 @@ class ImpostorRole extends Role {
         super(id);
         this._type = "impostor";
         this.setAction(ImpostorAction);
+        this.setUseVents(true);
     }
 }
 

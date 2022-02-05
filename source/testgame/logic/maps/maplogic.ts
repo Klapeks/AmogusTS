@@ -5,6 +5,7 @@ import { Task } from "../items/tasks/task";
 import { logic_buttons } from "../buttons";
 import { InteractableItem } from "../../../engine/InteractableItem";
 import { Location } from "../../../engine/Location";
+import { Vents } from "../items/vents";
 
 let _mininteract: InteractableItem, _dist: number, _wasminint: boolean;
 let mapNow: Map;
@@ -28,6 +29,7 @@ let logic_map = {
         const charcenter = Characters.main.getCenter();
         let trySelect = (inter: InteractableItem) => {
             inter.unselect();
+            if (inter instanceof Vents && !Characters.main.getRole().usevents) return;
             if (typeof inter.userange === "number") {
                 _dist = distanceSquared(inter.getCenter(), charcenter);
                 if (_dist < inter.userange*inter.userange) {
