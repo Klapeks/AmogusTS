@@ -42,7 +42,7 @@ const roles_impostors = {
         .addAdditionalAction({
             select: "noone",
             cooldown: 10,
-            button_texture: [0,0],
+            button_texture: [2,2],
             act: () => {
                 isFreeze = true;
                 const b = logic_buttons.AdditionalButton[0];
