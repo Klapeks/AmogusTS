@@ -71,10 +71,11 @@ class Canvas2DScene extends Scene {
                 _ly += sprite.margin.y;
             }
         }
-        const ctx = EngineConfig.hide_sprites_under_dark && sprite.isHideInDark() ? this._hideindark_ctx : this._ctx;
+        const ctx = EngineConfig.hide_sprites_under_dark && sprite.isHideInDark() 
+                && Light.isLightsEnable() ? this._hideindark_ctx : this._ctx;
         if (!img) {
             if (sprite.getTexture() instanceof TextTexture) {
-                if (EngineConfig.hide_sprites_under_dark && !isBack){
+                if (EngineConfig.hide_sprites_under_dark && !isBack && Light.isLightsEnable()){
                     Canvas2DScene.drawText(this._hideindark_ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.opacity)
                     if (sprite.isHideInDark()) return;
                 }
@@ -98,7 +99,7 @@ class Canvas2DScene extends Scene {
             return;
         } else {
             if (!img.geIsLoaded) return;
-            if (EngineConfig.hide_sprites_under_dark && !isBack){
+            if (EngineConfig.hide_sprites_under_dark && !isBack && Light.isLightsEnable()){
                 Canvas2DScene.drawImage(this._hideindark_ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.opacity);
                 if (sprite.isHideInDark()) return;
             }

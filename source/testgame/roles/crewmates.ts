@@ -7,13 +7,51 @@ import { meeting } from "../logic/meeting/meeting";
 import { role_medic } from "./special/role_medic";
 import { Sound } from "../../engine/Sound";
 import { HexColor } from "../../engine/Color";
+import { Game } from "../../engine/Game";
+import { logic_buttons } from "../logic/buttons";
+import { Light } from "../../engine/Light";
 
 let detectiveSound: Sound;
 
 const roles_crew = {
     Crewmate: new Role('Crewmate').setVisual('00FFFF'),  // Член экипажа
 
-    Capitan: new Role("Capitan").setVisual('65B1F9'),  // Капитан
+    Capitan: new Role("Capitan").setVisual('65B1F9').setAction({
+        select: "noone",
+        cooldown: 5,
+        button_texture: [1,1],
+        act: () => {
+            const res = Game.getCamera().getResolution();
+            const res_x = res.x;
+            const res_y = res.y;
+            const add = 30, add_s = 500/add;
+            const add_x = (res_x - res_x/4)/add;
+            const add_y = (res_y - res_y/4)/add;
+            for (let i = 0; i < add; i++) {
+                setTimeout(() => {
+                    res.add(-add_x,-add_y);
+                }, i*add_s);
+            }
+            setTimeout(() => {
+                res.set(res_x/4,res_y/4);
+            }, add_s*add);
+            Light.disableLights();
+            const b = logic_buttons.ActionButton;
+            b.setModifiedCooldown('#00FFFF', () => {
+                for (let i = 0; i < add; i++) {
+                    setTimeout(() => {
+                        res.add(add_x,add_y);
+                    }, i*add_s);
+                }
+                setTimeout(() => {
+                    res.set(res_x,res_y);
+                }, add_s*add);
+                Light.enableLights();
+                b.resetModifiedCooldown();
+                b.cooldown(10);
+            })
+        }
+    }),  // Капитан
     Medium: new Role("Medium").setVisual('D09DFF'),  // Ясновидящий
 
     Engineer: new Role("Engineer").settings({ color: '92BAC3', name: "Инженер", usevents: true }),  // Инженер
