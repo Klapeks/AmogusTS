@@ -22,7 +22,7 @@ const roles_neutrals = {
         .setAction({
             select:"any",
             cooldown: 10,
-            button_texture: [1,1],
+            button_texture: [0,2],
             act: (ch) => {
                 const role = ch.getRole();
                 if (role.type !== "crewmate"){
