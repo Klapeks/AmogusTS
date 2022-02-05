@@ -8,30 +8,34 @@ import { starting } from "./meeting/starting";
 class GameEventListener<T> {
     events: Array<(t: T) => boolean | void> = new Array();
     private _checkable: boolean = true;
-    constructor(checkable = true) {
+    private _defaultReturn: boolean = undefined;
+    constructor(checkable = true, defaultReturn: boolean = undefined) {
         this._checkable = checkable;
+        this._defaultReturn = defaultReturn;
     }
     addEvent(event: (t: T) => boolean | void) {
         this.events.push(event);
     }
     check(t: T): boolean {
+        if (this._defaultReturn == undefined) this._defaultReturn = GameLogic.isGameStarted;
         let answer: boolean | void;
         for (let event of this.events) {
             answer = event(t);
-            if (this._checkable && typeof answer === "boolean" 
-                    && answer === false) return false;
+            if (!this._checkable) continue;
+            if (typeof answer === "boolean" && answer === false) return false;
         }
-        return GameLogic.isGameStarted;
+        return this._defaultReturn;
     }
 }
 
 let GameLogic = {
+    isGameStarted: false,
     eventListeners: {
         onkill: new GameEventListener<{character: Character, killer?: Character}>(),
         onmove: new GameEventListener<Character>(),
         onreset: new GameEventListener<void>(false),
+        character_canidle: new GameEventListener<Character>(true, true),
     },
-    isGameStarted: false,
     startGame() {
         logic_buttons.ActionButton.cooldown(0);
         logic_buttons.InteractButton.cooldown(0);

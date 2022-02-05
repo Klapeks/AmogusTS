@@ -5,6 +5,7 @@ import { LinkedLocation, Location } from "../../engine/Location";
 import { Screen } from "../../engine/Screen";
 import { Sprite } from "../../engine/Sprite";
 import { TextTexture, Texture } from "../../engine/Texture";
+import { GameLogic } from "../logic/gamelogic";
 import { Vents, vent_logic } from "../logic/items/vents";
 import { Role } from "../roles/role";
 import { Roles } from "../roles/roles";
@@ -60,6 +61,8 @@ class Character {
     }
 
     idle() {
+        if (!GameLogic.eventListeners.character_canidle.check(this)
+                    && !this.isVentedAnim) return;
         this.isVentedAnim = false;
         this._walkanimation = 0;
         this._sprite.splitting = null;

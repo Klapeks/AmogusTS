@@ -63,6 +63,7 @@ const roles_impostors = {
                 if (ch.getRole().type === "impostor") return true;
                 return !isFreeze;
             })
+            GameLogic.eventListeners.character_canidle.addEvent(ch => { return !isFreeze; })
         }),  // Холодильник
 
     Vanisher: new ImpostorRole("Vanisher")

@@ -15,7 +15,6 @@ import { starting } from "./meeting/starting";
 import { randomRoles, RoleFuncs, Roles } from "../roles/roles";
 import { MainMenu } from "../gui/mainmenu";
 import { GameLogic } from "./gamelogic";
-import { kill } from "process";
 import { logic_kill } from "./kill";
 
 let logic = {
@@ -45,7 +44,7 @@ let logic = {
         RoleFuncs.update();
         
 
-        if (Game.hasKey("keyk")){
+        if (Game.hasKey("keyk")) {
             const res = Game.getCamera().getResolution();
             let qx = (Game.mouseinfo.posX - Screen.width/2)*Screen.width/res.x + Game.getCamera().getLocation().x;
             let qy = (Game.mouseinfo.posY - Screen.height/2)*Screen.height/res.y + Game.getCamera().getLocation().y;
