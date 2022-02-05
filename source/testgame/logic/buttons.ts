@@ -147,42 +147,43 @@ let logic_buttons = {
             return actionButton.cooldown_time > 0;
         return interactButton.cooldown_time > 0
     },
-    buttonSelectUpdate(neardead: DeadCharacter) {
-
-        additionalButton.forEach(addbut => {
-            addbut.updateCD();
-            if (addbut.cooldown_time > 0) addbut.unselect();
-            else addbut.select();
-        })
-
-        actionButton.updateCD();
-        if (actionButton.cooldown_time > 0) {
-            actionButton.unselect();
+    buttonSelectUpdate(butid: number | true, neardead: DeadCharacter) {
+        const button = butid === true ? actionButton : additionalButton[butid];
+        if (!button) return;
+        button.updateCD();
+        if (button.cooldown_time > 0) {
+            button.unselect();
             return;
         }
         if (!Characters.main.getRole().canSelectSomeone()) {
-            actionButton.select();
+            button.select();
             return;
         }
-        if (Characters.main.getRole().action.select === "deadbody") {
+        const act = butid === true ? Characters.main.getRole().action 
+            : Characters.main.getRole().additionalActions[butid];
+        if (!act) return;
+        if (act.select === "deadbody") {
             if (!neardead) {
-                actionButton.unselect();
+                button.unselect();
                 return;
             }
-            actionButton.select();
+            button.select();
         } else {
             if (!logic_character.isSelectedCharacter()) {
-                actionButton.unselect();
+                button.unselect();
                 return;
             }
-            actionButton.select();
+            button.select();
         }
     },
     update() {
         if (voting.isVoting) return;
 
         const neardead = logic_kill.getDeadNear(Characters.main.getLocation());
-        logic_buttons.buttonSelectUpdate(neardead);
+        logic_buttons.buttonSelectUpdate(true, neardead);
+        for (let i = additionalButton.length; i > 0; i--) {
+            logic_buttons.buttonSelectUpdate(i-1, neardead);
+        }
         if (neardead) reportButton.select()
         else reportButton.unselect();
         
@@ -210,8 +211,24 @@ let logic_buttons = {
                     .setClick(() => {
                         const role = Characters.main.getRole();
                         if (role.additionalActions.length <= i && !role.additionalActions[i]) return;
-                        role.additionalActions[i].act();
-                        b.cooldown(role.additionalActions[i].cooldown);
+                        if (!role.canSelectSomeone()) {
+                            role.additionalActions[i].act(null);
+                            additionalButton[i].cooldown(role.additionalActions[i].cooldown);
+                            return;
+                        }
+                        if (role.additionalActions[i].select === "deadbody") {
+                            let ch = logic_kill.getDeadNear(Characters.main.getLocation());
+                            if (ch) {
+                                role.additionalActions[i].act(ch.getCharacter());
+                                additionalButton[i].cooldown(role.additionalActions[i].cooldown);
+                            }
+                            return;
+                        }
+                        let ch = logic_character.trySelectCharacter();
+                        if (ch) {
+                            role.additionalActions[i].act(ch);
+                            additionalButton[i].cooldown(role.additionalActions[i].cooldown);
+                        }
                     });
             additionalButton.push(b);
         })

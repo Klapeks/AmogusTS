@@ -12,12 +12,6 @@ interface RoleAction {
     button_texture?: string | Texture | [number, number],
     button_state?: number
 }
-interface AdditionalAction {
-    cooldown: number,
-    act: () => void,
-    button_texture?: string | Texture | [number, number],
-    button_state?: number
-}
 
 class Role {
     protected id: string;
@@ -125,14 +119,22 @@ class Role {
         return this;
     }
     canSelectSomeone(onlyalive = false) {
-        if (!this.action) return false;
-        if (this.action.select === "noone") return false;
-        if (onlyalive && this.action.select === "deadbody") return false;
-        return true;
+        if (this.action) {
+            if (this.action.select === "any") return true;
+            if (this.action.select === "notimpostor") return true;
+            if (!onlyalive && this.action.select === "deadbody") return true;
+        }
+        if (this.additionalActions) 
+        for (let act of this.additionalActions) {
+            if (act.select === "any") return true;
+            if (act.select === "notimpostor") return true;
+            if (!onlyalive && act.select === "deadbody") return true;
+        }
+        return false;
     }
 
-    additionalActions: Array<AdditionalAction>;
-    addAdditionalAction(action: AdditionalAction) {
+    additionalActions: Array<RoleAction>;
+    addAdditionalAction(action: RoleAction) {
         if (!this.additionalActions) this.additionalActions = new Array();
         this.additionalActions.push(action);
         return this;

@@ -34,6 +34,7 @@ const roles_impostors = {
     Vanisher: new ImpostorRole("Vanisher")
         .settings({ color: 'FFFFFF', name: "Невидимка" })
         .addAdditionalAction({
+            select: "noone",
             cooldown: 10,
             button_texture: [2,1],
             act: () => {
@@ -47,7 +48,16 @@ const roles_impostors = {
             }
         }),  // Невидимка
 
-    Janitor: new ImpostorRole("Janitor").settings({ color: 'FF0000', name: "Санитар" }),  // Санитар
+    Janitor: new ImpostorRole("Janitor")
+        .settings({ color: 'FF0000', name: "Санитар" })
+        .addAdditionalAction({
+            select: "deadbody",
+            cooldown: 25,
+            button_texture: [2, 1],
+            act: (ch) => {
+                ch.deadbody?.delete();
+            }
+        }),  // Санитар
 
     Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча" }),  // Саранча
 
