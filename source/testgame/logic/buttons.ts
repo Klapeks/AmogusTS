@@ -155,13 +155,16 @@ let logic_buttons = {
             button.unselect();
             return;
         }
-        if (!Characters.main.getRole().canSelectSomeone()) {
+        const role = Characters.main.getRole();
+        if (!role.canSelectSomeone()) {
             button.select();
             return;
         }
-        const act = butid === true ? Characters.main.getRole().action 
-            : Characters.main.getRole().additionalActions[butid];
-        if (!act) return;
+        if (butid !== true) {
+            if (!role.additionalActions) return;
+            if (role.additionalActions.length <= butid && !role.additionalActions[butid]) return;
+        }
+        const act = butid === true ? role.action : role.additionalActions[butid];
         if (act.select === "deadbody") {
             if (!neardead) {
                 button.unselect();
