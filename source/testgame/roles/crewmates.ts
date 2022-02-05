@@ -14,7 +14,6 @@ const roles_crew = {
     Crewmate: new Role('Crewmate').setVisual('00FFFF'),  // Член экипажа
 
     Capitan: new Role("Capitan").setVisual('65B1F9'),  // Капитан
-    Swapper: new Role("Swapper").setVisual('C0FF00'),  // Сваппер
     Medium: new Role("Medium").setVisual('D09DFF'),  // Ясновидящий
 
     Engineer: new Role("Engineer").settings({ color: '92BAC3', name: "Инженер", usevents: true }),  // Инженер

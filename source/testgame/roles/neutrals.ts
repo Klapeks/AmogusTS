@@ -17,10 +17,14 @@ const roles_neutrals = {
     Executioner: new NeutralRole("Executioner").settings({ color: '1DD579', name: "Палач" }),  // Палач
     Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка" }),  // Спалахуйка
 
+    Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Сваппер" }),  // Сваппер
+    Clown: new NeutralRole("Clown").settings({ color: 'FF0099', name: "Клоун" }),  // Клоун
+    VIP: new NeutralRole("VIP").settings({ color: '00FF00', name: "VIP" }),  //ВИП
+
     Shifter: new NeutralRole("Shifter")
         .settings({ color: 'CC874D', name: "Снитчара" })
         .setAction({
-            select:"any",
+            select: "any",
             cooldown: 10,
             button_texture: [0,2],
             act: (ch) => {
@@ -39,25 +43,23 @@ const roles_neutrals = {
             }
         }),  // Снитчара - пиздить роли
 
-    Clown: new NeutralRole("Clown").settings({ color: 'FF0099', name: "Клоун" }),  // Клоун
-    VIP: new NeutralRole("VIP").settings({ color: '00FF00', name: "VIP" }),  //ВИП
-
-    Melok: new NeutralRole("Melok").settings({ color: 'FF9DF0', name: "Милок" })
-            .setOnLoad(() => {
-                GameLogic.eventListeners.onkill.addEvent((characters) => {
-                    const {character, killer} = characters;
-                    if (character.getRole() === roles_neutrals.Melok) {
-                        killanimation_logic.play(killer);
-                        return false;
-                    }
-                    return true;
-                })
+    Melok: new NeutralRole("Melok")
+        .settings({ color: 'FF9DF0', name: "Милок" })
+        .setOnLoad(() => {
+            GameLogic.eventListeners.onkill.addEvent((characters) => {
+                const {character, killer} = characters;
+                if (character.getRole() === roles_neutrals.Melok) {
+                    killanimation_logic.play(killer);
+                    return false;
+                }
+                return true;
             })
-            .setOnPick(ch => {
-                ch.getSprite().setMargin({x:ch.getSprite().width / 4.5, y:ch.getSprite().height / 2.5})
-                ch.getSprite().width /= 2;
-                ch.getSprite().height /= 2;
-            }), // Милок
+        })
+        .setOnPick(ch => {
+            ch.getSprite().setMargin({x:ch.getSprite().width / 4.5, y:ch.getSprite().height / 2.5})
+            ch.getSprite().width /= 2;
+            ch.getSprite().height /= 2;
+        }), // Милок
 }
 
 export {roles_neutrals}
