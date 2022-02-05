@@ -1,6 +1,8 @@
 import { Color, HexColor } from "../../engine/Color";
 import { SplitingTexture, Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
+import { logic_buttons } from "../logic/buttons";
+import { Characters, logic_character } from "../logic/charslog";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
 interface RoleAction {
@@ -70,10 +72,51 @@ class Role {
         this.onload = f;
         return this;
     }
-    onpick: (character: Character) => void;
+    private _onpick: (character: Character) => void;
     setOnPick(f: (character: Character) => void) {
-        this.onpick = f;
+        this._onpick = f;
         return this;
+    }
+    onPick(character: Character) {
+        if (this._onpick) this._onpick(character);
+        if (character !== Characters.main) return;
+        
+        logic_character.unSelectCharacter();
+
+        if (this.type === "impostor") {
+            Characters.main.setNicknameColor(HexColor('FF0000'));
+            for (let ch of Characters.another) {
+                if (ch.getRole().type==="impostor") {
+                    ch.showRoleplate();
+                    ch.setNicknameColor(HexColor('FF0000'));
+                }
+            }
+        }
+        
+        if (this.action) {
+            logic_buttons.ActionButton.hidden = false;
+            logic_buttons.ActionButton.setState(this.action.button_state || 0);
+        } else {
+            logic_buttons.ActionButton.hidden = true;
+        }
+
+        logic_buttons.AdditionalButton.forEach(a => {a.hidden = true;});
+        if (this.additionalActions && this.additionalActions.length > 0) {
+            this.additionalActions.forEach((addact, i) => {
+                logic_buttons.AdditionalButton[i].setState(addact.button_state || 0);
+                logic_buttons.AdditionalButton[i].hidden = false;
+            });
+        }
+
+        if (this.type === "impostor") {
+            logic_buttons.InteractButton.defaultState = 1;
+            logic_buttons.InteractButton.setState(1);
+            logic_buttons.InteractButton.select();
+        } else {
+            logic_buttons.InteractButton.defaultState = 0;
+            logic_buttons.InteractButton.setState(0);
+            logic_buttons.InteractButton.unselect();
+        }
     }
 
     action: RoleAction;

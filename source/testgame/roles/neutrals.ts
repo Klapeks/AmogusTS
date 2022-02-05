@@ -16,7 +16,29 @@ class NeutralRole extends Role {
 const roles_neutrals = {
     Executioner: new NeutralRole("Executioner").settings({ color: '1DD579', name: "Палач" }),  // Палач
     Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка" }),  // Спалахуйка
-    Shifter: new NeutralRole("Shifter").settings({ color: 'CC874D', name: "Снитчара" }),  // Снитчара - пиздить роли
+
+    Shifter: new NeutralRole("Shifter")
+        .settings({ color: 'CC874D', name: "Снитчара" })
+        .setAction({
+            select:"any",
+            cooldown: 10,
+            button_texture: [1,1],
+            act: (ch) => {
+                const role = ch.getRole();
+                if (role.type !== "crewmate"){
+                    killanimation_logic.play(Characters.main);
+                    return;
+                }
+                const myrole = Characters.main.getRole();
+
+                ch.setRole(myrole);
+                Characters.main.setRole(role);
+
+                myrole.onPick(ch)
+                role.onPick(Characters.main)
+            }
+        }),  // Снитчара - пиздить роли
+
     Clown: new NeutralRole("Clown").settings({ color: 'FF0099', name: "Клоун" }),  // Клоун
     VIP: new NeutralRole("VIP").settings({ color: '00FF00', name: "VIP" }),  //ВИП
 

@@ -116,6 +116,7 @@ class UseButton extends Button {
         } else if (this.cooldown_text) {
             (this.cooldown_text.getTexture() as TextTexture)
                 .setText(`${Math.ceil(this.cooldown_time)}`);
+            this.cooldown_text.hidden = this._sprite.hidden;
         }
     }
     defaultState = 0;

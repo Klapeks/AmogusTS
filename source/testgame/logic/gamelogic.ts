@@ -41,13 +41,12 @@ let GameLogic = {
             ch.setNicknameColor(HexColor('FFFFFF'));
             ch.hideRoleplate();
             if (i===0) {
-                ch.setRole(Roles.Impostor);
+                ch.setRole(Roles.Shifter);
             } else if (i===1) {
                 // ch.setRole(Roles.Melok);
             } else 
             ch.setRole(role);
-
-            if (ch.getRole()?.onpick) ch.getRole().onpick(ch);
+            ch.getRole().onPick(ch);
 
             ch.isAlive = true;
             ch.hidden = false;
@@ -57,43 +56,8 @@ let GameLogic = {
             }
             ch.showRoleplate();
         });
-        const role = Characters.main.getRole();
-        starting.show(role);
+        starting.show(Characters.main.getRole());
         Characters.main.showRoleplate();
-        if (role.type === "impostor") {
-            Characters.main.setNicknameColor(HexColor('FF0000'));
-            for (let ch of Characters.another) {
-                if (ch.getRole().type==="impostor") {
-                    ch.showRoleplate();
-                    ch.setNicknameColor(HexColor('FF0000'));
-                }
-            }
-        }
-        
-        if (role.action) {
-            logic_buttons.ActionButton.hidden = false;
-            logic_buttons.ActionButton.setState(role.action.button_state || 0);
-        } else {
-            logic_buttons.ActionButton.hidden = true;
-        }
-
-        logic_buttons.AdditionalButton.forEach(a => {a.hidden = true;});
-        if (role.additionalActions && role.additionalActions.length > 0) {
-            role.additionalActions.forEach((addact, i) => {
-                logic_buttons.AdditionalButton[i].setState(addact.button_state || 0);
-                logic_buttons.AdditionalButton[i].hidden = false;
-            });
-        }
-
-        if (role.type === "impostor") {
-            logic_buttons.InteractButton.defaultState = 1;
-            logic_buttons.InteractButton.setState(1);
-            logic_buttons.InteractButton.select();
-        } else {
-            logic_buttons.InteractButton.defaultState = 0;
-            logic_buttons.InteractButton.setState(0);
-            logic_buttons.InteractButton.unselect();
-        }
 
         GameLogic.isGameStarted = true;
     }
