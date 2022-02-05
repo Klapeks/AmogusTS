@@ -1,6 +1,7 @@
 import { HexColor } from "../../engine/Color";
 import { Game } from "../../engine/Game";
 import { Screen } from "../../engine/Screen";
+import { Sound } from "../../engine/Sound";
 import { StaticSprite } from "../../engine/Sprite";
 import { OnecolorTexture } from "../../engine/Texture";
 import { config } from "../config";
@@ -30,6 +31,7 @@ class ImpostorRole extends Role {
 
 let isFreeze = false;
 let freezeSprite: StaticSprite;
+let freezeSound: Sound;
 
 const roles_impostors = {
     Impostor: new ImpostorRole('Impostor').settings({ color: 'FF0000', name: "Импостер" }),
@@ -48,6 +50,7 @@ const roles_impostors = {
                 isFreeze = true;
                 const b = logic_buttons.AdditionalButton[0];
                 Game.getScene().addUpperSprite(freezeSprite);
+                freezeSound.play();
                 b.setModifiedCooldown('#00FFFF', () => {
                     isFreeze = false;
                     Game.getScene().removeUpperSprite(freezeSprite);
@@ -57,6 +60,7 @@ const roles_impostors = {
                 })
             }
         }).setOnLoad(()=>{
+            freezeSound = new Sound('roles/freezer.mp3')
             freezeSprite = new StaticSprite(new OnecolorTexture(HexColor('00CDFF')))
                     .setSize(Screen.width, Screen.height)
                     .setOpacity(0.3).setPriority(10);

@@ -121,11 +121,11 @@ class TabletMenu extends ApearableMenu {
     nameplates: Array<Nameplate> = new Array();
     private _selectedNameplate: StaticSprite;
 
-    show() {
+    show(priority = 55) {
         tablet.tryChangeTexture();
         if (this.isShowed || this._sprite) return;
         Nameplate.last_number = 0;
-        super.show();
+        super.show(priority);
         this._glass = new StaticSprite(glassTexture)
                 .setSize(this._sprite.width, this._sprite.height)
                 .setLocation(this._sprite.getLocation().x,

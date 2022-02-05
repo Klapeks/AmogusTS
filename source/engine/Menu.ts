@@ -14,14 +14,14 @@ class Menu {
     }
     protected _sprite: StaticSprite;
     isShowed = false;
-    show() {
+    show(priority?: number) {
         if (this.isShowed) return;
         if (this._sprite) return;
         this.isShowed = true;
         this._sprite = new StaticSprite(this._texture)
             .setSize(this._size.width, this._size.height)
-            .setLocationByCenter(Screen.width/2, Screen.height/2)
-            .setPriority(60);
+            .setLocationByCenter(Screen.width/2, Screen.height/2);
+        if (priority) this._sprite.setPriority(priority);
         
         Game.getScene().addUpperSprite(this._sprite);
         MenusUtils.showedMenus.push(this);
@@ -60,9 +60,9 @@ class ApearableMenu extends Menu {
     onMenuMoving(location: Location) {}
     onClose() {}
     
-    show() {
+    show(priority?: number) {
         if (this.isShowed || this._sprite) return;
-        super.show();
+        super.show(priority);
         
         if (this.apeartime) {
             const ny = this._sprite.getLocation().y;
