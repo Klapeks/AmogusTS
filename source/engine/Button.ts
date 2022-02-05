@@ -13,7 +13,7 @@ class Button {
     private _seltexture: Texture;
     constructor(texture: Texture, location: Location = new Location(0,0)) {
         this._texture = texture;
-        this._sprite = new StaticSprite(texture, location);
+        this._sprite = new StaticSprite(texture, location).setPriority(50);
     }
     setMargin(margin: {x:number, y:number}){
         this._sprite.setMargin(margin)

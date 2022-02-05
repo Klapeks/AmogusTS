@@ -30,15 +30,18 @@ let meeting = {
         meetingSound = new Sound('voting/meeting.wav');
         meetingText = new StaticSprite(new Texture('voting/meetingtext.png'))
                     .setSize(400*position.multiply, 192*position.multiply)
-                    .setLocationByCenter(Screen.width/2, Screen.height/2+position.dy);
+                    .setLocationByCenter(Screen.width/2, Screen.height/2+position.dy)
+                    .setPriority(55);
 
         deadbodyText = new StaticSprite(new Texture('voting/reporttext.png'))
                     .setSize(432*position.multiply, 224*position.multiply)
-                    .setLocationByCenter(Screen.width/2, Screen.height/2+position.dy);
+                    .setLocationByCenter(Screen.width/2, Screen.height/2+position.dy)
+                    .setPriority(55);
 
         table = new StaticSprite(new Texture('voting/table.png'))
                     .setSize(position.width, position.height)
-                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*1.25);
+                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*1.25)
+                    .setPriority(55);
         
         deadTexture = new Texture('voting/dead.png');
 
@@ -70,11 +73,13 @@ let meeting = {
                 amogusSprite = new StaticSprite(icon.getTextures().meeting.texture)
                     .setSize(position.width, position.height)
                     .setSplitting(0,0,icon.getTextures().meeting.width,icon.getTextures().meeting.height)
-                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy);
+                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy)
+                    .setPriority(55);
 
                 additionSprite = new StaticSprite(deadTexture)
                     .setSize(position.width, position.height)
-                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*2.5);
+                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*2.5)
+                    .setPriority(55);
                 
                 Game.getScene().addUpperSprite(deadbodyText, amogusSprite, additionSprite);
             }
@@ -84,12 +89,14 @@ let meeting = {
                 amogusSprite = new StaticSprite(icon.getTextures().meeting.texture)
                     .setSize(position.width, position.height)
                     .setSplitting(0,icon.getTextures().meeting.height,icon.getTextures().meeting.width,icon.getTextures().meeting.height)
-                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*1.25);
+                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*1.25)
+                    .setPriority(55);
 
                 additionSprite = new StaticSprite(icon.getTextures().meeting.texture)
                     .setSize(position.width, position.height)
                     .setSplitting(0,icon.getTextures().meeting.height*2,icon.getTextures().meeting.width,icon.getTextures().meeting.height)
-                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*1.25);
+                    .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*1.25)
+                    .setPriority(55);
 
                 Game.getScene().addUpperSprite(meetingText, amogusSprite, table, additionSprite);
             }

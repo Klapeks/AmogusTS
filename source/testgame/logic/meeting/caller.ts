@@ -12,9 +12,11 @@ let calltime = 260; // in milis
 let caller = {
     load() {
         redSprite = new StaticSprite(new Texture('voting/red.png'), new Location(0,0))
-            .setSize(Screen.width,Screen.height);
+            .setSize(Screen.width,Screen.height)
+            .setPriority(55);
         callSprite = new StaticSprite(new Texture('voting/call.png'), new Location(0, 0))
-            .setSize(Screen.width, 0);
+            .setSize(Screen.width, 0)
+            .setPriority(55);
         redSprite.hidden = true;
         callSprite.hidden = true;
     },

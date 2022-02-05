@@ -38,6 +38,7 @@ let createSprite = (character: Character, i: number): StaticSprite => {
     return new StaticSprite(character.getTextures().static)
             .setSize(s*(i<0?1:-1),s)
             .setLocationByCenter(x,y)
+            .setPriority(75);
 }
 
 let starting = {
@@ -49,17 +50,23 @@ let starting = {
         const darkT = new Texture('starting/dark.png');
         const darkT2 = new OnecolorTexture(RgbColor(0,0,0));
         dark = {
-            right: new StaticSprite(darkT).setSize(200, Screen.height),
-            left: new StaticSprite(darkT).setSize(-200, Screen.height),
+            right: new StaticSprite(darkT)
+                .setSize(200, Screen.height)
+                .setPriority(75),
+            left: new StaticSprite(darkT)
+                .setSize(-200, Screen.height)
+                .setPriority(75),
             left_sq: null,
             right_sq: null
         }
         dark.right_sq = new StaticSprite(darkT2,
                 new LinkedLocation(dark.right.getLocation(), {dx:dark.right.width, dy:0}))
-                .setSize(Screen.half_width+200,Screen.height);
+                .setSize(Screen.half_width+200,Screen.height)
+                .setPriority(75);
         dark.left_sq = new StaticSprite(darkT2,
                 new LinkedLocation(dark.left.getLocation(), {dx:-Screen.half_width-200, dy:0}))
-                .setSize(Screen.half_width+200,Screen.height);
+                .setSize(Screen.half_width+200,Screen.height)
+                .setPriority(75);
     },
     show(role: Role) {
         if (starting.isShowed) return;
@@ -92,16 +99,19 @@ let starting = {
             }));
         });
         const backcolorSprite = new StaticSprite(backColorTT).setSize(512*3, 256*3)
-                    .setLocationByCenter(Screen.half_width, Screen.height*2/3);
+                    .setLocationByCenter(Screen.half_width, Screen.height*2/3)
+                    .setPriority(75);
         const blackRect = new StaticSprite(new OnecolorTexture(RgbColor(0,0,0)), new Location(0,0))
-                .setSize(Screen.width, Screen.height);
+                .setSize(Screen.width, Screen.height)
+                .setPriority(75);
 
         const roleText = new StaticSprite(new TextTexture(role.name, 'arial')
                     .setColor(`rgb(${role.color.r},${role.color.g},${role.color.b})`)
                     .setFontSize(200).setAlign('center'))
                     .setSize(Screen.width, 0)
                     .setLocation(Screen.half_width, 275)
-                    .setOpacity(0);
+                    .setOpacity(0)
+                    .setPriority(75);
 
         const characterSprites = new Array<StaticSprite>();
         const mainCharSprite = createSprite(Characters.main, 0).setOpacity(0);

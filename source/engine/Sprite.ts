@@ -140,9 +140,9 @@ class StaticSprite extends Sprite {
         this.setMargin({ x: 0, y: 0 });
     }
 }
-let FullscreenSprite = (texture: Texture | string): StaticSprite => {
+let FullscreenSprite = (texture: Texture | string, priority=100): StaticSprite => {
     return new StaticSprite(typeof texture === "string" ? new Texture(texture) : texture)
-            .setSize(Screen.width, Screen.height);
+            .setSize(Screen.width, Screen.height).setPriority(priority);
 }
 
 let NullSprite: Sprite = new Sprite(null);

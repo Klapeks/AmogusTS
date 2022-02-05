@@ -20,7 +20,8 @@ class Menu {
         this.isShowed = true;
         this._sprite = new StaticSprite(this._texture)
             .setSize(this._size.width, this._size.height)
-            .setLocationByCenter(Screen.width/2, Screen.height/2);
+            .setLocationByCenter(Screen.width/2, Screen.height/2)
+            .setPriority(60);
         
         Game.getScene().addUpperSprite(this._sprite);
         MenusUtils.showedMenus.push(this);

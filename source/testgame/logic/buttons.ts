@@ -96,7 +96,8 @@ class UseButton extends Button {
                 {dx:this._sprite.margin.x < 0 ? -100 : 100,
                 dy:this._sprite.margin.y < 0 ? -125 : 125}))
             .setMargin(this._sprite.margin)
-            .setSize(200, 200);
+            .setSize(200, 200)
+            .setPriority(50);
         this.updateCD();
 
         Game.getScene().addUpperSprite(this.cooldown_text);

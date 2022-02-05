@@ -14,7 +14,8 @@ let MainMenu = {
         background = FullscreenSprite('gui/mainmenu/background.jpg');
         startButton = new StaticSprite(new MultiTexture('gui/mainmenu/button.png','gui/mainmenu/button2.png'))
                     .setSize(256*1.5, 128*1.5)
-                    .setLocationByCenter(Screen.half_width, Screen.height*3/4);
+                    .setLocationByCenter(Screen.half_width, Screen.height*3/4)
+                    .setPriority(100);
         Game.eventListeners.addMouseClick((x,y) => {
             if (!MainMenu.isShowed) return;
             if (Location.isInHitbox(x,y, startButton.getHitboxPos())){

@@ -39,27 +39,35 @@ let ejections = {
     load() {
         soundText = new Sound("voting/eject_text.wav");
         soundKick = new Sound("voting/eject_skeld.wav");
-        darkness = new StaticSprite(new Texture('dark.png')).setSize(Screen.width, Screen.height);
+        darkness = new StaticSprite(new Texture('dark.png'))
+                    .setSize(Screen.width, Screen.height)
+                    .setPriority(95);
         darkness.setSplitting(0, 0, 8, 8);
         darkness.hidden = true;
 
-        stars = new StaticSprite(new Texture('stars.png')).setSize(Screen.width, Screen.height);
+        stars = new StaticSprite(new Texture('stars.png'))
+                    .setSize(Screen.width, Screen.height)
+                    .setPriority(95);
         stars.setSplitting(0, 0, 800, 432);
         stars.hidden = true;
 
-        stars2 = new StaticSprite(new Texture('stars2.png')).setSize(Screen.width, Screen.height);
+        stars2 = new StaticSprite(new Texture('stars2.png'))
+                    .setSize(Screen.width, Screen.height)
+                    .setPriority(95);
         stars2.setSplitting(0, 0, 800, 432);
         stars2.hidden = true;
 
         let textt = new TextTexture('', 'arial').setFontSize(ejectTexts.mainsize).setColor("white").setAlign("center").setOutline('black', 5);
         textSprite = new StaticSprite(textt, new Location(Screen.width/2,
                 Screen.height/2 + ejectTexts.mainsize/2 + ejectTexts.mainmargin))
-                .setSize(Screen.width, Screen.height);
+                .setSize(Screen.width, Screen.height)
+                .setPriority(95);
 
         textt = new TextTexture('', 'arial').setFontSize(ejectTexts.subsize).setColor("white").setAlign("center").setOutline('black', 5);
         subtextSprite = new StaticSprite(textt, new Location(Screen.width/2,
                 Screen.height/2 + (ejectTexts.subsize+ejectTexts.mainsize)/2 + ejectTexts.submargin))
-                .setSize(Screen.width, Screen.height);
+                .setSize(Screen.width, Screen.height)
+                .setPriority(95);
         
         textSprite.hidden = true;
         subtextSprite.hidden = true;
@@ -84,7 +92,8 @@ let ejections = {
 
         if (texture) {
             iconSprite = new StaticSprite(texture, new Location(-200, Screen.height/2))
-                    .setSize(256*ejectTexts.iconSize, 256*ejectTexts.iconSize);
+                    .setSize(256*ejectTexts.iconSize, 256*ejectTexts.iconSize)
+                    .setPriority(95);
             Game.getScene().addUpperSprite(iconSprite);
             for (let i = 0; i < ejectTexts.ejectRotation; i+=0.1) {
                 const ratio = i/ejectTexts.ejectRotation;

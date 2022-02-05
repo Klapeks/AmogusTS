@@ -1,4 +1,8 @@
 import { HexColor } from "../../engine/Color";
+import { Game } from "../../engine/Game";
+import { Screen } from "../../engine/Screen";
+import { StaticSprite } from "../../engine/Sprite";
+import { OnecolorTexture } from "../../engine/Texture";
 import { config } from "../config";
 import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
@@ -24,6 +28,7 @@ class ImpostorRole extends Role {
 }
 
 let isFreeze = false;
+let freezeSprite: StaticSprite;
 
 const roles_impostors = {
     Impostor: new ImpostorRole('Impostor').settings({ color: 'FF0000', name: "Импостер" }),
@@ -41,14 +46,19 @@ const roles_impostors = {
             act: () => {
                 isFreeze = true;
                 const b = logic_buttons.AdditionalButton[0];
+                Game.getScene().addUpperSprite(freezeSprite);
                 b.setModifiedCooldown('#00FFFF', () => {
                     isFreeze = false;
+                    Game.getScene().removeUpperSprite(freezeSprite);
                     Characters.main.getSprite().opacity = 1;
                     b.resetModifiedCooldown();
                     b.cooldown(30);
                 })
             }
         }).setOnLoad(()=>{
+            freezeSprite = new StaticSprite(new OnecolorTexture(HexColor('00CDFF')))
+                    .setSize(Screen.width, Screen.height)
+                    .setOpacity(0.3).setPriority(10);
             GameLogic.eventListeners.onmove.addEvent(ch => {
                 if (ch.getRole().type === "impostor") return true;
                 return !isFreeze;
