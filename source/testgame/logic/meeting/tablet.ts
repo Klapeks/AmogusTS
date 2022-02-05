@@ -50,14 +50,14 @@ class Nameplate {
             new StaticSprite(nameplatesT, nloc)
             .setSize(plateSize.width, plateSize.height)
             .setSplitting(2, 10, 272, 64)
-            .setPriority(70));
+            .setPriority(55));
         
         this.charplate.set('icon', 
             new StaticSprite(this._character.getTextures().idle,
             new LinkedLocation(nloc, {dx:-20, dy:-28}))
             .setSize(1.75*128*textures.character_ratio, 1.75*190/2*textures.character_ratio)
             .setSplitting(0,0,256,190)
-            .setPriority(70));
+            .setPriority(55));
 
         const nick = this._character.getNickname();
         if (nick) {
@@ -66,7 +66,7 @@ class Nameplate {
             this.charplate.set('nickname', new StaticSprite(nickplate,
                 new LinkedLocation(nloc, {dx: 130, dy: 50}))
                 .setSize(plateSize.width,0)
-                .setPriority(70));
+                .setPriority(55));
             
         }
         if (this._character.isRoleplateShows()) {
@@ -75,7 +75,7 @@ class Nameplate {
             this.charplate.set('role', new StaticSprite(npt,
                 new LinkedLocation(nloc, {dx: 130, dy: 90}))
                 .setSize(plateSize.width,0)
-                .setPriority(70));
+                .setPriority(55));
         }
         if (!this._character.isAlive) {
             this.nameplate.opacity = 0.7;
@@ -89,7 +89,7 @@ class Nameplate {
                 new StaticSprite(deadmarkTexture,
                 new LinkedLocation(nloc, {dx: 20, dy: 20}))
                 .setSize(plateSize.height-25, plateSize.height-25)
-                .setPriority(70));
+                .setPriority(55));
         }
         this.charplate.forEach((sprite) => Game.getScene().addUpperSprite(sprite));
         return this;
@@ -130,7 +130,7 @@ class TabletMenu extends ApearableMenu {
                 .setSize(this._sprite.width, this._sprite.height)
                 .setLocation(this._sprite.getLocation().x,
                             this._sprite.getLocation().y)
-                .setPriority(60);
+                .setPriority(55);
         Game.getScene().addUpperSprite(this._glass);
         this.nameplates.push(new Nameplate(Characters.main).createSprite());
         Characters.another.filter(ch => {
@@ -143,7 +143,7 @@ class TabletMenu extends ApearableMenu {
         this._selectedNameplate = new StaticSprite(nameplatesT, this.nameplates[0].getLocation().clone())
                         .setSize(plateSize.width, plateSize.height)
                         .setSplitting(2, 78, 272, 64)
-                        .setPriority(90);
+                        .setPriority(55);
         this._selectedNameplate.hidden = true;
         Game.getScene().addUpperSprite(this._selectedNameplate);
     }
@@ -205,7 +205,7 @@ let tablet = {
             new MultiTexture('buttons/accept.png', 'buttons/accept_showed.png'),
             new Location(0,0))
             .setSize(plateSize.height-30, plateSize.height-25)
-            .setPriority(90);
+            .setPriority(55);
         acceptButton.hidden = true;
 
         menu = new TabletMenu().addClick({x:0,y:0,dx:Screen.width,dy:Screen.height}, (x,y) =>{

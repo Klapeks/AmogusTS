@@ -48,18 +48,21 @@ abstract class KillAnimation {
         _crewmateSprite = new StaticSprite(this._frameInfo.crewmateTexture)
                         .setSize(crewmate.width*multiply, crewmate.height*multiply)
                         .setLocation(crewmate.x, crewmate.y)
-                        .setSplitting(0, 0, crewmate.width, crewmate.height);
+                        .setSplitting(0, 0, crewmate.width, crewmate.height)
+                        .setPriority(55);
 
         _killerSprite = new StaticSprite(this.getImpostorTexture(killer))
                         .setSize(impostor.width*multiply, impostor.height*multiply)
                         .setLocation(impostor.x, impostor.y)
-                        .setSplitting(0, 0, impostor.width, impostor.height);
+                        .setSplitting(0, 0, impostor.width, impostor.height)
+                        .setPriority(55);
 
         if (this._frameInfo.additionalTexture && additional) 
                 _additionalSprite = new StaticSprite(this._frameInfo.additionalTexture)
                         .setSize(additional.width*multiply, additional.height*multiply)
                         .setLocation(additional.x, additional.y)
-                        .setSplitting(0, 0, additional.width, additional.height);
+                        .setSplitting(0, 0, additional.width, additional.height)
+                        .setPriority(55);
 
         caller.call(() => {
             Game.getScene().addUpperSprite(_killerSprite, _additionalSprite, _crewmateSprite);

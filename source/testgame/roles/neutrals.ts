@@ -1,4 +1,5 @@
 import { Location } from "../../engine/Location";
+import { Sound } from "../../engine/Sound";
 import { config } from "../config";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
@@ -12,6 +13,8 @@ class NeutralRole extends Role {
         this._type = "neutral";
     }
 }
+
+let shifterSound: Sound;
 
 const roles_neutrals = {
     Executioner: new NeutralRole("Executioner").settings({ color: '1DD579', name: "Палач" }),  // Палач
@@ -33,6 +36,7 @@ const roles_neutrals = {
                     killanimation_logic.play(Characters.main);
                     return;
                 }
+                shifterSound.play();
                 const myrole = Characters.main.getRole();
 
                 ch.setRole(myrole);
@@ -41,6 +45,8 @@ const roles_neutrals = {
                 myrole.onPick(ch)
                 role.onPick(Characters.main)
             }
+        }).setOnLoad(() => {
+            shifterSound = new Sound('roles/shifter.wav');
         }),  // Снитчара - пиздить роли
 
     Melok: new NeutralRole("Melok")
