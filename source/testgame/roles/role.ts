@@ -61,7 +61,8 @@ class Role {
         description?:string,
         action?: RoleAction,
         usevents?: boolean | "all",
-        winsound?: string
+        winsound?: string,
+        countAsCrewmate?: boolean
     }) {
         if (set.name) this.name = set.name;
         if (set.color) this.setColor(set.color);
@@ -69,8 +70,11 @@ class Role {
         if (set.action) this.setAction(set.action);
         if (set.usevents) this.setUseVents(set.usevents);
         if (set.winsound) this.setWinSound(set.winsound);
+        if (set.countAsCrewmate) this.countAsCrewmate = set.countAsCrewmate;
         return this;
     }
+
+    countAsCrewmate = false;
 
     onload: () => void;
     setOnLoad(f: () => void) {

@@ -17,6 +17,7 @@ class NeutralRole extends Role {
         super(id);
         this._type = "neutral";
         this.setWinSound('theend/victory_neutral.wav');
+        this.countAsCrewmate = true;
     }
 }
 
@@ -26,6 +27,7 @@ const createNoKick = (role: Role, win: Role = role) => {
         if (character.getRole() === role) {
             event.doAfterKick.push(() => {
                 theend.end(win, character, 0);
+                return false;
             })
         }
         return true;
@@ -46,7 +48,7 @@ let shifterSound: Sound;
 let executionerTarget: Character;
 
 const roles_neutrals = {
-    Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка" }),  // Спалахуйка
+    Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка", countAsCrewmate: false }),  // Спалахуйка
 
     Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Сваппер" }),  // Сваппер
 
@@ -61,6 +63,7 @@ const roles_neutrals = {
                 if (event.character === executionerTarget) {
                     event.doAfterKick.push(() => {
                         theend.end(roles_neutrals.Executioner, Characters.main, 0);
+                        return false;
                     })
                 }
             })

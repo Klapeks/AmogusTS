@@ -7,6 +7,7 @@ import { TextTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { textures } from "../../textures";
 import { GameLogic } from "../gamelogic";
+import { logic_kill } from "../kill";
 import { meeting } from "./meeting";
 
 let darkness: StaticSprite,
@@ -92,7 +93,7 @@ let ejections = {
         stars.splitting.x = 0;
         stars2.splitting.x = 0;
 
-        let afterKick = new Array<() => void>();
+        let afterKick = new Array<() => void | boolean>();
 
         if (character) {
             GameLogic.eventListeners.onkick.check({character, doAfterKick: afterKick});
@@ -108,6 +109,7 @@ let ejections = {
                     iconSprite.setLocationYaw(i);
                 }, ejectTimings[0] + (ejectTimings[3]-ejectTimings[0])*ratio);
             }
+            character.setAlive(false);
         }
         Game.getScene().addUpperSprite(subtextSprite, textSprite);
 
@@ -167,9 +169,17 @@ let ejections = {
             textSprite.hidden = true;
             subtextSprite.hidden = true;
             meeting.end();
+            let cont = true;
             if (afterKick && afterKick.length > 0) {
-                afterKick.forEach(f => f());
+                for (let f of afterKick) {
+                    const ans = f();
+                    if (typeof ans === "boolean" && ans === false) {
+                        cont = false;
+                        break;
+                    }
+                }
             }
+            if (cont) logic_kill.checkAlive(0);
         }, ejectTimings[5]);
 
         // Stage 6: Remove dark

@@ -26,6 +26,7 @@ class Character {
         this.resetSize();
     }
     resetSize() {
+        this._sprite.margin = undefined;
         this._sprite.setSize(256*textures.character_ratio, 256*textures.character_ratio);
     }
     setColor(foreground: Color | string, background: Color | string, mask: Color = {r:120,g:200,b:220}) {
@@ -223,7 +224,12 @@ class Character {
     }
 
     deadbody: DeadCharacter;
+
     isAlive: boolean = true;
+    setAlive(alive: boolean) {
+        this.isAlive = alive;
+        this.hidden = !alive;
+    }
 
     resetCharacter() {
         this.resetSize();

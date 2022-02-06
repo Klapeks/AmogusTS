@@ -56,8 +56,7 @@ let GameLogic = {
             ch.setRole(role);
             ch.getRole().onPick(ch);
 
-
-            // ch.showRoleplate();
+            ch.showRoleplate();
         });
         starting.show(Characters.main.getRole());
         Characters.main.showRoleplate();
