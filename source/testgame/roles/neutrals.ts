@@ -1,5 +1,7 @@
+import { HexColor } from "../../engine/Color";
 import { Location } from "../../engine/Location";
 import { Sound } from "../../engine/Sound";
+import { Character } from "../characters/Character";
 import { config } from "../config";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
@@ -41,12 +43,37 @@ const createNoKill = (role: Role, win: Role = role) => {
 
 let shifterSound: Sound;
 
+let executionerTarget: Character;
+
 const roles_neutrals = {
     Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка" }),  // Спалахуйка
 
     Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Сваппер" }),  // Сваппер
 
-    Executioner: new NeutralRole("Executioner").settings({ color: '1DD579', name: "Палач" }),  // Палач
+    Executioner: new NeutralRole("Executioner")
+        .settings({ color: '1DD579', name: "Палач" })
+        .setOnLoad(() => {
+            GameLogic.eventListeners.onreset.addEvent(() => {
+                executionerTarget = undefined;
+            })
+            GameLogic.eventListeners.onkick.addEvent((event) => {
+                if (!executionerTarget) return;
+                if (event.character === executionerTarget) {
+                    event.doAfterKick.push(() => {
+                        theend.end(roles_neutrals.Executioner, Characters.main, 0);
+                    })
+                }
+            })
+        })
+        .setOnPick(() => {
+            setTimeout(() => {
+                const randChar = () => Characters.another[Math.floor(Math.random()*Characters.another.length)];
+                do {
+                    executionerTarget = randChar();
+                } while (executionerTarget.getRole().type !== "crewmate");
+                executionerTarget.setNicknameColor(HexColor('1DD579'));
+            }, 1);
+        }),  // Палач
 
     VIP: new NeutralRole("VIP")
         .settings({ color: '00FF00', name: "VIP" })
