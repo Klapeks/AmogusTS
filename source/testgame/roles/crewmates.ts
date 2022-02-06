@@ -15,7 +15,10 @@ let detectiveSound: Sound;
 
 const roles_crew = {
     Crewmate: new Role('Crewmate').setVisual('00FFFF'),  // Член экипажа
+    Medium: new Role("Medium").setVisual('D09DFF'),  // Ясновидящий
 
+    Engineer: new Role("Engineer").settings({ color: '92BAC3', name: "Инженер", usevents: true }),  // Инженер
+    
     Capitan: new Role("Capitan").setVisual('65B1F9').setAction({
         select: "noone",
         cooldown: 5,
@@ -52,9 +55,7 @@ const roles_crew = {
             })
         }
     }),  // Капитан
-    Medium: new Role("Medium").setVisual('D09DFF'),  // Ясновидящий
 
-    Engineer: new Role("Engineer").settings({ color: '92BAC3', name: "Инженер", usevents: true }),  // Инженер
     Detective: new Role("Detective")
         .settings({ color: 'C0FF00', name: "Детектив" })
         .setAction({

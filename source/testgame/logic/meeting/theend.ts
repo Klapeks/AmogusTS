@@ -6,10 +6,12 @@ import { StaticSprite } from "../../../engine/Sprite";
 import { Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { config } from "../../config";
+import { darking } from "../../gui/darking";
 import { gui_sounds } from "../../gui/gui_sounds";
 import { Role } from "../../roles/role";
 import { Roles } from "../../roles/roles";
 import { Characters } from "../charslog";
+import { GameLogic } from "../gamelogic";
 import { introducing } from "./introducing";
 
 let resetButton: ClickingButton;
@@ -29,6 +31,7 @@ let theend = {
             reset(); reset = undefined;
             resetButton.hidden = true;
             Game.getScene().removeUpperSprite(resetButton.getSprite());
+            GameLogic.startGame();
         }).setOnHover(() => {
             gui_sounds.hover.play();
         });
@@ -44,7 +47,14 @@ let theend = {
         resetButton.update(Game.mouseinfo);
     },
     end(role: Role, neutral_character?: Character) {
+        setTimeout(() => {
+            darking.hide();
+            theend.callend(role, neutral_character);
+        }, darking.show(500));
+    },
+    callend(role: Role, neutral_character?: Character) {
         if (introducing.isIntroducing) return;
+        GameLogic.endGame();
         reset = undefined;
         const characterSprites = new Array<StaticSprite>();
         let background: Color;

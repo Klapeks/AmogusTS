@@ -15,7 +15,8 @@ class DeadCharacter {
             new Location(character.getLocation().x,character.getLocation().y))
             .setSize(Math.abs(character.getSprite().width), character.getSprite().height)
             .setSplitting(0, 0, character.getTextures().dead.width, character.getTextures().dead.height)
-            .setHideInDark(true);
+            .setHideInDark(true)
+            .setMargin(character.getSprite().margin);
 
         Game.getScene().addDynamicSprite(this._sprite);
         this.playDeath();

@@ -21,9 +21,12 @@ class Character {
     constructor(id: number, location?: Location) {
         this._id = id;
         this._sprite = new Sprite(textures.amogus.idle, location)
-            .setSize(256*textures.character_ratio, 256*textures.character_ratio)
             .setTexture(textures.missingo)
             .setHideInDark(true);
+        this.resetSize();
+    }
+    resetSize() {
+        this._sprite.setSize(256*textures.character_ratio, 256*textures.character_ratio);
     }
     setColor(foreground: Color | string, background: Color | string, mask: Color = {r:120,g:200,b:220}) {
         if (typeof foreground === "string") foreground = HexColor(foreground);
@@ -220,8 +223,19 @@ class Character {
     }
 
     deadbody: DeadCharacter;
-
     isAlive: boolean = true;
+
+    resetCharacter() {
+        this.resetSize();
+        this.setNicknameColor(HexColor('FFFFFF'));
+        this.hideRoleplate();
+        this.isAlive = true;
+        this.hidden = false;
+        if (this.deadbody) {
+            this.deadbody.delete();
+            this.deadbody = null;
+        }
+    }
 
     static generateNicknameTexture(nickname: string, fontsize = 32, align = "center") {
         return new TextTexture(nickname, 'Comic Sans MS, Comic Sans')

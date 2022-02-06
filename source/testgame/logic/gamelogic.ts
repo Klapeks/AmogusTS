@@ -41,30 +41,31 @@ let GameLogic = {
         logic_buttons.InteractButton.cooldown(0);
         GameLogic.eventListeners.onreset.check();
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
-            const ch = i===0 ? Characters.main : Characters.another[i-1]
-            ch.setNicknameColor(HexColor('FFFFFF'));
-            ch.hideRoleplate();
+            const ch = i===0 ? Characters.main : Characters.another[i-1];
+            ch.resetCharacter();
             if (i===0) {
-                ch.setRole(Roles.ENDER_TEST);
+                ch.setRole(Roles.Impostor);
             } else
-            // if (i===1) {
-            //     // ch.setRole(Roles.Melok);
-            // } else 
+            if (i===2) {
+                ch.setRole(Roles.Melok);
+            } else 
             ch.setRole(role);
             ch.getRole().onPick(ch);
 
-            ch.isAlive = true;
-            ch.hidden = false;
-            if (ch.deadbody) {
-                ch.deadbody.delete();
-                ch.deadbody = null;
-            }
+
             ch.showRoleplate();
         });
         starting.show(Characters.main.getRole());
         Characters.main.showRoleplate();
 
         GameLogic.isGameStarted = true;
+    },
+    endGame() {
+        GameLogic.eventListeners.onreset.check();
+        Characters.main.resetCharacter();
+        Characters.another.forEach(ch => ch.resetCharacter());
+        
+        GameLogic.isGameStarted = false;
     }
 }
 

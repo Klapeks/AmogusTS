@@ -64,13 +64,12 @@ const roles_neutrals = {
         }),  // Снитчара - пиздить роли
 
     Melok: new NeutralRole("Melok")
-        .settings({ color: 'FF9DF0', name: "Милок" })
+        .settings({ color: 'FF9DF0', name: "Милок", winsound: 'theend/role_melok.wav'})
         .setOnLoad(() => {
             GameLogic.eventListeners.onkill.addEvent((characters) => {
                 const {character, killer} = characters;
                 if (character.getRole() === roles_neutrals.Melok) {
-                    killanimation_logic.play(killer);
-                    return false;
+                    theend.end(roles_neutrals.Melok, character);
                 }
                 return true;
             })
