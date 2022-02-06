@@ -28,7 +28,7 @@ let RoleFuncs = {
         for (let i = 0; i < neutral; i++) {
             if (Math.random() < config.roles.neutral_chance) roles.push(f(suproles));
         }
-        suproles = Object.values(Roles).filter(r=>r.type==="crewmate");
+        suproles = Object.values(Roles).filter(r=>r.type==="crewmate" && r!==roles_crew.Crewmate);
         while(roles.length < amount) {
             roles.push(f(suproles));
         }
