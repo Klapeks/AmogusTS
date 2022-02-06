@@ -233,7 +233,7 @@ let tablet = {
                         ejections.eject(
                                 `${nick} был ${nameplate.getCharacter().getRole().name}`,
                                 `Осталось еще ${RoleFuncs.getImpostors(true).length} компостира`,
-                                nameplate.getCharacter().getTextures().eject);
+                                nameplate.getCharacter());
                         setTimeout(() => {
                             acceptButton.hidden = true;
                             Game.getScene().removeUpperSprite(acceptButton);

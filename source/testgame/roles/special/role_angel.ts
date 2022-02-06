@@ -7,6 +7,7 @@ import { Character } from "../../characters/Character";
 import { SelectedCharacter } from "../../characters/ExtraCharacters";
 import { Characters } from "../../logic/charslog";
 import { GameLogic } from "../../logic/gamelogic";
+import { Roles } from "../roles";
 
 let saveTexture: Texture, saveBlowTexture: Texture;
 let saveTextureInfo = { width: 512, height: 288, amount: 19 }
@@ -48,12 +49,16 @@ let role_angel = {
         })
     },
     save(character: Character) {
-        savingSound.play();
-        if (savedCharacter) {
-            savedCharacter.setNicknameColor(HexColor('FFFFFF'));
+        if (Characters.main.getRole() === Roles.Angel){
+            savingSound.play();
+            if (savedCharacter) {
+                savedCharacter.setNicknameColor(HexColor('FFFFFF'));
+            }
         }
         savedCharacter = character;
-        savedCharacter.setNicknameColor(HexColor('73BAFF'));
+        if (Characters.main.getRole() === Roles.Angel){
+            savedCharacter.setNicknameColor(HexColor('73BAFF'));
+        }
     },
     playSave(character: Character, reverse: boolean = false, degrees: number = 0) {
         const sumamount = saveTextureInfo.amount + saveBlowTextureInfo.amount;

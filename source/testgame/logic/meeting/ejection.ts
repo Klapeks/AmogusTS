@@ -4,7 +4,9 @@ import { Screen } from "../../../engine/Screen";
 import { Sound } from "../../../engine/Sound";
 import { Sprite, StaticSprite } from "../../../engine/Sprite";
 import { TextTexture, Texture } from "../../../engine/Texture";
+import { Character } from "../../characters/Character";
 import { textures } from "../../textures";
+import { GameLogic } from "../gamelogic";
 import { meeting } from "./meeting";
 
 let darkness: StaticSprite,
@@ -81,7 +83,7 @@ let ejections = {
         }
     },
     isEjecting: false,
-    eject(text: string, subtext: string = "", texture?: Texture) {
+    eject(text: string, subtext: string = "", character?: Character) {
         ejections.isEjecting = true;
         Game.getScene().addUpperSprite(darkness, stars, stars2);
         darkness.setSplitting(7*16, 7*16, 8, 8);
@@ -90,8 +92,11 @@ let ejections = {
         stars.splitting.x = 0;
         stars2.splitting.x = 0;
 
-        if (texture) {
-            iconSprite = new StaticSprite(texture, new Location(-200, Screen.height/2))
+        let afterKick = new Array<() => void>();
+
+        if (character) {
+            GameLogic.eventListeners.onkick.check({character, doAfterKick: afterKick});
+            iconSprite = new StaticSprite(character.getTextures().eject, new Location(-200, Screen.height/2))
                     .setSize(256*ejectTexts.iconSize, 256*ejectTexts.iconSize)
                     .setPriority(95);
             Game.getScene().addUpperSprite(iconSprite);
@@ -162,6 +167,9 @@ let ejections = {
             textSprite.hidden = true;
             subtextSprite.hidden = true;
             meeting.end();
+            if (afterKick && afterKick.length > 0) {
+                afterKick.forEach(f => f());
+            }
         }, ejectTimings[5]);
 
         // Stage 6: Remove dark

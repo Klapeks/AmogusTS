@@ -35,6 +35,7 @@ let GameLogic = {
         onmove: new GameEventListener<Character>(),
         onreset: new GameEventListener<void>(false),
         character_canidle: new GameEventListener<Character>(true, true),
+        onkick: new GameEventListener<{character: Character, doAfterKick: Array<() => void>}>(),
     },
     startGame() {
         logic_buttons.ActionButton.cooldown(0);
@@ -43,17 +44,20 @@ let GameLogic = {
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
             const ch = i===0 ? Characters.main : Characters.another[i-1];
             ch.resetCharacter();
-            if (i===0) {
-                ch.setRole(Roles.Impostor);
-            } else
-            if (i===2) {
-                ch.setRole(Roles.Melok);
-            } else 
+            // if (i===0) {
+            //     ch.setRole(Roles.Angel);
+            // } else
+            // if (i===2) {
+            //     ch.setRole(Roles.VIP);
+            // } else 
+            // if (i===1) {
+            //     ch.setRole(Roles.Melok);
+            // } else 
             ch.setRole(role);
             ch.getRole().onPick(ch);
 
 
-            ch.showRoleplate();
+            // ch.showRoleplate();
         });
         starting.show(Characters.main.getRole());
         Characters.main.showRoleplate();

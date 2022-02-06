@@ -80,6 +80,12 @@ let logic = {
             if (!ch.isAlive) return;
             logic_kill.kill(ch, ch, false);
         }
+        if (Game.hasKey("digit7")) {
+            const ch = Characters.another[1];
+            // if (!ch.isAlive) return;
+            role_angel.save(ch);
+            // logic_kill.kill(ch, ch, false);
+        }
     }
 }
 

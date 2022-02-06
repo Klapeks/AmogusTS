@@ -6,7 +6,9 @@ import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
 import { killanimation_logic } from "../logic/kill/ka_logic";
 import { theend } from "../logic/meeting/theend";
+import { roles_impostors } from "./impostors";
 import { Role, RoleAction, RoleType } from "./role";
+import { Roles } from "./roles";
 
 class NeutralRole extends Role {
     constructor(id: string){
@@ -16,27 +18,65 @@ class NeutralRole extends Role {
     }
 }
 
+const createNoKick = (role: Role, win: Role = role) => {
+    GameLogic.eventListeners.onkick.addEvent((event) => {
+        const character = event.character;
+        if (character.getRole() === role) {
+            event.doAfterKick.push(() => {
+                theend.end(win, character, 0);
+            })
+        }
+        return true;
+    })
+}
+const createNoKill = (role: Role, win: Role = role) => {
+    GameLogic.eventListeners.onkill.addEvent((characters) => {
+        const {character, killer} = characters;
+        if (character.getRole() === role) {
+            theend.end(win, character);
+        }
+        return true;
+    })
+}
+
 let shifterSound: Sound;
 
 const roles_neutrals = {
-    Executioner: new NeutralRole("Executioner").settings({ color: '1DD579', name: "Палач" }),  // Палач
     Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка" }),  // Спалахуйка
 
     Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Сваппер" }),  // Сваппер
-    Clown: new NeutralRole("Clown").settings({ color: 'FF0099', name: "Клоун" }),  // Клоун
-    VIP: new NeutralRole("VIP").settings({ color: '00FF00', name: "VIP" }),  //ВИП
 
+    Executioner: new NeutralRole("Executioner").settings({ color: '1DD579', name: "Палач" }),  // Палач
 
-    ENDER_TEST: new NeutralRole("ENDER_TEST")
-        .settings({ color: '000000', name: "Тестовая роль" })
-        .setAction({
-            select: "any",
-            cooldown: 10,
-            button_texture: [1,1],
-            act: (ch) => {
-                theend.end(ch.getRole());
+    VIP: new NeutralRole("VIP")
+        .settings({ color: '00FF00', name: "VIP" })
+        .setOnLoad(() => {
+            createNoKick(roles_neutrals.VIP, roles_impostors.Impostor);
+            createNoKill(roles_neutrals.VIP, roles_impostors.Impostor);
+        })
+        .setOnPick((character) => {
+            if (Characters.main.getRole().type === "crewmate") {
+                character.showRoleplate();
             }
         }),  //ВИП
+
+    Melok: new NeutralRole("Melok")
+        .settings({ color: 'FF9DF0', name: "Милок", winsound: 'theend/role_melok.wav'})
+        .setOnLoad(() => {
+            createNoKill(roles_neutrals.Melok);
+            createNoKick(roles_neutrals.Melok);
+        })
+        .setOnPick(ch => {
+            ch.getSprite().setMargin({x:ch.getSprite().width / 4.5, y:ch.getSprite().height / 2.5})
+            ch.getSprite().width /= 2;
+            ch.getSprite().height /= 2;
+        }), // Милок
+
+    Clown: new NeutralRole("Clown")
+        .settings({ color: 'FF0099', name: "Клоун" })
+        .setOnLoad(() => {
+            createNoKick(roles_neutrals.Clown);
+        }),  // Клоун
 
     Shifter: new NeutralRole("Shifter")
         .settings({ color: 'CC874D', name: "Снитчара" })
@@ -62,23 +102,6 @@ const roles_neutrals = {
         }).setOnLoad(() => {
             shifterSound = new Sound('roles/shifter.wav');
         }),  // Снитчара - пиздить роли
-
-    Melok: new NeutralRole("Melok")
-        .settings({ color: 'FF9DF0', name: "Милок", winsound: 'theend/role_melok.wav'})
-        .setOnLoad(() => {
-            GameLogic.eventListeners.onkill.addEvent((characters) => {
-                const {character, killer} = characters;
-                if (character.getRole() === roles_neutrals.Melok) {
-                    theend.end(roles_neutrals.Melok, character);
-                }
-                return true;
-            })
-        })
-        .setOnPick(ch => {
-            ch.getSprite().setMargin({x:ch.getSprite().width / 4.5, y:ch.getSprite().height / 2.5})
-            ch.getSprite().width /= 2;
-            ch.getSprite().height /= 2;
-        }), // Милок
 }
 
 export {roles_neutrals}

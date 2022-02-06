@@ -46,11 +46,15 @@ let theend = {
         if (resetButton.hidden) return;
         resetButton.update(Game.mouseinfo);
     },
-    end(role: Role, neutral_character?: Character) {
-        setTimeout(() => {
-            darking.hide();
+    end(role: Role, neutral_character?: Character, darkingtime: number = 500) {
+        if (darkingtime) {
+            setTimeout(() => {
+                darking.hide();
+                theend.callend(role, neutral_character);
+            }, darking.show(darkingtime));
+        } else {
             theend.callend(role, neutral_character);
-        }, darking.show(500));
+        }
     },
     callend(role: Role, neutral_character?: Character) {
         if (introducing.isIntroducing) return;
@@ -72,7 +76,7 @@ let theend = {
                         .filter(ch => ch.getRole().type==="neutral")[0];
                 }
                 background = color = neutral_character.getRole().color;
-                title = `${neutral_character.getNickname()} победил!`;
+                title = `${neutral_character.getRole().name} победил!`;
                 fontsize = 175;
 
                 characterSprites.push(introducing.createCharacterSprite(neutral_character, 0));
