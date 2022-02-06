@@ -56,13 +56,13 @@ const roles_neutrals = {
         .setAction({
             select: "notinfected",
             cooldown: 1,
-            button_texture: [0,0],
+            button_texture: [0,4],
             act: role_arsonist.dose
         })
         .addAdditionalAction({
             select: "regulatable",
             cooldown: 5,
-            button_texture: [0,0],
+            button_texture: [2,3],
             act: role_arsonist.ignite
         })
         .setOnPick(() => {
