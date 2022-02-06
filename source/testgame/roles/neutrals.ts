@@ -3,6 +3,7 @@ import { Location } from "../../engine/Location";
 import { Sound } from "../../engine/Sound";
 import { Character } from "../characters/Character";
 import { config } from "../config";
+import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
@@ -11,6 +12,7 @@ import { theend } from "../logic/meeting/theend";
 import { roles_impostors } from "./impostors";
 import { Role, RoleAction, RoleType } from "./role";
 import { Roles } from "./roles";
+import { role_arsonist } from "./special/role_arsonist";
 
 class NeutralRole extends Role {
     constructor(id: string){
@@ -48,7 +50,24 @@ let shifterSound: Sound;
 let executionerTarget: Character;
 
 const roles_neutrals = {
-    Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка", countAsCrewmate: false }),  // Спалахуйка
+    Arsonist: new NeutralRole("Arsonist")
+        .settings({ color: 'FF9100', name: "Спалахуйка", countAsCrewmate: false })
+        .setOnLoad(role_arsonist.load)
+        .setAction({
+            select: "notinfected",
+            cooldown: 1,
+            button_texture: [0,0],
+            act: role_arsonist.dose
+        })
+        .addAdditionalAction({
+            select: "regulatable",
+            cooldown: 5,
+            button_texture: [0,0],
+            act: role_arsonist.ignite
+        })
+        .setOnPick(() => {
+            logic_buttons.AdditionalButton[0].unselect();
+        }),  // Спалахуйка
 
     Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Стрелочник" }),  // Сваппер
 

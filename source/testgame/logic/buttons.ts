@@ -53,6 +53,7 @@ class UseButton extends Button {
     }
     click() {
         if (this.hidden) return;
+        if (!this._isselected) return;
         if (this.cooldown_time) return;
         if (this.clickRule && !this.clickRule()) return;
         let f = this._onclicking[this._nowtex];
@@ -149,6 +150,7 @@ let logic_buttons = {
         return interactButton.cooldown_time > 0
     },
     buttonSelectUpdate(butid: number | true, neardead: DeadCharacter) {
+        if (!GameLogic.isGameStarted) return;
         const button = butid === true ? actionButton : additionalButton[butid];
         if (!button) return;
         button.updateCD();
@@ -157,15 +159,15 @@ let logic_buttons = {
             return;
         }
         const role = Characters.main.getRole();
-        if (!role.canSelectSomeone(false, butid)) {
-            button.select();
-            return;
-        }
         if (butid !== true) {
             if (!role.additionalActions) return;
             if (role.additionalActions.length <= butid && !role.additionalActions[butid]) return;
         }
         const act = butid === true ? role.action : role.additionalActions[butid];
+        if (!role.canSelectSomeone(false, butid)) {
+            if (act && act.select !== "regulatable") button.select();
+            return;
+        }
         if (act.select === "deadbody") {
             if (!neardead) {
                 button.unselect();
@@ -229,7 +231,7 @@ let logic_buttons = {
                             }
                             return;
                         }
-                        let ch = logic_character.trySelectCharacter(true, selection === "notimpostor");
+                        let ch = logic_character.trySelectCharacter(true, selection === "notimpostor", selection === "notinfected");
                         if (ch) {
                             role.additionalActions[i].act(ch);
                             additionalButton[i].cooldown(role.additionalActions[i].cooldown);
@@ -263,7 +265,7 @@ let logic_buttons = {
                         }
                         return;
                     }
-                    let ch = logic_character.trySelectCharacter(true, selection === "notimpostor");
+                    let ch = logic_character.trySelectCharacter(true, selection === "notimpostor", selection === "notinfected");
                     if (ch) {
                         role.action.act(ch);
                         actionButton.cooldown(role.action.cooldown);

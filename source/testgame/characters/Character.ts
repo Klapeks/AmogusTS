@@ -237,11 +237,14 @@ class Character {
         this.hideRoleplate();
         this.isAlive = true;
         this.hidden = false;
+        this.isInfected = false;
         if (this.deadbody) {
             this.deadbody.delete();
             this.deadbody = null;
         }
     }
+
+    isInfected = false;
 
     static generateNicknameTexture(nickname: string, fontsize = 32, align = "center") {
         return new TextTexture(nickname, 'Comic Sans MS, Comic Sans')

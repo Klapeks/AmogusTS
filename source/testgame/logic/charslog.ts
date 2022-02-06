@@ -92,14 +92,15 @@ let logic_character = {
     updateSelect() {
         const canselect = Characters.main.getRole().canSelectSomeone();
         if (!canselect) return;
-        let character = logic_character.trySelectCharacter(true, canselect==="notimpostor");
+        let character = logic_character.trySelectCharacter(true, canselect==="notimpostor", canselect==="notinfected");
         if (character) logic_character.selectCharacter(character);
         else logic_character.unSelectCharacter();
     },
-    trySelectCharacter(onlyAlive: boolean = true, excludeImpostors = false) {
+    trySelectCharacter(onlyAlive: boolean = true, excludeImpostors = false, excludeInfected = false) {
         let character: Character = undefined;
         for (let ch of Characters.another) {
             if (excludeImpostors && ch.getRole().type==="impostor") continue;
+            if (excludeInfected && ch.isInfected) continue;
             if (ch.hidden) continue;
             if (!character || Characters.main.distanceSquared(ch) < Characters.main.distanceSquared(character)) {
                 if (!onlyAlive) character = ch;

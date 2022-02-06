@@ -6,7 +6,7 @@ import { logic_buttons } from "../logic/buttons";
 import { Characters, logic_character } from "../logic/charslog";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
-type RoleSelection = "any" | "notimpostor" | "noone" | "deadbody";
+type RoleSelection = "any" | "notimpostor" | "noone" | "deadbody" | "notinfected" | "regulatable";
 interface RoleAction {
     select: RoleSelection,
     act: (ch: Character) => void,
@@ -138,6 +138,7 @@ class Role {
             if (this.action) {
                 if (this.action.select === "any") return "any";
                 if (this.action.select === "notimpostor") return "notimpostor";
+                if (this.action.select === "notinfected") return "notinfected";
                 if (!onlyalive && this.action.select === "deadbody") return "deadbody";
             }
         if (this.additionalActions) {
@@ -145,6 +146,7 @@ class Role {
                 for (let act of this.additionalActions) {
                     if (act.select === "any") return "any";
                     if (act.select === "notimpostor") return "notimpostor";
+                    if (act.select === "notinfected") return "notinfected";
                     if (!onlyalive && act.select === "deadbody") return "deadbody";
                 }
             } else if (type!==true) {
@@ -152,6 +154,7 @@ class Role {
                 const act = this.additionalActions[type];
                 if (act.select === "any") return "any";
                 if (act.select === "notimpostor") return "notimpostor";
+                if (act.select === "notinfected") return "notinfected";
                 if (!onlyalive && act.select === "deadbody") return "deadbody";
             }
         }

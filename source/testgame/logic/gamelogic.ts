@@ -40,12 +40,13 @@ let GameLogic = {
     startGame() {
         logic_buttons.ActionButton.cooldown(0);
         logic_buttons.InteractButton.cooldown(0);
+        logic_buttons.AdditionalButton.forEach(b => { b.cooldown(0); });
         GameLogic.eventListeners.onreset.check();
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
             const ch = i===0 ? Characters.main : Characters.another[i-1];
             ch.resetCharacter();
             if (i===0) {
-                ch.setRole(Roles.Vanisher);
+                ch.setRole(Roles.Arsonist);
             } else
             // if (i===2) {
             //     ch.setRole(Roles.VIP);
