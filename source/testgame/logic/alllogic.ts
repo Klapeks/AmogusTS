@@ -16,9 +16,11 @@ import { randomRoles, RoleFuncs, Roles } from "../roles/roles";
 import { MainMenu } from "../gui/mainmenu";
 import { GameLogic } from "./gamelogic";
 import { logic_kill } from "./kill";
+import { introducing } from "./meeting/introducing";
 
 let logic = {
     load(){
+        introducing.load();
         starting.load();
         logic_character.load();
         logic_buttons.load();
@@ -59,7 +61,7 @@ let logic = {
             role_angel.playSave(Characters.main);
         }
         if (Game.hasKey("digit0")) {
-            if (starting.isShowed) return;
+            if (introducing.isIntroducing) return;
             GameLogic.startGame();
         }
         if (Game.hasKey("digit9")) {
