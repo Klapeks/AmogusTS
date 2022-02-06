@@ -64,6 +64,7 @@ let RoleFuncs = {
                     }
                 })
             }
+            role.getWinSound();
         }
     },
     update() {

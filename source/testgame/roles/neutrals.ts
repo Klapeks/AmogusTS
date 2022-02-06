@@ -5,12 +5,14 @@ import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
 import { killanimation_logic } from "../logic/kill/ka_logic";
+import { theend } from "../logic/meeting/theend";
 import { Role, RoleAction, RoleType } from "./role";
 
 class NeutralRole extends Role {
     constructor(id: string){
         super(id);
         this._type = "neutral";
+        this.setWinSound('theend/victory_neutral.wav');
     }
 }
 
@@ -23,6 +25,18 @@ const roles_neutrals = {
     Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Сваппер" }),  // Сваппер
     Clown: new NeutralRole("Clown").settings({ color: 'FF0099', name: "Клоун" }),  // Клоун
     VIP: new NeutralRole("VIP").settings({ color: '00FF00', name: "VIP" }),  //ВИП
+
+
+    ENDER_TEST: new NeutralRole("ENDER_TEST")
+        .settings({ color: '000000', name: "Тестовая роль" })
+        .setAction({
+            select: "any",
+            cooldown: 10,
+            button_texture: [1,1],
+            act: (ch) => {
+                theend.end(ch.getRole());
+            }
+        }),  //ВИП
 
     Shifter: new NeutralRole("Shifter")
         .settings({ color: 'CC874D', name: "Снитчара" })

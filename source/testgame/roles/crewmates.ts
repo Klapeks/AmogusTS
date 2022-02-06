@@ -73,7 +73,7 @@ const roles_crew = {
         }),  
 
     Altruist: new Role("Altruist")
-        .settings({ color: 'C0FF00', name: "Детектив" })
+        .settings({ color: 'C0FF00', name: "Альтруист" })
         .setVisual('E7472F').setAction({
             button_texture: [2,0],
             cooldown: 1,

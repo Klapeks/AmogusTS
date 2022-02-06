@@ -1,14 +1,25 @@
 import { Color, RgbColor } from "../../../engine/Color"
 import { Game } from "../../../engine/Game";
-import { LinkedLocation, Location } from "../../../engine/Location";
+import { LinkedLocation } from "../../../engine/Location";
 import { Screen } from "../../../engine/Screen";
 import { Sound } from "../../../engine/Sound";
 import { StaticSprite } from "../../../engine/Sprite"
 import { OnecolorTexture, TextTexture, Texture } from "../../../engine/Texture";
+import { Character } from "../../characters/Character";
 import { darking } from "../../gui/darking";
 import { GameLogic } from "../gamelogic";
 
 let backcolor: Texture;
+
+let charactersLocation = {
+    centerx: Screen.half_width,
+    centery: Screen.half_height*4/3,
+    dy: 30, dx: 70,
+    mainSize: 500,
+    size: 400,
+    dsize: 10
+}
+
 let dark: {
     left: StaticSprite,
     left_sq: StaticSprite
@@ -101,7 +112,7 @@ let introducing = {
             setTimeout(() => {
                 dark.left.getLocation().x -= Screen.half_width*dap;
                 dark.right.getLocation().x += Screen.half_width*dap;
-            }, settings.timings.wait_dark_diffusion + i); //settings.timings.apear_main/2 
+            }, settings.timings.wait_dark_diffusion + i);
         }
 
         setTimeout(() => {
@@ -114,6 +125,18 @@ let introducing = {
             }, 1);
         }, settings.timings.sum);
         return {introduceText, dap}
+    },
+    createCharacterSprite(character: Character, i: number): StaticSprite {
+        const x = charactersLocation.centerx - i*charactersLocation.dx + i*charactersLocation.dsize - (i?i/Math.abs(i)*charactersLocation.dx/2:0);
+        const y = charactersLocation.centery - Math.abs(i)*charactersLocation.dy - (i===0?charactersLocation.dy/2:0);
+        const s = i===0 ? charactersLocation.mainSize : (charactersLocation.size - Math.abs(i)*charactersLocation.dsize);
+        return new StaticSprite(character.getTextures().static)
+                .setSize(s*(i<0?1:-1),s)
+                .setLocationByCenter(x,y)
+                .setPriority(75);
+    },
+    get charactersLocation() {
+        return charactersLocation;
     }
 }
 

@@ -27,6 +27,7 @@ class ImpostorRole extends Role {
         this._type = "impostor";
         this.setAction(ImpostorAction);
         this.setUseVents(true);
+        this.setWinSound('theend/victory_impostor.wav');
     }
 }
 

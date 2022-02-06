@@ -1,4 +1,5 @@
 import { Color, HexColor } from "../../engine/Color";
+import { Sound } from "../../engine/Sound";
 import { SplitingTexture, Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 import { logic_buttons } from "../logic/buttons";
@@ -59,13 +60,15 @@ class Role {
         name?:string,
         description?:string,
         action?: RoleAction,
-        usevents?: boolean | "all"
+        usevents?: boolean | "all",
+        winsound?: string
     }) {
         if (set.name) this.name = set.name;
         if (set.color) this.setColor(set.color);
         if (set.description) this.description = set.description;
         if (set.action) this.setAction(set.action);
         if (set.usevents) this.setUseVents(set.usevents);
+        if (set.winsound) this.setWinSound(set.winsound);
         return this;
     }
 
@@ -156,6 +159,17 @@ class Role {
         if (!this.additionalActions) this.additionalActions = new Array();
         this.additionalActions.push(action);
         return this;
+    }
+
+    private _winSound: Sound | string = 'theend/victory_crewmate.wav';
+    setWinSound(sound: Sound | string) {
+        this._winSound = sound;
+        return this;
+    }
+    getWinSound(): Sound {
+        if (typeof this._winSound === "string") 
+            this._winSound = new Sound(this._winSound);
+        return this._winSound;
     }
 }
 
