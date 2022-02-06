@@ -1,49 +1,52 @@
+import { ClickingButton } from "../../engine/Button";
 import { Game } from "../../engine/Game";
-import { Location } from "../../engine/Location";
 import { Screen } from "../../engine/Screen";
 import { FullscreenSprite, StaticSprite } from "../../engine/Sprite";
 import { MultiTexture, Texture } from "../../engine/Texture"
 import { GameLogic } from "../logic/gamelogic";
 import { darking } from "./darking";
+import { gui_sounds } from "./gui_sounds";
 
 let background: StaticSprite;
-let startButton: StaticSprite;
+let startButton: ClickingButton;
 
 let MainMenu = {
     load() {
         background = FullscreenSprite('gui/mainmenu/background.jpg');
-        startButton = new StaticSprite(new MultiTexture('gui/mainmenu/button.png','gui/mainmenu/button2.png'))
-                    .setSize(256*1.5, 128*1.5)
-                    .setLocationByCenter(Screen.half_width, Screen.height*3/4)
-                    .setPriority(100);
+        
+        startButton = new ClickingButton(new Texture('gui/mainmenu/button.png'))
+                .setHoverTexture(new Texture('gui/mainmenu/button2.png'));
+        startButton.getSprite().setSize(256*1.5,128*1.5)
+                .setLocationByCenter(Screen.half_width, Screen.height*3/4)
+                .setPriority(100);
+        startButton.setOnClick(() => {
+            gui_sounds.select.play();
+            MainMenu.isShowed = false;
+            setTimeout(() => {
+                GameLogic.startGame();
+                MainMenu.hide();
+                darking.hide(0);
+            }, darking.show());
+        }).setOnHover(() => {
+            gui_sounds.hover.play();
+        });
         Game.eventListeners.addMouseClick((x,y) => {
             if (!MainMenu.isShowed) return;
-            if (Location.isInHitbox(x,y, startButton.getHitboxPos())){
-                MainMenu.isShowed = false;
-                setTimeout(() => {
-                    GameLogic.startGame();
-                    MainMenu.hide();
-                    darking.hide(0);
-                }, darking.show());
-            }
+            startButton.doClick({posX: x, posY: y});
         })
     },
     update() {
         if (!MainMenu.isShowed) return;
-        if (Location.isInHitbox(Game.mouseinfo.posX,Game.mouseinfo.posY, startButton.getHitboxPos())){
-            (startButton.getTexture() as MultiTexture).setID(1);
-        } else {
-            (startButton.getTexture() as MultiTexture).setID(0);
-        }
+        startButton.update();
     },
     isShowed: false,
     show() {
         MainMenu.isShowed = true;
-        Game.getScene().addUpperSprite(background, startButton);
+        Game.getScene().addUpperSprite(background, startButton.getSprite());
     },
     hide() {
         MainMenu.isShowed = false;
-        Game.getScene().removeUpperSprite(background, startButton);
+        Game.getScene().removeUpperSprite(background, startButton.getSprite());
     }
 }
 

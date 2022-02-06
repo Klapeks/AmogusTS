@@ -22,12 +22,6 @@ class Button {
     get margin() {
         return this._sprite.margin;
     }
-    set hidden(b: boolean){
-        this._sprite.hidden = b;
-    }
-    get hidden(){
-        return this._sprite.hidden;
-    }
     private _altkey: string;
     setAltKey(key: string) {
         this._altkey = key;
@@ -35,6 +29,12 @@ class Button {
     }
     getAltKey() {
         return this._altkey;
+    }
+    set hidden(b: boolean){
+        this._sprite.hidden = b;
+    }
+    get hidden(){
+        return this._sprite.hidden;
     }
     getSprite(){
         return this._sprite;
@@ -108,4 +108,58 @@ let ButtonFuncs = {
         });
     }
 }
-export {Button, ButtonFuncs}
+
+class ClickingButton {
+    protected _sprite: StaticSprite;
+    private _texture: Texture;
+    private _hoverT: Texture;
+    constructor(texture: Texture, location: Location = new Location(0,0)) {
+        this._texture = texture;
+        this._sprite = new StaticSprite(texture, location);
+    }
+
+    isHovering = false;
+    setHoverTexture(texture: Texture) {
+        this._hoverT = texture;
+        return this;
+    }
+
+    set hidden(b: boolean){
+        this._sprite.hidden = b;
+    }
+    get hidden(){
+        return this._sprite.hidden;
+    }
+    getSprite(){
+        return this._sprite;
+    }
+    update(mouse: {posX: number, posY: number} = Game.mouseinfo) {
+        if (!this._hoverT) return;
+        if (Location.isInHitbox(mouse.posX, mouse.posY, this._sprite.getHitboxPos())) {
+            if (this.isHovering) return;
+            this.isHovering = true;
+            this._sprite.setTexture(this._hoverT);
+            if (this.onhover) this.onhover();
+        } else {
+            if (!this.isHovering) return;
+            this.isHovering = false;
+            this._sprite.setTexture(this._texture);
+        }
+    }
+    doClick(mouse: {posX: number, posY: number}) {
+        if (Location.isInHitbox(mouse.posX, mouse.posY, this._sprite.getHitboxPos())) {
+            if (this.onclick) this.onclick();
+        }
+    }
+    onclick: () => void;
+    setOnClick(c: () => void) {
+        this.onclick = c;
+        return this;
+    }
+    onhover: () => void;
+    setOnHover(h: () => void) {
+        this.onhover = h;
+        return this;
+    }
+}
+export {Button, ButtonFuncs, ClickingButton}

@@ -17,11 +17,15 @@ import { MainMenu } from "../gui/mainmenu";
 import { GameLogic } from "./gamelogic";
 import { logic_kill } from "./kill";
 import { introducing } from "./meeting/introducing";
+import { theend } from "./meeting/theend";
+import { gui_sounds } from "../gui/gui_sounds";
 
 let logic = {
     load(){
+        gui_sounds.load();
         introducing.load();
         starting.load();
+        theend.load();
         logic_character.load();
         logic_buttons.load();
         Joystick.create(new Texture('buttons/joystick.png'),new Texture('buttons/joystickbutton.png'));
@@ -40,10 +44,9 @@ let logic = {
         voting.update();
         ejections.update();
         killanimation_logic.update();
-        
         logic_map.update();
-
         RoleFuncs.update();
+        theend.update();
         
 
         if (Game.hasKey("keyk")) {

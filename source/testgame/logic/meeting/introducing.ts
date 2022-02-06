@@ -7,6 +7,7 @@ import { StaticSprite } from "../../../engine/Sprite"
 import { OnecolorTexture, TextTexture, Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { darking } from "../../gui/darking";
+import { gui_sounds } from "../../gui/gui_sounds";
 import { GameLogic } from "../gamelogic";
 
 let backcolor: Texture;
@@ -40,7 +41,8 @@ type IntroduceSettings = {
     sprites: StaticSprite[],
     background: Color,
     sound: Sound,
-    timings: IntroducingTime
+    timings: IntroducingTime,
+    fontsize?: number
 };
 
 let introducing = {
@@ -97,8 +99,9 @@ let introducing = {
                 .setPriority(75);
                 
         const introduceText = new StaticSprite(new TextTexture(settings.text, 'arial')
-                    .setColor(`rgb(${settings.color.r},${settings.color.g},${settings.color.b})`)
-                    .setFontSize(200).setAlign('center'))
+                    .setColor(settings.color)
+                    .setFontSize(settings.fontsize || 200)
+                    .setAlign('center'))
                     .setSize(Screen.width, 0)
                     .setLocation(Screen.half_width, 275)
                     .setOpacity(0)
@@ -114,17 +117,14 @@ let introducing = {
                 dark.right.getLocation().x += Screen.half_width*dap;
             }, settings.timings.wait_dark_diffusion + i);
         }
-
-        setTimeout(() => {
-            darking.show(0);
-            setTimeout(() => {
-                darking.hide();
+        return {
+            introduceText, dap,
+            remove() {
                 Game.getScene().removeUpperSprite(blackRect, backcolorSprite, 
                         ...settings.sprites, ...Object.values(dark), introduceText);
                 introducing.isIntroducing = false;
-            }, 1);
-        }, settings.timings.sum);
-        return {introduceText, dap}
+            }
+        }
     },
     createCharacterSprite(character: Character, i: number): StaticSprite {
         const x = charactersLocation.centerx - i*charactersLocation.dx + i*charactersLocation.dsize - (i?i/Math.abs(i)*charactersLocation.dx/2:0);

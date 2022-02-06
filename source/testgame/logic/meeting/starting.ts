@@ -2,11 +2,11 @@ import { Color, HexColor, RgbColor } from "../../../engine/Color";
 import { Sound } from "../../../engine/Sound";
 import { StaticSprite } from "../../../engine/Sprite";
 import { config } from "../../config";
+import { darking } from "../../gui/darking";
 import { Role } from "../../roles/role";
 import { Roles } from "../../roles/roles";
 import { Characters } from "../charslog";
 import { introducing } from "./introducing";
-import { theend } from "./theend";
 
 let roundstartSound: Sound;
 
@@ -79,6 +79,14 @@ let starting = {
                 opt.introduceText.getLocation().y += opt.dap*25;
             }, i);
         }
+
+        setTimeout(() => {
+            darking.show(0);
+            setTimeout(() => {
+                darking.hide();
+                opt.remove();
+            }, 1);
+        }, config.starting_time.sum);
     }
 }
 
