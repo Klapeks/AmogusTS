@@ -22,7 +22,7 @@ const roles_crew = {
     Capitan: new Role("Capitan").setVisual('65B1F9').setAction({
         select: "noone",
         cooldown: 5,
-        button_texture: [1,1],
+        button_texture: [0,3],
         act: () => {
             const res = Game.getCamera().getResolution();
             const res_x = res.x;

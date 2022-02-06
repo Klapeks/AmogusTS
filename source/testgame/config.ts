@@ -14,7 +14,11 @@ let config = {
     roles: {
         imposters: 2,
         neutral: 1,
-        neutral_chance: 0.4
+        neutral_chance: 0.4,
+        vanisher: {
+            vanish_time: 500,
+            vanish_opacity: 0.3
+        }
     }
 }
 

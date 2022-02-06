@@ -12,6 +12,10 @@ let role_medic = {
     },
     update() {
         if (!dragging) return;
+        if (!dragging.getSprite()) {
+            dragging = undefined;
+            return;
+        }
         const x = Characters.main.getLocation().x - dragging.getSprite().getLocation().x;
         const y = Characters.main.getLocation().y - dragging.getSprite().getLocation().y+10;
         const lerp = 15;

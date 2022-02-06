@@ -44,9 +44,9 @@ let GameLogic = {
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
             const ch = i===0 ? Characters.main : Characters.another[i-1];
             ch.resetCharacter();
-            // if (i===0) {
-            //     ch.setRole(Roles.Executioner);
-            // } else
+            if (i===0) {
+                ch.setRole(Roles.Vanisher);
+            } else
             // if (i===2) {
             //     ch.setRole(Roles.VIP);
             // } else 
@@ -58,6 +58,13 @@ let GameLogic = {
 
             ch.showRoleplate();
         });
+        if (Characters.main.getRole().type === "impostor") {
+            Characters.another.forEach(ch => {
+                if (ch.getRole().type === "impostor") {
+                    ch.setNicknameColor(HexColor('FF0000'))
+                }
+            })
+        }
         starting.show(Characters.main.getRole());
         Characters.main.showRoleplate();
 

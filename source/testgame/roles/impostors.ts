@@ -11,6 +11,7 @@ import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
 import { Role, RoleAction, RoleType } from "./role";
+import { role_vanisher } from "./special/role_vanisher";
 
 const ImpostorAction: RoleAction = {
     select: "notimpostor",
@@ -50,7 +51,7 @@ const roles_impostors = {
         .addAdditionalAction({
             select: "noone",
             cooldown: 15,
-            button_texture: [2,2],
+            button_texture: [1,3],
             act: () => {
                 const f = (character: Character, o:number) => {character.getSprite().setFilter('brightness', o);} 
                 f(Characters.main, 0);
@@ -103,13 +104,7 @@ const roles_impostors = {
             cooldown: 10,
             button_texture: [2,1],
             act: () => {
-                Characters.main.getSprite().opacity = 0.3;
-                const b = logic_buttons.AdditionalButton[0];
-                b.setModifiedCooldown('#00FF00', () => {
-                    Characters.main.getSprite().opacity = 1;
-                    b.resetModifiedCooldown();
-                    b.cooldown(5);
-                })
+                role_vanisher.vanish(Characters.main);
             }
         }),  // Невидимка
 

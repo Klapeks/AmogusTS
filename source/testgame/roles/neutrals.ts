@@ -50,7 +50,7 @@ let executionerTarget: Character;
 const roles_neutrals = {
     Arsonist: new NeutralRole("Arsonist").settings({ color: 'FF9100', name: "Спалахуйка", countAsCrewmate: false }),  // Спалахуйка
 
-    Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Сваппер" }),  // Сваппер
+    Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Стрелочник" }),  // Сваппер
 
     Executioner: new NeutralRole("Executioner")
         .settings({ color: '1DD579', name: "Палач" })
