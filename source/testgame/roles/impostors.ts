@@ -4,6 +4,7 @@ import { Screen } from "../../engine/Screen";
 import { Sound } from "../../engine/Sound";
 import { StaticSprite } from "../../engine/Sprite";
 import { OnecolorTexture } from "../../engine/Texture";
+import { Character } from "../characters/Character";
 import { config } from "../config";
 import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
@@ -38,7 +39,30 @@ const roles_impostors = {
 
     Shapeshifter: new ImpostorRole("Shapeshifter").settings({ color: '9A1F27', name: "Оборотень" }),  // Оборотень
 
-    Camouflager: new ImpostorRole("Camouflager").settings({ color: '029717', name: "Камуфляжер" }),  // Камуфляжер
+
+    Sniper: new ImpostorRole("Sniper").settings({ color: 'FF4822', name: "Снайпер"}),  // Снайпер
+    
+    Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча", usevents: "all"}),  // Саранча
+
+    Camouflager: new ImpostorRole("Camouflager")
+        .settings({ color: '029717', name: "Камуфляжер" })
+        .addAdditionalAction({
+            select: "noone",
+            cooldown: 15,
+            button_texture: [2,2],
+            act: () => {
+                const f = (character: Character, o:number) => {character.getSprite().setFilter('brightness', o);} 
+                f(Characters.main, 0);
+                Characters.another.forEach(ch => f(ch, 0));
+                const b = logic_buttons.AdditionalButton[0];
+                b.setModifiedCooldown('#555555', () => {
+                    f(Characters.main, undefined);
+                    Characters.another.forEach(ch => f(ch, undefined));
+                    b.resetModifiedCooldown();
+                    b.cooldown(30);
+                })
+            }
+        }),  // Камуфляжер
 
     Freezer: new ImpostorRole("Freezer")
         .settings({ color: 'C9CAFF', name: "Холодильник" })
@@ -98,10 +122,6 @@ const roles_impostors = {
                 ch.deadbody?.delete();
             }
         }),  // Санитар
-
-    Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча" }),  // Саранча
-
-    Sniper: new ImpostorRole("Sniper").settings({ color: 'FF4822', name: "Снайпер" }),  // Снайпер
 }
 
 export {roles_impostors}

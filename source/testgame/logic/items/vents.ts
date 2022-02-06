@@ -10,6 +10,8 @@ import { Character } from "../../characters/Character";
 import { config } from "../../config";
 import { logic_buttons } from "../buttons";
 import { Characters } from "../charslog";
+import { GameLogic } from "../gamelogic";
+import { logic_map } from "../maps/maplogic";
 
 let textures = {
     idle: NullTexture,
@@ -97,10 +99,23 @@ let vent_logic = {
     ventAnimationTime: 175, /* in ms */
     impostorVentAnimTime: 150, /* in ms */
     showedArrows: new Array<VentArrow>(),
-    showArrows(vent: Vents) {
+    showArrows(vent: Vents, allvents = false) {
         vent_logic.hideArrows();
-        if (vent.directions) for (let v of vent.directions) {
-            vent_logic.showedArrows.push(new VentArrow(vent, v));
+        if (allvents) {
+            let usedvents = new Array<Vents>();
+            for (let vv of logic_map.getMap().vents) {
+                if (vv.directions) for (let v of vv.directions) {
+                    if (!usedvents.includes(v) && v!==vent) {
+                        usedvents.push();
+                        vent_logic.showedArrows.push(new VentArrow(vent, v));
+                    }
+                }
+            }
+            usedvents = null;
+        } else {
+            if (vent.directions) for (let v of vent.directions) {
+                vent_logic.showedArrows.push(new VentArrow(vent, v));
+            }
         }
     },
     hideArrows() {

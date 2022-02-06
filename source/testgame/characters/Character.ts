@@ -98,7 +98,7 @@ class Character {
             vent_logic.playMoveSound();
             this.ventilation = vent;
         }
-        vent_logic.showArrows(vent);
+        vent_logic.showArrows(vent, this._role.usevents === "all");
     }
     outVent(isAnimation: boolean = true){
         vent_logic.hideArrows();

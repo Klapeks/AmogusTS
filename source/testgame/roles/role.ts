@@ -34,8 +34,8 @@ class Role {
         this.description = desc;
         return this;
     }
-    usevents: boolean;
-    setUseVents(b: boolean) {
+    usevents: boolean | "all";
+    setUseVents(b: boolean | "all") {
         this.usevents = b;
         return this;
     }
@@ -59,7 +59,7 @@ class Role {
         name?:string,
         description?:string,
         action?: RoleAction,
-        usevents?: boolean
+        usevents?: boolean | "all"
     }) {
         if (set.name) this.name = set.name;
         if (set.color) this.setColor(set.color);

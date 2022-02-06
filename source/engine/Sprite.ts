@@ -104,10 +104,39 @@ class Sprite {
         this._hideInDark = b;
         return this;
     }
-    opacity: number;
+    
+    get opacity(): number {
+        return this.getFilter('opacity');
+    }
+    set opacity(o: number) {
+        this.setFilter('opacity', o);
+    }
     setOpacity(opacity: number){
         this.opacity = opacity;
         return this;
+    }
+
+    private _filter: any = {};
+    setFilter(filter: string, args: any) {
+        if (args === undefined) {
+            delete this._filter[filter];
+        } else {
+            this._filter[filter] = args;
+        }
+        this.regenFilter();
+    }
+    getFilter(filter: string) {
+        return this._filter[filter];
+    }
+    private _filters: string;
+    private regenFilter(){
+        this._filters = "";
+        for (let key in this._filter) {
+            this._filters += `${key}(${this._filter[key]}) `;
+        }
+    }
+    getFilters() {
+        return this._filters;
     }
     
     priority = 0;

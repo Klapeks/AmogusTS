@@ -10,6 +10,7 @@ import { SuperMath } from "../engine/utils/SuperMath";
 import { OnecolorTexture, TextTexture, Texture } from "../engine/Texture";
 
 let _lx: number, _ly: number, _lw: number, _lh: number;
+// let _ctxFilter: string;
 
 class Canvas2DScene extends Scene {
     private _canvas: HTMLCanvasElement;
@@ -76,10 +77,10 @@ class Canvas2DScene extends Scene {
         if (!img) {
             if (sprite.getTexture() instanceof TextTexture) {
                 if (EngineConfig.hide_sprites_under_dark && !isBack && Light.isLightsEnable()){
-                    Canvas2DScene.drawText(this._hideindark_ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.opacity)
+                    Canvas2DScene.drawText(this._hideindark_ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.getFilters())
                     if (sprite.isHideInDark()) return;
                 }
-                Canvas2DScene.drawText(ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.opacity)
+                Canvas2DScene.drawText(ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.getFilters())
             }
             if (sprite.getTexture() instanceof OnecolorTexture) {
                 const {r,g,b} = (sprite.getTexture() as OnecolorTexture).color;
@@ -100,17 +101,17 @@ class Canvas2DScene extends Scene {
         } else {
             if (!img.geIsLoaded) return;
             if (EngineConfig.hide_sprites_under_dark && !isBack && Light.isLightsEnable()){
-                Canvas2DScene.drawImage(this._hideindark_ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.opacity);
+                Canvas2DScene.drawImage(this._hideindark_ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.getFilters());
                 if (sprite.isHideInDark()) return;
             }
-            Canvas2DScene.drawImage(ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.opacity);
+            Canvas2DScene.drawImage(ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.getFilters());
         }
     }
 
-    static drawText(ctx: CanvasRenderingContext2D, tt: TextTexture, x: number, y: number, dx: number, dy: number, opacity?: number) {
+    static drawText(ctx: CanvasRenderingContext2D, tt: TextTexture, x: number, y: number, dx: number, dy: number, filter?: string) {
         if (!ctx) return;
         ctx.save();
-        if (!Number.isNaN(opacity)) ctx.filter = `opacity(${opacity})`;
+        ctx.filter = filter;
         ctx.font = `${tt.fontsize}px ${tt.font}`;
         ctx.textAlign = tt.align as CanvasTextAlign;
         if (tt.outline.color && tt.outline.width) {
@@ -122,10 +123,12 @@ class Canvas2DScene extends Scene {
         ctx.fillText(tt.text, x, y, dx);
         ctx.restore();
     }
-    static drawImage(ctx: CanvasRenderingContext2D, image: any, x: number, y: number, dx: number, dy: number, s: Splitting | null, rotation: number, opacity?: number) {
+    static drawImage(ctx: CanvasRenderingContext2D, image: any, x: number, y: number, dx: number, dy: number, s: Splitting | null, rotation: number, filter?: string) {
         if (!ctx) return;
         ctx.save();
-        if (!Number.isNaN(opacity)) ctx.filter = `opacity(${opacity})`;
+        // _ctxFilter = "";
+        // if (!Number.isNaN(opacity) && opacity!==undefined) _ctxFilter = `opacity(${opacity}) `;
+        // _ctxFilter += 'brightness(0.25)';
         if (dx < 0) {
             ctx.translate(x, y);
             if (rotation) {
@@ -135,6 +138,7 @@ class Canvas2DScene extends Scene {
             }
             ctx.scale(-1,1);
             ctx.translate(dx, 0);
+            if (filter) ctx.filter = filter;
             if (s) ctx.drawImage(image, s.x, s.y, s.width, s.height, 0, 0, -dx, dy);
             else ctx.drawImage(image, 0, 0, -dx, dy);
         } else {
@@ -144,6 +148,7 @@ class Canvas2DScene extends Scene {
                 ctx.rotate(rotation);
                 ctx.translate(-dx/2, -dy/2);
             }
+            if (filter) ctx.filter = filter;
             if (s) ctx.drawImage(image, s.x, s.y, s.width, s.height, 0, 0, dx, dy);
             else ctx.drawImage(image, 0, 0, dx, dy);
         }
