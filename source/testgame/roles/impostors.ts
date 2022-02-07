@@ -54,13 +54,18 @@ const roles_impostors = {
             cooldown: 15,
             button_texture: [1,3],
             act: () => {
-                const f = (character: Character, o:number) => {character.getSprite().setFilter('brightness', o);} 
-                f(Characters.main, 0);
-                Characters.another.forEach(ch => f(ch, 0));
+                const f = (character: Character, o:number) => {character.getSprite().setFilter('brightness', o);};
+                OpacityUtils.opacityAnimation(null, {time: 250, from: 1, to: 0, func: (i) => {
+                    f(Characters.main, i);
+                    Characters.another.forEach(ch => f(ch, i));
+                }})
                 const b = logic_buttons.AdditionalButton[0];
                 b.setModifiedCooldown('#555555', () => {
-                    f(Characters.main, undefined);
-                    Characters.another.forEach(ch => f(ch, undefined));
+                    OpacityUtils.opacityAnimation(null, {time: 250, from: 0, to: 1, func: (i) => {
+                        if (i>=1) i = undefined;
+                        f(Characters.main, i);
+                        Characters.another.forEach(ch => f(ch, i));
+                    }})
                     b.resetModifiedCooldown();
                     b.cooldown(30);
                 })
