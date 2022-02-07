@@ -25,7 +25,7 @@ class Light {
         isEnableLight = false;
     }
     static isLightsEnable(){
-        return isEnableLight;
+        return isEnableLight && false;
     }
 }
 

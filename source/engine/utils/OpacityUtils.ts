@@ -1,27 +1,32 @@
 import { Sprite } from "../Sprite";
 
 let OpacityUtils = {
-    opacityAnimation(sprite: Sprite, time: number, opacity = 0, reverse = false) {
-        const i_part = 1/(1-opacity);
-        if (reverse){
-            sprite.opacity = 0;
-            for (let i = opacity; i < 1; i+=0.1) {
+    opacityAnimation(sprite: Sprite, settings: {time: number, from?: number, to?: number}) {
+        if (Number.isNaN(settings.from)) settings.from = 0;
+        if (Number.isNaN(settings.to)) settings.to = 1;
+        const {time, from, to} = settings;
+        
+        if (from < to){
+            const i_part = 1/(to-from);
+            sprite.opacity = from;
+            for (let i = from; i < to; i+=0.1) {
                 setTimeout(() => {
                     sprite.opacity = i;
-                }, time*(i-opacity)*i_part);
+                }, time*(i-from)*i_part);
             }
             setTimeout(() => {
-                sprite.opacity = 1;
+                sprite.opacity = to;
             }, time);
         } else {
-            sprite.opacity = 1;
-            for (let i = opacity; i < 1; i+=0.1) {
+            const i_part = 1/(from-to);
+            sprite.opacity = from;
+            for (let i = to; i < from; i+=0.1) {
                 setTimeout(() => {
                     sprite.opacity = i;
-                }, time*(1-(i-opacity)*i_part));
+                }, time*(1-(i-to)*i_part));
             }
             setTimeout(() => {
-                sprite.opacity = opacity;
+                sprite.opacity = to;
             }, time);
         }
     }

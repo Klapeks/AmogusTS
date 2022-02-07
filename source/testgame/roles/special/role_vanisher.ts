@@ -11,17 +11,19 @@ let role_vanisher = {
         const opacity = Characters.main.getRole().type==="impostor"
             ? config.roles.vanisher.vanish_opacity : 0;
 
-        OpacityUtils.opacityAnimation(
-            character.getSprite(),
-            config.roles.vanisher.vanish_time,
-            opacity);
+        OpacityUtils.opacityAnimation(character.getSprite(), {
+                time: config.roles.vanisher.vanish_time,
+                from: 1,
+                to: opacity
+            });
 
         const b = logic_buttons.AdditionalButton[0];
         b.setModifiedCooldown('#00FF00', () => {
-            OpacityUtils.opacityAnimation(
-                character.getSprite(),
-                config.roles.vanisher.vanish_time,
-                opacity, true);
+            OpacityUtils.opacityAnimation(character.getSprite(), {
+                    time: config.roles.vanisher.vanish_time,
+                    from: opacity,
+                    to: 1
+                });
             b.resetModifiedCooldown();
             b.cooldown(5);
         })

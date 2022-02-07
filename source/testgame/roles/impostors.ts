@@ -4,6 +4,7 @@ import { Screen } from "../../engine/Screen";
 import { Sound } from "../../engine/Sound";
 import { StaticSprite } from "../../engine/Sprite";
 import { OnecolorTexture } from "../../engine/Texture";
+import { OpacityUtils } from "../../engine/utils/OpacityUtils";
 import { Character } from "../characters/Character";
 import { config } from "../config";
 import { logic_buttons } from "../logic/buttons";
@@ -75,12 +76,15 @@ const roles_impostors = {
             act: () => {
                 isFreeze = true;
                 const b = logic_buttons.AdditionalButton[0];
+                OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0, to: 0.3});
                 Game.getScene().addUpperSprite(freezeSprite);
                 freezeSound.play();
                 b.setModifiedCooldown('#00FFFF', () => {
                     isFreeze = false;
-                    Game.getScene().removeUpperSprite(freezeSprite);
-                    Characters.main.getSprite().opacity = 1;
+                    OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0.3, to: 0});
+                    setTimeout(() => {
+                        Game.getScene().removeUpperSprite(freezeSprite);
+                    }, 500);
                     b.resetModifiedCooldown();
                     b.cooldown(30);
                 })
