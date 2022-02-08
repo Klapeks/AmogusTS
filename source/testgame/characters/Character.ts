@@ -195,6 +195,10 @@ class Character {
         return this;
     }
 
+    getTextPlates() {
+        return [this._nicknameSprite, this._roleplateSprite];
+    }
+
     protected _isShowedRoleplate = false;
     isRoleplateShows() {
         return this._isShowedRoleplate;

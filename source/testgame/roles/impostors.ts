@@ -54,7 +54,13 @@ const roles_impostors = {
             cooldown: 15,
             button_texture: [1,3],
             act: () => {
-                const f = (character: Character, o:number) => {character.getSprite().setFilter('brightness', o);};
+                const f = (character: Character, o:number) => {
+                    character.getSprite().setFilter('brightness', o);
+                    if (o!==1 && o !== 0 && o!==undefined) return;
+                    character.getTextPlates().forEach(s => {
+                        if (s) s.setFilter('opacity', o);
+                    })
+                };
                 OpacityUtils.opacityAnimation(null, {time: 250, from: 1, to: 0, func: (i) => {
                     f(Characters.main, i);
                     Characters.another.forEach(ch => f(ch, i));

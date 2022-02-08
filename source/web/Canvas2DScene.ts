@@ -110,6 +110,8 @@ class Canvas2DScene extends Scene {
 
     static drawText(ctx: CanvasRenderingContext2D, tt: TextTexture, x: number, y: number, dx: number, dy: number, filter?: string) {
         if (!ctx) return;
+        if (x+dx < 0 || y+dy+tt.fontsize < 0 || x-dx > Screen.width || y-dy-tt.fontsize > Screen.height) return;
+        if (filter && filter.includes('opacity(0)')) return;
         ctx.save();
         ctx.filter = filter;
         ctx.font = `${tt.fontsize}px ${tt.font}`;
@@ -125,6 +127,8 @@ class Canvas2DScene extends Scene {
     }
     static drawImage(ctx: CanvasRenderingContext2D, image: any, x: number, y: number, dx: number, dy: number, s: Splitting | null, rotation: number, filter?: string) {
         if (!ctx) return;
+        if (x+dx < 0 || y+dy < 0 || x > Screen.width || y > Screen.height) return;
+        if (filter && filter.includes('opacity(0)')) return;
         ctx.save();
         // _ctxFilter = "";
         // if (!Number.isNaN(opacity) && opacity!==undefined) _ctxFilter = `opacity(${opacity}) `;

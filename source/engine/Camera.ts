@@ -18,6 +18,7 @@ class Camera {
     getResolution(): Location {
         return this._resolution;
     }
+
 }
 
 export { Camera };
