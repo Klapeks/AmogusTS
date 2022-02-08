@@ -1,6 +1,6 @@
 import { Camera } from "./Camera";
 import { Light } from "./Light";
-import { BiLocation, Location, Point, Size } from "./Location";
+import { Location, Size } from "./Location";
 import { Screen } from "./Screen";
 import { Splitting, Sprite, StaticSprite } from "./Sprite";
 import { Texture } from "./Texture";
@@ -13,7 +13,7 @@ class SpriteArray {
     constructor(sprite?: Sprite) {
         if (sprite) this.sprite = sprite;
     }
-    add(sprite: Sprite, filter: SpriteFilter = SpriteArray.PriorityFilter){
+    add(sprite: Sprite, filter: SpriteFilter = SpriteArray.PriorityFilter) {
         if (this.sprite===sprite) return this;
         if (!this.sprite){
             this.sprite = sprite;
@@ -34,9 +34,9 @@ class SpriteArray {
 
         if (!this.next){
             this.next = new SpriteArray(sprite);
-            return this;
+            return this.next;
         }
-        this.next.add(sprite, filter);
+        return this.next.add(sprite, filter);
     }
     remove(sprite: Sprite) {
         if (!this.next) {
@@ -105,6 +105,7 @@ abstract class Scene {
         for (let s of sprite) {
             if(!s) continue;
             this._sprites_upper.remove(s);
+            if (this._veryUpper && this._veryUpper.sprite === s) this._veryUpper = undefined;
         }
     }
     addDynamicSprite(...sprite: Sprite[]): void {
@@ -119,9 +120,19 @@ abstract class Scene {
             this._sprites_back.add(s);
         }
     }
+    protected _veryUpper: SpriteArray;
     addUpperSprite(...sprite: Sprite[]): void {
         for (let s of sprite) {
             if(!s) continue;
+            if (s instanceof StaticSprite) {
+                const {x,y} = s.getLocation();
+                if (x <= 0 && y <= 0 && s.width + x >= Screen.width && s.height + y >= Screen.height) {
+                    if (s.opacity >= 1) {
+                        this._veryUpper = this._sprites_upper.add(s);
+                        continue;
+                    }
+                }
+            }
             this._sprites_upper.add(s);
         }
     }
@@ -144,6 +155,20 @@ abstract class Scene {
         this._lights = this._lights.filter(l=>!lights.includes(l));
     }
     drawSprites(): void {
+        if (this._veryUpper && this._veryUpper.sprite 
+            && this._veryUpper.sprite.opacity >= 1
+            && !this._veryUpper.sprite.hidden
+            && !this._veryUpper.sprite.getTexture().hasOpacity) 
+        {
+            const upper_than_dark = new Array<Sprite>();
+            this._veryUpper.forEach((sprite) => {
+                if (sprite.upperThanDark) upper_than_dark.push(sprite);
+                else this.drawSprite(sprite)
+            })
+            if (Light.isLightsEnable()) this.drawLights();
+            upper_than_dark.forEach(sprite => this.drawSprite(sprite));
+            return;
+        }
         this._sprites_back.forEach((sprite) => this.drawSprite(sprite, true));
 
         let ts: TreeSprite;

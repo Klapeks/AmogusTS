@@ -109,6 +109,11 @@ const roles_impostors = {
                 if (ch.getRole().type === "impostor") return true;
                 return !isFreeze;
             })
+            GameLogic.eventListeners.onreset.addEvent(() => {
+                if (!isFreeze) return;
+                isFreeze = false;
+                Game.getScene().removeUpperSprite(freezeSprite);
+            })
             GameLogic.eventListeners.character_canidle.addEvent(ch => { return !isFreeze; })
         }),  // Холодильник
 

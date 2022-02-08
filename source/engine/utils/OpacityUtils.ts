@@ -2,9 +2,9 @@ import { Sprite } from "../Sprite";
 
 let OpacityUtils = {
     opacityAnimation(sprite: Sprite, settings: {time: number, from?: number, to?: number, func?: (i: number) => void, going?: number}) {
-        if (Number.isNaN(settings.from)) settings.from = 0;
-        if (Number.isNaN(settings.to)) settings.to = 1;
-        if (Number.isNaN(settings.going)) settings.going = 0.1;
+        settings.going ??= 0.1;
+        settings.from ??= 0;
+        settings.to ??= 1;
         if (!settings.func) settings.func = (i) => sprite.opacity = i;
         const {time, from, to} = settings;
         

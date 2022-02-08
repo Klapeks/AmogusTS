@@ -42,19 +42,22 @@ let ejections = {
     load() {
         soundText = new Sound("voting/eject_text.wav");
         soundKick = new Sound("voting/eject_skeld.wav");
-        darkness = new StaticSprite(new Texture('dark.png'))
+        darkness = new StaticSprite(new Texture('dark.png')
+                    .settings({hasOpacity: true}))
                     .setSize(Screen.width, Screen.height)
                     .setPriority(95);
         darkness.setSplitting(0, 0, 8, 8);
         darkness.hidden = true;
 
-        stars = new StaticSprite(new Texture('stars.png'))
+        stars = new StaticSprite(new Texture('stars.png')
+                    .settings({hasOpacity: true}))
                     .setSize(Screen.width, Screen.height)
                     .setPriority(95);
         stars.setSplitting(0, 0, 800, 432);
         stars.hidden = true;
 
-        stars2 = new StaticSprite(new Texture('stars2.png'))
+        stars2 = new StaticSprite(new Texture('stars2.png')
+                    .settings({hasOpacity: true}))
                     .setSize(Screen.width, Screen.height)
                     .setPriority(95);
         stars2.setSplitting(0, 0, 800, 432);

@@ -48,6 +48,11 @@ class Texture {
     getImage(): any {
         return this._image;
     }
+    hasOpacity = false;
+    settings(set: {hasOpacity?:boolean}){
+        this.hasOpacity ??= set.hasOpacity;
+        return this;
+    }
 }
 class SplittedTexture extends Texture {
     constructor(path: string, splitting: Splitting, image?: any, onload?: ()=>void) {
