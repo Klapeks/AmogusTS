@@ -118,7 +118,7 @@ class Sprite {
 
     private _filter: any = {};
     setFilter(filter: string, args: any) {
-        if (args === undefined) {
+        if (args === undefined || args === null) {
             delete this._filter[filter];
         } else {
             this._filter[filter] = args;

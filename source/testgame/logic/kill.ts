@@ -8,6 +8,7 @@ import { Characters } from "./charslog";
 import { GameLogic } from "./gamelogic";
 import { killanimation_logic } from "./kill/ka_logic";
 import { theend } from "./meeting/theend";
+import { voting } from "./meeting/voting";
 
 
 let logic_kill = {
@@ -15,6 +16,7 @@ let logic_kill = {
         if (!GameLogic.eventListeners.onkill.check({character, killer})) return;
         killanimation_logic.playKillSound();
         if (killer) {
+            if (character===Characters.main) killanimation_logic.play(killer);
             if (movekiller) {
                 killer.getSprite().width = Math.abs(killer.getSprite().width)
                 if (character.getSprite().width < 0) killer.getSprite().width = -killer.getSprite().width;
@@ -23,7 +25,8 @@ let logic_kill = {
         }
         character.isAlive = false;
         character.hidden = true;
-        DeadCharacter.allDeadBodies.push(new DeadCharacter(character));
+        if (!voting.isVoting)
+            DeadCharacter.allDeadBodies.push(new DeadCharacter(character));
         logic_kill.checkAlive();
     },
     getDeadNear(location: Location): DeadCharacter {

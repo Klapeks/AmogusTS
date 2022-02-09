@@ -85,7 +85,9 @@ class MultiTexture extends Texture {
         return this._textures[this._textureID].getImage();
     }
     setID(id: number) {
+        if (id < 0 || id >= this._textures.length) return this;
         this._textureID = id;
+        return this;
     }
 }
 class OnecolorTexture extends Texture {

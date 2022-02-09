@@ -4,6 +4,7 @@ import { RoleFuncs, Roles } from "../roles/roles";
 import { logic_buttons } from "./buttons";
 import { Characters } from "./charslog";
 import { starting } from "./meeting/starting";
+import { tablet } from "./meeting/tablet";
 
 class GameEventListener<T> {
     events: Array<(t: T) => boolean | void> = new Array();
@@ -46,7 +47,7 @@ let GameLogic = {
             const ch = i===0 ? Characters.main : Characters.another[i-1];
             ch.resetCharacter();
             if (i===0) {
-                ch.setRole(Roles.Janitor);
+                ch.setRole(Roles.Sniper);
             } else
             // if (i===2) {
             //     ch.setRole(Roles.VIP);
@@ -57,7 +58,7 @@ let GameLogic = {
             ch.setRole(role);
             ch.getRole().onPick(ch);
 
-            ch.showRoleplate();
+            // ch.showRoleplate();
         });
         if (Characters.main.getRole().type === "impostor") {
             Characters.another.forEach(ch => {

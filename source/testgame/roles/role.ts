@@ -4,6 +4,7 @@ import { SplitingTexture, Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 import { logic_buttons } from "../logic/buttons";
 import { Characters, logic_character } from "../logic/charslog";
+import { tablet } from "../logic/meeting/tablet";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
 type RoleSelection = "any" | "notimpostor" | "noone" | "deadbody" | "notinfected" | "regulatable";
@@ -13,6 +14,12 @@ interface RoleAction {
     cooldown: number,
     button_texture?: string | Texture | [number, number],
     button_state?: number
+}
+interface RoleMeetingAction {
+    // select: "any" | "notimpostor" | "notinfected" | "infected",
+    act: (ch: Character) => void,
+    button_texture: string | Texture,
+    select?: (ch: Character) => boolean
 }
 
 class Role {
@@ -90,6 +97,14 @@ class Role {
         if (this._onpick) this._onpick(character);
 
         if (character !== Characters.main) return;
+
+        if (this.meetingAction?.button_texture) {
+            if (typeof this.meetingAction.button_texture === "string"){
+                this.meetingAction.button_texture = new Texture(this.meetingAction.button_texture);
+            }
+            tablet.setAdditionalButtonTexture(this.meetingAction.button_texture);
+        }
+
         if (this.type === "impostor") {
             character.setNicknameColor(HexColor('FF0000'));
             for (let ch of Characters.another) {
@@ -168,6 +183,12 @@ class Role {
         return this;
     }
 
+    meetingAction: RoleMeetingAction;
+    setMeetingAction(action: RoleMeetingAction) {
+        this.meetingAction = action;
+        return this;
+    }
+
     private _winSound: Sound | string = 'theend/victory_crewmate.wav';
     setWinSound(sound: Sound | string) {
         this._winSound = sound;
@@ -180,4 +201,4 @@ class Role {
     }
 }
 
-export {Role, RoleAction, RoleType}
+export {Role, RoleAction, RoleMeetingAction, RoleType}

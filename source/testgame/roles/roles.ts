@@ -1,4 +1,4 @@
-import { SplittedTexture } from "../../engine/Texture";
+import { SplittedTexture, Texture } from "../../engine/Texture";
 import { config } from "../config";
 import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
@@ -51,6 +51,10 @@ let RoleFuncs = {
                     role.action.button_state = logic_buttons.ActionButton
                         .addState(role.action.button_texture, null);
                 }
+            }
+            if (role.meetingAction?.button_texture) {
+                if (typeof role.meetingAction.button_texture === "string")
+                role.meetingAction.button_texture = new Texture(role.meetingAction.button_texture);
             }
             if (role.additionalActions && role.additionalActions.length > 0) {
                 role.additionalActions.forEach((addact, i) => {

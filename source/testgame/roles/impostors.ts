@@ -11,6 +11,7 @@ import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
+import { tablet } from "../logic/meeting/tablet";
 import { Role, RoleAction, RoleType } from "./role";
 import { role_vanisher } from "./special/role_vanisher";
 
@@ -42,8 +43,20 @@ const roles_impostors = {
 
     Shapeshifter: new ImpostorRole("Shapeshifter").settings({ color: '9A1F27', name: "Оборотень" }),  // Оборотень
 
-    Sniper: new ImpostorRole("Sniper").settings({ color: 'FF4822', name: "Снайпер"}),  // Снайпер
-    
+
+    Sniper: new ImpostorRole("Sniper")
+        .settings({ color: 'FF4822', name: "Снайпер"})
+        .setMeetingAction({
+            button_texture: 'buttons/background_of_button.png',
+            act: (ch) => {
+                logic_kill.kill(ch, Characters.main, false);
+                tablet.updateNameplate(ch);
+            },
+            select: (ch) => {
+                return true;
+                return ch.getRole().type !== "impostor";
+            }
+        }),  // Снайпер
     
     Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча", usevents: "all"}),  // Саранча
 

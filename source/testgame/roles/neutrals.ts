@@ -78,14 +78,13 @@ const roles_neutrals = {
             })
             GameLogic.eventListeners.onkick.addEvent((event) => {
                 if (!executionerTarget) return;
-                if (event.character === executionerTarget) {
-                    const f = (ch:Character) => ch.isAlive && ch.getRole() === roles_neutrals.Executioner;
-                    if (!(Characters.another.filter(f).length > 0 || f(Characters.main))) return;
-                    event.doAfterKick.push(() => {
-                        theend.end(roles_neutrals.Executioner, Characters.main, 0);
-                        return false;
-                    })
-                }
+                if (event.character !== executionerTarget) return;
+                const f = (ch:Character) => ch.isAlive && ch.getRole() === roles_neutrals.Executioner;
+                if (!(Characters.another.filter(f).length > 0 || f(Characters.main))) return;
+                event.doAfterKick.push(() => {
+                    theend.end(roles_neutrals.Executioner, Characters.main, 0);
+                    return false;
+                })
             })
         })
         .setOnPick(() => {
@@ -94,6 +93,7 @@ const roles_neutrals = {
                 do {
                     executionerTarget = randChar();
                 } while (executionerTarget.getRole().type !== "crewmate");
+                
                 if (Characters.main.getRole() === roles_neutrals.Executioner) {
                     executionerTarget.setNicknameColor(HexColor('1DD579'));
                 }

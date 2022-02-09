@@ -10,7 +10,9 @@ import { CharacterFuncs } from "../../characters/CharFuncs";
 import { RoleFuncs } from "../../roles/roles";
 import { textures } from "../../textures";
 import { Characters } from "../charslog";
+import { GameLogic } from "../gamelogic";
 import { ejections } from "./ejection";
+import { meeting } from "./meeting";
 
 let tabletTexture: Texture, glassTexture: Texture, nameplatesT: Texture, deadmarkTexture: Texture;
 let tabletSize = {width: Screen.width*0.95, height: Screen.height*0.95};
@@ -77,21 +79,26 @@ class Nameplate {
                 .setSize(plateSize.width,0)
                 .setPriority(55));
         }
-        if (!this._character.isAlive) {
-            this.nameplate.opacity = 0.7;
-            let _i = this.charplate.get('icon');
-            if (_i) _i.opacity = 0.9;
-            _i = this.charplate.get('nickname');
-            if (_i) _i.opacity = 0.9;
-            _i = this.charplate.get('role');
-            if (_i) _i.opacity = 0.9;
-            this.charplate.set('deadmark', 
-                new StaticSprite(deadmarkTexture,
-                new LinkedLocation(nloc, {dx: 20, dy: 20}))
-                .setSize(plateSize.height-25, plateSize.height-25)
-                .setPriority(55));
-        }
         this.charplate.forEach((sprite) => Game.getScene().addUpperSprite(sprite));
+        if (!this._character.isAlive) this.makeDead();
+        return this;
+    }
+    makeDead() {
+        const nloc = this.charplate.get('nameplate').getLocation();
+        this.nameplate.opacity = 0.7;
+        let _i = this.charplate.get('icon');
+        if (_i) _i.opacity = 0.9;
+        _i = this.charplate.get('nickname');
+        if (_i) _i.opacity = 0.9;
+        _i = this.charplate.get('role');
+        if (_i) _i.opacity = 0.9;
+        this.charplate.set('deadmark', 
+            new StaticSprite(deadmarkTexture,
+            new LinkedLocation(nloc, {dx: 20, dy: 20}))
+            .setSize(plateSize.height-25, plateSize.height-25)
+            .setPriority(55));
+            
+        Game.getScene().addUpperSprite(this.charplate.get('deadmark'));
         return this;
     }
     removeSpirte() {
@@ -147,6 +154,12 @@ class TabletMenu extends ApearableMenu {
         this._selectedNameplate.hidden = true;
         Game.getScene().addUpperSprite(this._selectedNameplate);
     }
+    updateNameplate(character: Character) {
+        this.nameplates.forEach(np => {
+            if (np.getCharacter()!==character) return;
+            if (!character.isAlive) np.makeDead();
+        })
+    }
 
     setSelectedNameplateLocation(location: Location) {
         if (location){
@@ -177,6 +190,8 @@ class TabletMenu extends ApearableMenu {
 let acceptButton: StaticSprite;
 let menu: TabletMenu;
 let changedTexture = false;
+
+let additionalButton: StaticSprite;
 let tablet = {
     tryChangeTexture() {
         if (!changedTexture) {
@@ -191,6 +206,12 @@ let tablet = {
         changedTexture = false;
     },
     open() { menu.show(); },
+    setAdditionalButtonTexture(texture: Texture) {
+        additionalButton.setTexture(texture);
+    },
+    updateNameplate(character: Character) {
+        menu.updateNameplate(character);
+    },
     load() {
         tabletTexture = new Texture('voting/tablet.png');
         glassTexture = new Texture('voting/tablet_up.png');
@@ -201,12 +222,16 @@ let tablet = {
             select: new Sound("voting/votescreen_select.wav", "gui"),
         }
 
-        acceptButton = new StaticSprite(
-            new MultiTexture('buttons/accept.png', 'buttons/accept_showed.png'),
-            new Location(0,0))
+        acceptButton = new StaticSprite(new Texture('buttons/accept.png'))
             .setSize(plateSize.height-30, plateSize.height-25)
             .setPriority(55);
         acceptButton.hidden = true;
+
+        additionalButton = new StaticSprite(new Texture('missingo.png'),
+            new LinkedLocation(acceptButton.getLocation(), {dx: -(plateSize.height-30-15)-5, dy: 7.5}))
+            .setSize(plateSize.height-30-15, plateSize.height-25-15)
+            .setPriority(55);
+        additionalButton.hidden = true;
 
         menu = new TabletMenu().addClick({x:0,y:0,dx:Screen.width,dy:Screen.height}, (x,y) =>{
             let nameplate: Nameplate = null;
@@ -217,8 +242,8 @@ let tablet = {
                 }
             }
             if (!nameplate) {
-                acceptButton.hidden = true;
-                Game.getScene().removeUpperSprite(acceptButton);
+                acceptButton.hidden = additionalButton.hidden = true;
+                Game.getScene().removeUpperSprite(acceptButton, additionalButton);
                 return;
             }
             if (!acceptButton.hidden){
@@ -235,11 +260,15 @@ let tablet = {
                                 `Осталось еще ${RoleFuncs.getImpostors(true).length} компостира`,
                                 nameplate.getCharacter());
                         setTimeout(() => {
-                            acceptButton.hidden = true;
-                            Game.getScene().removeUpperSprite(acceptButton);
-                            menu.hide(true);
+                            tablet.close();
                         }, 500);
                     }
+                    return;
+                } else if (!additionalButton.hidden && Location.isInHitbox(x,y, {
+                    location: additionalButton.getLocation(), size: additionalButton
+                })) {
+                    if (!Characters.main.getRole().meetingAction) return;
+                    Characters.main.getRole().meetingAction.act(nameplate.getCharacter());
                     return;
                 }
                 sounds.select.play();
@@ -248,23 +277,24 @@ let tablet = {
                 sounds.select.play();
                 acceptButton.setLocation(nameplate.getLocation().x+375, nameplate.getLocation().y+10);
                 acceptButton.hidden = false;
-                Game.getScene().addUpperSprite(acceptButton);
+                additionalButton.hidden = true;
+                Game.getScene().addUpperSprite(acceptButton, additionalButton);
+            }
+            if (Characters.main.getRole().meetingAction) {
+                additionalButton.hidden = Characters.main.getRole().meetingAction.select 
+                    ? !Characters.main.getRole().meetingAction.select(nameplate.getCharacter())
+                    : false;
             }
         });
+        GameLogic.eventListeners.onreset.addEvent(() => {
+            tablet.close();
+            meeting.end();
+        })
     },
     update() {
         if (menu.isShowed) {
-            if (acceptButton) {
-                if (Location.isInHitbox(
-                    Game.mouseinfo.posX,Game.mouseinfo.posY, {
-                    location: acceptButton.getLocation(),
-                    size: acceptButton
-                })) {
-                    (acceptButton.getTexture() as MultiTexture).setID(1);
-                } else {
-                    (acceptButton.getTexture() as MultiTexture).setID(0);
-                }
-            }
+            trySelectButton(acceptButton);
+            trySelectButton(additionalButton);
             let nameplate: Nameplate = null;
             for (let np of menu.nameplates) {
                 if (np.checkMouseMove()) {
@@ -275,8 +305,27 @@ let tablet = {
             if (!nameplate) menu?.setSelectedNameplateLocation(null);
             else menu?.setSelectedNameplateLocation(nameplate.getLocation());
         }
+    },
+    close() {
+        acceptButton.hidden = additionalButton.hidden = true;
+        Game.getScene().removeUpperSprite(acceptButton, additionalButton);
+        menu.hide(true);
     }
 
 };
+let trySelectButton = (button: StaticSprite) => {
+    if (!button || button.hidden) return;
+    if (Location.isInHitbox(
+        Game.mouseinfo.posX,Game.mouseinfo.posY, {
+        location: button.getLocation(),
+        size: button
+    })) {
+        button.setFilter('brightness', 0.7);
+        // (button.getTexture() as MultiTexture).setID(1);
+    } else {
+        button.setFilter('brightness', null);
+        // (button.getTexture() as MultiTexture).setID(0);
+    }
+}
 
 export {tablet}
