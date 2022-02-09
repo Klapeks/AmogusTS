@@ -46,7 +46,6 @@ const createNoKill = (role: Role, win: Role = role) => {
 }
 
 let shifterSound: Sound;
-
 let executionerTarget: Character;
 
 const roles_neutrals = {
