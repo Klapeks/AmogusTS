@@ -48,9 +48,9 @@ class Texture {
     getImage(): any {
         return this._image;
     }
-    hasOpacity = false;
-    settings(set: {hasOpacity?:boolean}){
-        this.hasOpacity ??= set.hasOpacity;
+    isFulled = false;
+    settings(set: {isFulled?:boolean}){
+        this.isFulled ??= set.isFulled;
         return this;
     }
 }
@@ -87,6 +87,7 @@ class OnecolorTexture extends Texture {
     constructor(color: Color){
         super(null);
         this.color = color;
+        this.isFulled = true;
     }
 }
 class TextTexture extends Texture {

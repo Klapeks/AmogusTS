@@ -127,7 +127,7 @@ abstract class Scene {
             if (s instanceof StaticSprite) {
                 const {x,y} = s.getLocation();
                 if (x <= 0 && y <= 0 && s.width + x >= Screen.width && s.height + y >= Screen.height) {
-                    if (s.opacity >= 1) {
+                    if (s.opacity >= 1 && !s.hidden && s.getTexture().isFulled) {
                         this._veryUpper = this._sprites_upper.add(s);
                         continue;
                     }
@@ -158,7 +158,7 @@ abstract class Scene {
         if (this._veryUpper && this._veryUpper.sprite 
             && this._veryUpper.sprite.opacity >= 1
             && !this._veryUpper.sprite.hidden
-            && !this._veryUpper.sprite.getTexture().hasOpacity) 
+            && this._veryUpper.sprite.getTexture().isFulled) 
         {
             const upper_than_dark = new Array<Sprite>();
             this._veryUpper.forEach((sprite) => {
