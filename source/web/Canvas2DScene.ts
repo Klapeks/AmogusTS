@@ -36,14 +36,28 @@ class Canvas2DScene extends Scene {
         console.log("texture was drawed: ", texture)
         Canvas2DScene.drawImage(this._ctx, texture.getImage(), 0, 0, Screen.width, Screen.height, null, 0);
     }
+    static _drawedSpritedPesPeriod: number = 0;
+    static _drawedSpritesSprite: TextTexture;
     drawSprites(): void {
         if (!Game.isLoaded) return;
+
+        Canvas2DScene._drawedSpritedPesPeriod = 0;
+        if (!Canvas2DScene._drawedSpritesSprite)
+            Canvas2DScene._drawedSpritesSprite 
+                = new TextTexture('Sprites: ', 'arial')
+                .setColor('white')
+                .setFontSize(30)
+                .setOutline('black', 1)
+                .setAlign('left');
+
         this._ctx.fillStyle = "black";
         this._ctx.fillRect(0, 0, Screen.width, Screen.height);
         if (EngineConfig.hide_sprites_under_dark) {
             this._hideindark_ctx?.clearRect(0, 0, Screen.width, Screen.height);
         }
         super.drawSprites();
+        Canvas2DScene._drawedSpritesSprite.setText(`Sprites: ${Canvas2DScene._drawedSpritedPesPeriod}`);
+        Canvas2DScene.drawText(this._ctx, Canvas2DScene._drawedSpritesSprite, 30, 40, 1000, 50);
     }
     drawSprite(sprite: Sprite, isBack = false): void {
         if (sprite.hidden) return;
@@ -112,6 +126,7 @@ class Canvas2DScene extends Scene {
         if (!ctx) return;
         if (x+dx < 0 || y+dy+tt.fontsize < 0 || x-dx > Screen.width || y-dy-tt.fontsize > Screen.height) return;
         if (filter && filter.includes('opacity(0)')) return;
+        Canvas2DScene._drawedSpritedPesPeriod += 1;
         ctx.save();
         ctx.filter = filter;
         ctx.font = `${tt.fontsize}px ${tt.font}`;
@@ -129,6 +144,7 @@ class Canvas2DScene extends Scene {
         if (!ctx) return;
         if (x+dx < 0 || y+dy < 0 || x > Screen.width || y > Screen.height) return;
         if (filter && filter.includes('opacity(0)')) return;
+        Canvas2DScene._drawedSpritedPesPeriod += 1;
         ctx.save();
         // _ctxFilter = "";
         // if (!Number.isNaN(opacity) && opacity!==undefined) _ctxFilter = `opacity(${opacity}) `;
@@ -174,7 +190,6 @@ class Canvas2DScene extends Scene {
             canvas.width = splitting.width;
             canvas.height = splitting.height;
             ctx = canvas.getContext('2d');
-            console.log(splitting);
             ctx.putImageData(data, 0, 0);
         } else {
             ctx.putImageData(filter(ctx.getImageData(0, 0, canvas.width, canvas.height)), 0,0);

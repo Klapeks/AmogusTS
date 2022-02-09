@@ -16,6 +16,11 @@ import { logic_map } from "./maps/maplogic";
 import { meeting } from "./meeting/meeting";
 import { voting } from "./meeting/voting";
 
+const convertToGray = (t: Texture) => {
+    setTimeout(() => {
+        t.setImage(Retexturing.gray(t.getImage()));
+    }, 0);
+};
 
 class UseButton extends Button {
     private _textures: Array<Texture> = new Array();
@@ -28,13 +33,14 @@ class UseButton extends Button {
         this.addState(defaultTexture, null);
         this.setState(0);
     }
-    addState(texture: Texture | string, onclick: () => void) {
+    addState(texture: Texture | string, onclick: () => void, selected?: Texture) {
         if (typeof texture === "string") texture = new Texture(texture);
         this._textures.push(texture);
-        const seltex = new Texture(texture.getPath(), texture.getImage(), () => {
-            seltex.setImage(Retexturing.gray(seltex.getImage()));
-        });
-        this._unselectedtextures.push(seltex);
+        if (!selected) {
+            const img = texture.getImage()?.geIsLoaded ? texture.getImage() : null;
+            selected = new Texture(texture.getPath(), img, convertToGray);
+        }
+        this._unselectedtextures.push(selected);
         this._onclicking.push(onclick);
         return this._textures.length-1;
     }

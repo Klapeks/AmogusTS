@@ -42,8 +42,8 @@ const roles_impostors = {
 
     Shapeshifter: new ImpostorRole("Shapeshifter").settings({ color: '9A1F27', name: "Оборотень" }),  // Оборотень
 
-
     Sniper: new ImpostorRole("Sniper").settings({ color: 'FF4822', name: "Снайпер"}),  // Снайпер
+    
     
     Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча", usevents: "all"}),  // Саранча
 

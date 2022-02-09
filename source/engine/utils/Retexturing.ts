@@ -23,6 +23,7 @@ let Retexturing = {
             const data = imgdata.data;
             for (let i = 0; i < data.length; i += 4) {
                 if (data[i+3] == 0) continue;
+                // data[i] = data[i+1] = data[i+2] = 0;
                 data[i] = data[i+1] = data[i+2] 
                     = Math.round((data[i]+data[i+1]+data[i+2])/3);
             }

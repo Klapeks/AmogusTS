@@ -127,7 +127,7 @@ abstract class Scene {
             if (s instanceof StaticSprite) {
                 const {x,y} = s.getLocation();
                 if (x <= 0 && y <= 0 && s.width + x >= Screen.width && s.height + y >= Screen.height) {
-                    if (s.opacity >= 1 && !s.hidden && s.getTexture().isFulled) {
+                    if ((!Number.isFinite(s.opacity) || s.opacity >= 1) && !s.hidden && s.getTexture().isFulled) {
                         this._veryUpper = this._sprites_upper.add(s);
                         continue;
                     }
@@ -155,19 +155,18 @@ abstract class Scene {
         this._lights = this._lights.filter(l=>!lights.includes(l));
     }
     drawSprites(): void {
-        if (this._veryUpper && this._veryUpper.sprite 
-            && this._veryUpper.sprite.opacity >= 1
-            && !this._veryUpper.sprite.hidden
-            && this._veryUpper.sprite.getTexture().isFulled) 
-        {
-            const upper_than_dark = new Array<Sprite>();
-            this._veryUpper.forEach((sprite) => {
-                if (sprite.upperThanDark) upper_than_dark.push(sprite);
-                else this.drawSprite(sprite)
-            })
-            if (Light.isLightsEnable()) this.drawLights();
-            upper_than_dark.forEach(sprite => this.drawSprite(sprite));
-            return;
+        if (this._veryUpper && this._veryUpper.sprite) {
+            const s = this._veryUpper.sprite;
+            if ((!Number.isFinite(s.opacity) || s.opacity >= 1) && !s.hidden && s.getTexture().isFulled) {
+                const upper_than_dark = new Array<Sprite>();
+                this._veryUpper.forEach((sprite) => {
+                    if (sprite.upperThanDark) upper_than_dark.push(sprite);
+                    else this.drawSprite(sprite)
+                })
+                if (Light.isLightsEnable()) this.drawLights();
+                upper_than_dark.forEach(sprite => this.drawSprite(sprite));
+                return;
+            }
         }
         this._sprites_back.forEach((sprite) => this.drawSprite(sprite, true));
 

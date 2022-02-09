@@ -21,11 +21,17 @@ class Texture {
     private _path: string;
     private _image: any;
     private _onload: ()=>void = () => {};
-    constructor(path: string, image?: any, onload?: ()=>void) {
-        if (onload) this._onload = onload;
+    constructor(path: string, image?: any, onload?: (texture: Texture)=>void) {
+        if (onload) this._onload = () => onload(this);
         if (path){
             this._path = Game.functions.texturePath(path);
-            if (image) this._image = image;
+            if (image) {
+                this._image = image;
+                if (onload) {
+                    TextureFuncs.loadingTextures++;
+                    image_on_load(this, this._image);
+                }
+            }
             else {
                 TextureFuncs.loadingTextures++;
                 this._image = Game.functions.generateImage(this, image_on_load);
