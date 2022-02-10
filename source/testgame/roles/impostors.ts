@@ -11,7 +11,7 @@ import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
-import { tablet } from "../logic/meeting/tablet";
+import { VoteMenu } from "../logic/meeting/tablet/votemenu";
 import { Role, RoleAction, RoleType } from "./role";
 import { role_shapeshifter } from "./special/role_shapeshifter";
 import { role_vanisher } from "./special/role_vanisher";
@@ -71,7 +71,7 @@ const roles_impostors = {
             button_texture: 'buttons/background_of_button.png',
             act: (ch) => {
                 logic_kill.kill(ch, Characters.main, false);
-                tablet.updateNameplate(ch);
+                VoteMenu.updateNameplate(ch);
             },
             select: (ch) => {
                 return ch.getRole().type !== "impostor";

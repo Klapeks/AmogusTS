@@ -67,9 +67,8 @@ let logic_character = {
         Characters.another.push(new Character(4, new Location(200,-1300)).setColor({r:255,g:0,b:0},{r:0,g:255,b:0}).setNickname("Vladushe4ek"));
         Characters.another.push(new Character(5, new Location(700,-1550)).setColor({r:0,g:255,b:0},{r:0,g:255,b:0}).setNickname("huy"));
         Characters.another.push(new Character(6, new Location(500,-1300)).setColor({r:0,g:0,b:255},{r:0,g:0,b:255}).setNickname("Аболтус"));
-        Characters.another.push(new Character(7, new Location(800,-1300)).setColor("C51111","7A0838").setNickname("Vladik"));
+        Characters.another.push(new Character(7, new Location(800,-1300)).setColor("C51111", "7A0838").setNickname("Vladik"));
         
-
         Characters.another.forEach(i => Game.getScene().addDynamicSprite(i.getSprite()));
         Game.getScene().addDynamicSprite(selection.getSprite());
         Game.getScene().addDynamicSprite(Characters.main.getSprite());

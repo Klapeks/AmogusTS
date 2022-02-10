@@ -8,7 +8,7 @@ import { Texture } from "../../../engine/Texture";
 import { Character } from "../../characters/Character";
 import { Characters } from "../charslog";
 import { caller } from "./caller";
-import { tablet } from "./tablet";
+import { tablet } from "./tablet/tablet";
 import { voting } from "./voting";
 
 let table: StaticSprite, meetingText: StaticSprite, deadbodyText: StaticSprite;

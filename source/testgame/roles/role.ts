@@ -4,7 +4,7 @@ import { SplitingTexture, Texture } from "../../engine/Texture";
 import { Character } from "../characters/Character";
 import { logic_buttons } from "../logic/buttons";
 import { Characters, logic_character } from "../logic/charslog";
-import { tablet } from "../logic/meeting/tablet";
+import { VoteMenu } from "../logic/meeting/tablet/votemenu";
 
 type RoleType = "crewmate" | "impostor" | "neutral"
 type RoleSelection = "any" | "notimpostor" | "noone" | "deadbody" | "notinfected" | "regulatable";
@@ -16,10 +16,10 @@ interface RoleAction {
     button_state?: number
 }
 interface RoleMeetingAction {
-    // select: "any" | "notimpostor" | "notinfected" | "infected",
     act: (ch: Character) => void,
     button_texture: string | Texture,
-    select?: (ch: Character) => boolean
+    select?: (ch: Character, selectedRole?: string) => boolean,
+    roleSelecting?: boolean
 }
 
 class Role {
@@ -102,7 +102,7 @@ class Role {
             if (typeof this.meetingAction.button_texture === "string"){
                 this.meetingAction.button_texture = new Texture(this.meetingAction.button_texture);
             }
-            tablet.setAdditionalButtonTexture(this.meetingAction.button_texture);
+            VoteMenu.setAdditionalButtonTexture(this.meetingAction.button_texture);
         }
 
         if (this.type === "impostor") {

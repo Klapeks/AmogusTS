@@ -1,4 +1,4 @@
-import { tablet } from "./tablet";
+import { VoteMenu } from "./tablet/votemenu";
 
 let voting = {
     isVoting: false,
@@ -7,7 +7,7 @@ let voting = {
     update() {
     },
     start(){
-        tablet.open();
+        VoteMenu.open();
     }
 }
 

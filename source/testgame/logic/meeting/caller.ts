@@ -4,7 +4,8 @@ import { Screen } from "../../../engine/Screen";
 import { StaticSprite } from "../../../engine/Sprite"
 import { Texture } from "../../../engine/Texture";
 import { Characters } from "../charslog";
-import { tablet } from "./tablet";
+import { tablet } from "./tablet/tablet";
+import { tablet_settings } from "./tablet/tablet_settings";
 
 let redSprite: StaticSprite, callSprite: StaticSprite;
 let calltime = 260; // in milis
