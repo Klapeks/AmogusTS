@@ -84,7 +84,7 @@ const roles_impostors = {
         .settings({ color: '029717', name: "Камуфляжер" })
         .addAdditionalAction({
             select: "noone",
-            cooldown: 15,
+            cooldown: 10,
             button_texture: [1,3],
             act: () => {
                 const f = (character: Character, o:number) => {
@@ -99,14 +99,18 @@ const roles_impostors = {
                     Characters.another.forEach(ch => f(ch, i));
                 }})
                 const b = logic_buttons.AdditionalButton[0];
-                b.setModifiedCooldown('#555555', () => {
-                    OpacityUtils.opacityAnimation(null, {time: 250, from: 0, to: 1, func: (i) => {
-                        if (i>=1) i = undefined;
-                        f(Characters.main, i);
-                        Characters.another.forEach(ch => f(ch, i));
-                    }})
-                    b.resetModifiedCooldown();
-                    b.cooldown(30);
+                b.resetModifiedCooldown({
+                    color: "#555555",
+                    afterEnd: () => {
+                        OpacityUtils.opacityAnimation(null, {time: 250, from: 0, to: 1, func: (i) => {
+                            if (i>=1) i = undefined;
+                            f(Characters.main, i);
+                            Characters.another.forEach(ch => f(ch, i));
+                        }})
+                        b.resetModifiedCooldown();
+                        b.cooldown(30);
+                    },
+                    vibing: 3
                 })
             }
         }),  // Камуфляжер
@@ -131,6 +135,19 @@ const roles_impostors = {
                     }, 500);
                     b.resetModifiedCooldown();
                     b.cooldown(30);
+                })
+                b.resetModifiedCooldown({
+                    color: "#00FFFF",
+                    afterEnd: () => {
+                        isFreeze = false;
+                        OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0.3, to: 0});
+                        setTimeout(() => {
+                            Game.getScene().removeUpperSprite(freezeSprite);
+                        }, 500);
+                        b.resetModifiedCooldown();
+                        b.cooldown(30);
+                    },
+                    vibing: 3
                 })
             }
         }).setOnLoad(()=>{

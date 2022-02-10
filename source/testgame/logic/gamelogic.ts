@@ -46,9 +46,9 @@ let GameLogic = {
         RoleFuncs.random(Characters.another.length+1).forEach((role, i) => {
             const ch = i===0 ? Characters.main : Characters.another[i-1];
             ch.resetCharacter();
-            if (i===0) {
-                ch.setRole(Roles.Shapeshifter);
-            } else
+            // if (i===0) {
+            //     ch.setRole(Roles.Camouflager);
+            // } else
             // if (i===2) {
             //     ch.setRole(Roles.VIP);
             // } else 

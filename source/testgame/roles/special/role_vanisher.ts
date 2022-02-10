@@ -18,14 +18,18 @@ let role_vanisher = {
             });
 
         const b = logic_buttons.AdditionalButton[0];
-        b.setModifiedCooldown('#00FF00', () => {
-            OpacityUtils.opacityAnimation(character.getSprite(), {
-                    time: config.roles.vanisher.vanish_time,
-                    from: opacity,
-                    to: 1
-                });
-            b.resetModifiedCooldown();
-            b.cooldown(5);
+        b.resetModifiedCooldown({
+            color: "#00FF00",
+            afterEnd: () => {
+                OpacityUtils.opacityAnimation(character.getSprite(), {
+                        time: config.roles.vanisher.vanish_time,
+                        from: opacity,
+                        to: 1
+                    });
+                b.resetModifiedCooldown();
+                b.cooldown(5);
+            },
+            vibing: 3
         })
     }
 }
