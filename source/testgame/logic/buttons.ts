@@ -60,8 +60,13 @@ class UseButton extends Button {
     click() {
         if (this.hidden) return;
         if (!this._isselected) return;
-        if (this.cooldown_time) return;
         if (this.clickRule && !this.clickRule()) return;
+        if (this.cooldown_time) {
+            if (this.modifiedCooldown.cd_action) {
+                this.modifiedCooldown.cd_action();
+            }
+            return;
+        }
         let f = this._onclicking[this._nowtex];
         if (!f) f = this._onclick;
         f();
@@ -92,6 +97,7 @@ class UseButton extends Button {
             Game.getScene().removeUpperSprite(this.cooldown_text);
             this.cooldown_text = null;
             this.modifiedCooldown.afterEnd();
+            this.vibe(false);
             return;
         }
         this.cooldown_time = time;
@@ -109,12 +115,30 @@ class UseButton extends Button {
 
         Game.getScene().addUpperSprite(this.cooldown_text);
     }
-    modifiedCooldown: {color: string, afterEnd: () => void};
-    resetModifiedCooldown() {
-        this.setModifiedCooldown("white", () => {})
+    modifiedCooldown: {
+        color: string,
+        afterEnd: () => void,
+        noopacity?: boolean,
+        cd_action?: () => void,
+        vibing?: number
+    };
+    resetModifiedCooldown(modifiedCooldown?: typeof this.modifiedCooldown) {
+        this.vibe(false);
+        if (modifiedCooldown) {
+            this.modifiedCooldown = modifiedCooldown;
+            if (this.cooldown_text) {
+                (this.cooldown_text.getTexture() as TextTexture).setColor(this.modifiedCooldown.color);
+            }
+        } else {
+            this.setModifiedCooldown("white", () => {})
+        }
     }
     setModifiedCooldown(color: string, afterEnd: () => void) {
+        this.vibe(false);
         this.modifiedCooldown = {color, afterEnd};
+        if (this.cooldown_text) {
+            (this.cooldown_text.getTexture() as TextTexture).setColor(this.modifiedCooldown.color);
+        }
     }
     updateCD() {
         if (!this.cooldown_time) return;
@@ -122,8 +146,10 @@ class UseButton extends Button {
         if (this.cooldown_time <= 0) {
             this.cooldown(0);
         } else if (this.cooldown_text) {
-            (this.cooldown_text.getTexture() as TextTexture)
-                .setText(`${Math.ceil(this.cooldown_time)}`);
+            (this.cooldown_text.getTexture() as TextTexture).setText(`${Math.ceil(this.cooldown_time)}`);
+            if (this.modifiedCooldown.vibing && this.modifiedCooldown.vibing >= this.cooldown_time) {
+                this.vibe();
+            }
             this.cooldown_text.hidden = this._sprite.hidden;
         }
     }
@@ -131,6 +157,20 @@ class UseButton extends Button {
     setDefaultState(stage: number){
         this.defaultState = stage;
         return this;
+    }
+
+    private _previbeMargin: {x: number, y: number};
+    vibe(b: boolean = true) {
+        if (b) {
+            if (!this._previbeMargin) this._previbeMargin = this._sprite.margin;
+            this._sprite.margin = {
+                x: Math.random()*10-5+this._previbeMargin.x,
+                y: Math.random()*10-5+this._previbeMargin.y
+            }
+        } else if (this._previbeMargin){
+            this._sprite.margin = this._previbeMargin;
+            this._previbeMargin = undefined;
+        }
     }
 }
 
@@ -161,6 +201,7 @@ let logic_buttons = {
         if (!button) return;
         button.updateCD();
         if (button.cooldown_time > 0) {
+            if (button.modifiedCooldown.noopacity) return;
             button.unselect();
             return;
         }

@@ -69,11 +69,13 @@ class Canvas2DScene extends Scene {
         if (sprite instanceof StaticSprite) {
             _lx = sprite.getLocation().x;
             _ly = sprite.getLocation().y;
-            let margin = (sprite as StaticSprite).margin;
-            if (margin.x < 0) _lx = Screen.width - _lx + margin.x;
-            else _lx += margin.x;
-            if (margin.y < 0) _ly = Screen.height - _ly + margin.y;
-            else _ly += margin.y;
+            if (sprite.margin) {
+                let margin = sprite.margin;
+                if (margin.x < 0) _lx = Screen.width - _lx + margin.x;
+                else _lx += margin.x;
+                if (margin.y < 0) _ly = Screen.height - _ly + margin.y;
+                else _ly += margin.y;
+            }
             _lw = sprite.width;
             _lh = sprite.height;
         } else {
