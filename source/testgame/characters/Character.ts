@@ -51,6 +51,10 @@ class Character {
         this.idle();
         return this;
     }
+    setAmogusTextures(textures: AmogusTextures) {
+        this._textures = textures;
+        return this;
+    }
     getColor() {
         return this._color;
     }
@@ -157,15 +161,16 @@ class Character {
 
     private _nickname: string;
     private _nicknameSprite: Sprite;
-    setNickname(nickname: string | undefined) {
+    setNickname(nickname: string | undefined, color = "white") {
         this._nickname = nickname;
         if (this._nicknameSprite) {
+            color = this.getNicknameColor();
             Game.getScene().removeUpperSprite(this._nicknameSprite);
             this._nicknameSprite = null;
             if (!nickname) return this;
         }
 
-        this._nicknameSprite = new Sprite(Character.generateNicknameTexture(nickname),
+        this._nicknameSprite = new Sprite(Character.generateNicknameTexture(nickname).setColor(color),
                     new LinkedLocation(this.getLocation(), {dx:256*textures.character_ratio/2,dy:10}))
                     .setSize(Screen.width/2,50)
                     .setHideInDark(this._sprite.isHideInDark());
@@ -177,8 +182,8 @@ class Character {
     }
     setNicknameColor(color: Color) {
         if (!this._nicknameSprite) return;
-        const {r,g,b} = color;
-        (this._nicknameSprite.getTexture() as TextTexture).setColor(`rgb(${r},${g},${b})`);
+        (this._nicknameSprite.getTexture() as TextTexture)
+            .setColor(`rgb(${color.r},${color.g},${color.b})`);
     }
     getNicknameColor(): string {
         return (this._nicknameSprite?.getTexture() as TextTexture)?.color || 'white';

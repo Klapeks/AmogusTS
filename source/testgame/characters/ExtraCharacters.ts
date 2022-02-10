@@ -12,6 +12,21 @@ class SelectedCharacter extends Character {
         this.setColor(null, null, null);
         this.selcolor = color;
     }
+
+    selectedCharacter: Character;
+    select(character: Character){
+        this.selectedCharacter = character;
+        if (character) {
+            this.getSprite().setLocation(character.getLocation().x, character.getLocation().y);
+            this.getSprite().setSize(character.getSprite().width,character.getSprite().height);
+            this.walkAnimationFrame = character.walkAnimationFrame;
+            this.getSprite().width = character.getSprite().width;
+            this.getSprite().margin = character.getSprite().margin;
+            this.hidden = false;
+        } else {
+            this.hidden = true;
+        }
+    }
     
     protected cloneFiltering(texture: Texture): Texture {
         texture = new Texture(texture.getPath(),null,() => {

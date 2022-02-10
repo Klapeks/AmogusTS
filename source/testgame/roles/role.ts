@@ -148,32 +148,42 @@ class Role {
         this.action = act;
         return this;
     }
-    canSelectSomeone(onlyalive = false, type: number | true | false = false): RoleSelection | false {
-        if (type===false || type===true) 
-            if (this.action) {
-                if (this.action.select === "any") return "any";
-                if (this.action.select === "notimpostor") return "notimpostor";
-                if (this.action.select === "notinfected") return "notinfected";
-                if (!onlyalive && this.action.select === "deadbody") return "deadbody";
-            }
-        if (this.additionalActions) {
-            if (type===false) {
-                for (let act of this.additionalActions) {
-                    if (act.select === "any") return "any";
-                    if (act.select === "notimpostor") return "notimpostor";
-                    if (act.select === "notinfected") return "notinfected";
-                    if (!onlyalive && act.select === "deadbody") return "deadbody";
-                }
-            } else if (type!==true) {
-                if (type < 0 || type >= this.additionalActions.length) return false;
-                const act = this.additionalActions[type];
-                if (act.select === "any") return "any";
-                if (act.select === "notimpostor") return "notimpostor";
-                if (act.select === "notinfected") return "notinfected";
-                if (!onlyalive && act.select === "deadbody") return "deadbody";
-            }
+    canSelectSomeone(onlyalive = false, type: number | true): RoleSelection | false {
+        let selection = new Array<RoleSelection>();
+        if (type===true) {
+            if (!this.action) return false;
+            if (this.action.select === "any") return "any";
+            if (this.action.select === "notimpostor") return "notimpostor";
+            if (this.action.select === "notinfected") return "notinfected";
+            if (!onlyalive && this.action.select === "deadbody") return "deadbody";
+        } else {
+            if (!this.additionalActions) return false;
+            if (type < 0 || type >= this.additionalActions.length) return false;
+            const act = this.additionalActions[type];
+            if (act.select === "any") return "any";
+            if (act.select === "notimpostor") return "notimpostor";
+            if (act.select === "notinfected") return "notinfected";
+            if (!onlyalive && act.select === "deadbody") return "deadbody";
         }
         return false;
+    }
+    canSelectSomeoneAll(onlyalive = false): RoleSelection[] {
+        let selection = new Array<RoleSelection>();
+        if (this.action) {
+            if (this.action.select === "any") selection.push("any");
+            if (this.action.select === "notimpostor") selection.push("notimpostor");
+            if (this.action.select === "notinfected") selection.push("notinfected");
+            if (!onlyalive && this.action.select === "deadbody") selection.push("deadbody");
+        }
+        if (this.additionalActions) {
+            for (let act of this.additionalActions) {
+                if (act.select === "any") selection.push("any");
+                if (act.select === "notimpostor") selection.push("notimpostor");
+                if (act.select === "notinfected") selection.push("notinfected");
+                if (!onlyalive && act.select === "deadbody") selection.push("deadbody");
+            }
+        }
+        return selection;
     }
 
     additionalActions: Array<RoleAction>;

@@ -1,5 +1,6 @@
 import { Location } from "../../engine/Location";
 import { Character } from "./Character";
+import { AmogusTextures } from "./CharFuncs";
 
 const defaultHitboxes = [
     127, 221,

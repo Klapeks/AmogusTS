@@ -181,7 +181,16 @@ let logic_buttons = {
             }
             button.select();
         } else {
-            if (!logic_character.isSelectedCharacter()) {
+            const selchar = logic_character.getSelectedCharacter();
+            if (!selchar) {
+                button.unselect();
+                return;
+            }
+            if (act.select === "notimpostor" && selchar.getRole().type === "impostor"){
+                button.unselect();
+                return;
+            }
+            if (act.select === "notinfected" && selchar.isInfected) {
                 button.unselect();
                 return;
             }

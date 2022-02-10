@@ -90,9 +90,12 @@ let logic_character = {
 
     },
     updateSelect() {
-        const canselect = Characters.main.getRole().canSelectSomeone();
-        if (!canselect) return;
-        let character = logic_character.trySelectCharacter(true, canselect==="notimpostor", canselect==="notinfected");
+        const canselect = Characters.main.getRole().canSelectSomeoneAll();
+        if (!canselect || canselect.length === 0) return;
+        // const oneselect = canselect.length === 1 ? canselect[0] : null;
+        let character = logic_character.trySelectCharacter(true, 
+            canselect.includes("notimpostor") && !canselect.includes("any"),
+            canselect.includes("notinfected") && !canselect.includes("any"));
         if (character) logic_character.selectCharacter(character);
         else logic_character.unSelectCharacter();
     },
@@ -111,18 +114,13 @@ let logic_character = {
         return undefined;
     },
     selectCharacter(character: Character) {
-        selection.getSprite().setLocation(character.getLocation().x, character.getLocation().y);
-        selection.getSprite().setSize(character.getSprite().width,character.getSprite().height);
-        selection.walkAnimationFrame = character.walkAnimationFrame;
-        selection.getSprite().width = character.getSprite().width;
-        selection.getSprite().margin = character.getSprite().margin;
-        selection.hidden = false;
+        selection.select(character);
     },
     unSelectCharacter() {
-        selection.hidden = true;
+        selection.select(null);
     },
-    isSelectedCharacter(){
-        return !selection.hidden;
+    getSelectedCharacter(){
+        return selection.selectedCharacter;
     },
     isWall(iteration: number, addx:number, addy:number) {
         // return false;

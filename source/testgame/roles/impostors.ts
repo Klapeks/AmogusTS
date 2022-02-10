@@ -12,6 +12,7 @@ import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
 import { tablet } from "../logic/meeting/tablet";
+import { AmogusTextures } from "../textures";
 import { Role, RoleAction, RoleType } from "./role";
 import { role_vanisher } from "./special/role_vanisher";
 
@@ -38,10 +39,36 @@ let isFreeze = false;
 let freezeSprite: StaticSprite;
 let freezeSound: Sound;
 
+let shapeshifterCharacter: Character;
+let shapeshifterDefaultTexture: AmogusTextures;
+let shapeshifterDefaultNickname: string;
+
 const roles_impostors = {
     Impostor: new ImpostorRole('Impostor').settings({ color: 'FF0000', name: "Импостер" }),
 
-    Shapeshifter: new ImpostorRole("Shapeshifter").settings({ color: '9A1F27', name: "Оборотень" }),  // Оборотень
+    Shapeshifter: new ImpostorRole("Shapeshifter")
+        .settings({ color: '9A1F27', name: "Оборотень" })
+        .addAdditionalAction({
+            select: "any",
+            cooldown: 10,
+            button_texture: [0,0],
+            act: (ch) => {
+                shapeshifterDefaultTexture = Characters.main.getTextures();
+                shapeshifterDefaultNickname = Characters.main.getNickname();
+                Characters.main.setAmogusTextures(ch.getTextures());
+                Characters.main.setNickname(ch.getNickname());
+
+                const b = logic_buttons.AdditionalButton[0];
+                b.setModifiedCooldown('#9A1F27', () => {
+                    Characters.main.setAmogusTextures(shapeshifterDefaultTexture);
+                    Characters.main.setNickname(shapeshifterDefaultNickname);
+                    b.resetModifiedCooldown();
+                    b.cooldown(30);
+                    shapeshifterDefaultTexture = null;
+                    shapeshifterDefaultNickname = null;
+                })
+            }
+        }),  // Оборотень
 
 
     Sniper: new ImpostorRole("Sniper")
@@ -53,7 +80,6 @@ const roles_impostors = {
                 tablet.updateNameplate(ch);
             },
             select: (ch) => {
-                return true;
                 return ch.getRole().type !== "impostor";
             }
         }),  // Снайпер
