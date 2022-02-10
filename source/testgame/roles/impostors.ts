@@ -53,21 +53,35 @@ const roles_impostors = {
             cooldown: 10,
             button_texture: [0,0],
             act: (ch) => {
+                shapeshifterCharacter = ch;
+                logic_buttons.AdditionalButton[1].select();
+            }
+        })
+        .addAdditionalAction({
+            select: "regulatable",
+            cooldown: 10,
+            button_texture: [0,0],
+            act: () => {
+                if (!shapeshifterCharacter) return;
                 shapeshifterDefaultTexture = Characters.main.getTextures();
                 shapeshifterDefaultNickname = Characters.main.getNickname();
-                Characters.main.setAmogusTextures(ch.getTextures());
-                Characters.main.setNickname(ch.getNickname());
+                Characters.main.setAmogusTextures(shapeshifterCharacter.getTextures());
+                Characters.main.setNickname(shapeshifterCharacter.getNickname());
 
-                const b = logic_buttons.AdditionalButton[0];
+                const b = logic_buttons.AdditionalButton[1];
                 b.setModifiedCooldown('#9A1F27', () => {
                     Characters.main.setAmogusTextures(shapeshifterDefaultTexture);
                     Characters.main.setNickname(shapeshifterDefaultNickname);
                     b.resetModifiedCooldown();
-                    b.cooldown(30);
+                    b.cooldown(5);
                     shapeshifterDefaultTexture = null;
                     shapeshifterDefaultNickname = null;
                 })
             }
+        })
+        .setOnPick((ch) => {
+            if (ch!==Characters.main) return;
+            logic_buttons.AdditionalButton[1].unselect();
         }),  // Оборотень
 
 
