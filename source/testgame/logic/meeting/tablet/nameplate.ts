@@ -3,7 +3,6 @@ import { StaticSprite } from "../../../../engine/Sprite";
 import { LinkedLocation, Location } from "../../../../engine/Location";
 import { Game } from "../../../../engine/Game";
 import { textures } from "../../../textures";
-import { Texture } from "../../../../engine/Texture";
 import { tablet_settings } from "./tablet_settings";
 
 const tabset = tablet_settings;
@@ -80,6 +79,10 @@ class Nameplate {
         if (_i) _i.opacity = 0.9;
         _i = this.charplate.get('role');
         if (_i) _i.opacity = 0.9;
+        
+        if (this.charplate.has('deadmark')){
+            Game.getScene().removeUpperSprite(this.charplate.get('deadmark'));
+        }
         this.charplate.set('deadmark', 
             new StaticSprite(tabset.deadmarkTexture,
             new LinkedLocation(nloc, {dx: 20, dy: 20}))

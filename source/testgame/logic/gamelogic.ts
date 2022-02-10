@@ -57,7 +57,7 @@ let GameLogic = {
             ch.setRole(role);
             ch.getRole().onPick(ch);
 
-            // ch.showRoleplate();
+            ch.showRoleplate();
         });
         if (Characters.main.getRole().type === "impostor") {
             Characters.another.forEach(ch => {

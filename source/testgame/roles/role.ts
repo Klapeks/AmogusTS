@@ -16,9 +16,9 @@ interface RoleAction {
     button_state?: number
 }
 interface RoleMeetingAction {
-    act: (ch: Character) => void,
+    act: (ch: Character, selectedRole?: Role) => void,
     button_texture: string | Texture,
-    select?: (ch: Character, selectedRole?: string) => boolean,
+    select?: (ch: Character) => boolean,
     roleSelecting?: boolean
 }
 

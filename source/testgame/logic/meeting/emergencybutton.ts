@@ -10,7 +10,6 @@ import { TaskMenu } from "../items/TaskMenu";
 import { meeting } from "../meeting/meeting";
 import { voting } from "../meeting/voting";
 import { tablet } from "./tablet/tablet";
-import { tablet_settings } from "./tablet/tablet_settings";
 
 let buttonTexture: Texture;
 let clicksound: Sound;

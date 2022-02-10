@@ -84,7 +84,7 @@ var randomRoles = (amount = 10, impostors = config.roles.imposters, neutral = co
     const roles = RoleFuncs.random(amount, impostors, neutral);
     let a = '';
     roles.forEach((r, i)=>{
-        a+=`${i+1}. `
+        a+=`${i+1}. `;
         if (r.type==="impostor") a+="!";
         if (r.type==="neutral") a+="~";
         a+=r.name;

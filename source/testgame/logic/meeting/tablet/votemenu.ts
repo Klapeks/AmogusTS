@@ -12,24 +12,54 @@ import { meeting } from "../meeting";
 import { Nameplate } from "./nameplate";
 import { tablet_settings } from "./tablet_settings";
 import { TabletMenu } from "./tabletmenu";
+import { GuessRole } from "./guessrole";
 
 const tabset = tablet_settings;
 
 let menu: TabletMenu;
 
+
 let acceptButton: StaticSprite;
 let additionalButton: StaticSprite;
+let roleGuess: GuessRole;
+
+class VotingMenu extends TabletMenu {
+    constructor() {
+        super();
+        this.addClick({x:0,y:0,dx:Screen.width,dy:Screen.height}, onClick)
+    }
+
+    show(priority = 55) {
+        if (this.isShowed || this._sprite) return;
+        super.show(priority);
+        if (Characters.main.getRole().meetingAction?.roleSelecting) {
+            Game.getScene().addUpperSprite(...roleGuess.getSprites());
+        }
+    }
+    hide(extra: boolean = false) {
+        if (!extra) if (!this.isShowed) return;
+        super.hide(extra);
+        acceptButton.hidden = additionalButton.hidden = true;
+        Game.getScene().removeUpperSprite(...roleGuess.getSprites());
+        Game.getScene().removeUpperSprite(acceptButton, additionalButton);
+    }
+    onMenuMoving(location: Location): void {
+        super.onMenuMoving(location);
+        if (!roleGuess) return;
+        this.nameplates.forEach(np => np.updateLocation(location));
+        roleGuess.getLocation().set(location.x + this._size.width/2, location.y + this._size.height*3/4);
+    }
+}
 
 const VoteMenu = {
     open() { menu.show(); },
+    close() { menu.hide(true); },
+    getMenu() { return menu; },
     setAdditionalButtonTexture(texture: Texture) {
         additionalButton.setTexture(texture);
     },
     updateNameplate(character: Character) {
         menu.updateNameplate(character);
-    },
-    getMenu() {
-        return menu;
     },
     load() {
         acceptButton = new StaticSprite(new Texture('buttons/accept.png'))
@@ -43,8 +73,10 @@ const VoteMenu = {
             .setSize(tabset.plateSize.height-30-15, tabset.plateSize.height-25-15)
             .setPriority(55);
         additionalButton.hidden = true;
+
+        roleGuess = new GuessRole(new Location(-500, -500)).setPriority(55);
         
-        menu = new TabletMenu().addClick({x:0,y:0,dx:Screen.width,dy:Screen.height}, onClick);
+        menu = new VotingMenu();
 
         GameLogic.eventListeners.onreset.addEvent(() => {
             VoteMenu.close();
@@ -65,10 +97,8 @@ const VoteMenu = {
         if (!nameplate) menu.setSelectedNameplateLocation(null);
         else menu.setSelectedNameplateLocation(nameplate.getLocation());
     },
-    close() {
-        acceptButton.hidden = additionalButton.hidden = true;
-        Game.getScene().removeUpperSprite(acceptButton, additionalButton);
-        menu.hide(true);
+    hideButtons() {
+        onClick(-1,-1);
     }
 }
 
@@ -80,10 +110,8 @@ let trySelectButton = (button: StaticSprite) => {
         size: button
     })) {
         button.setFilter('brightness', 0.7);
-        // (button.getTexture() as MultiTexture).setID(1);
     } else {
         button.setFilter('brightness', null);
-        // (button.getTexture() as MultiTexture).setID(0);
     }
 }
 let onClick = (x: number, y: number) => {
@@ -99,6 +127,7 @@ let onClick = (x: number, y: number) => {
         Game.getScene().removeUpperSprite(acceptButton, additionalButton);
         return;
     }
+    const mainrole = Characters.main.getRole();
     if (!acceptButton.hidden){
         if (Location.isInHitbox(x,y, {
             location: acceptButton.getLocation(),
@@ -120,8 +149,17 @@ let onClick = (x: number, y: number) => {
         } else if (!additionalButton.hidden && Location.isInHitbox(x,y, {
             location: additionalButton.getLocation(), size: additionalButton
         })) {
-            if (!Characters.main.getRole().meetingAction) return;
-            Characters.main.getRole().meetingAction.act(nameplate.getCharacter());
+            if (!mainrole.meetingAction) return;
+            if (mainrole.meetingAction.roleSelecting) {
+                const selrole = roleGuess.getSelectedRole();
+                if (!selrole) {
+                    console.log("SELECT ROLE PLS")
+                    return;
+                }
+                mainrole.meetingAction.act(nameplate.getCharacter(), selrole);
+            } else {
+                mainrole.meetingAction.act(nameplate.getCharacter());
+            }
             return;
         }
         tabset.sounds.select.play();
@@ -133,12 +171,11 @@ let onClick = (x: number, y: number) => {
         additionalButton.hidden = true;
         Game.getScene().addUpperSprite(acceptButton, additionalButton);
     }
-    if (Characters.main.getRole().meetingAction) {
-        additionalButton.hidden = Characters.main.getRole().meetingAction.select 
-            ? !Characters.main.getRole().meetingAction.select(nameplate.getCharacter())
+    if (mainrole.meetingAction) {
+        additionalButton.hidden = mainrole.meetingAction.select
+            ? !mainrole.meetingAction.select(nameplate.getCharacter())
             : false;
     }
-
 }
 
 export {VoteMenu};

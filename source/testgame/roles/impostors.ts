@@ -69,13 +69,22 @@ const roles_impostors = {
         .settings({ color: 'FF4822', name: "Снайпер"})
         .setMeetingAction({
             button_texture: 'buttons/background_of_button.png',
-            act: (ch) => {
-                logic_kill.kill(ch, Characters.main, false);
-                VoteMenu.updateNameplate(ch);
+            act: (ch, role) => {
+                if (!role) return;
+                if (role === ch.getRole()) {
+                    logic_kill.kill(ch, Characters.main, false);
+                    VoteMenu.updateNameplate(ch);
+                    VoteMenu.hideButtons();
+                } else {
+                    logic_kill.kill(Characters.main, Characters.main, false);
+                    VoteMenu.updateNameplate(Characters.main);
+                    VoteMenu.hideButtons();
+                }
             },
             select: (ch) => {
                 return ch.getRole().type !== "impostor";
-            }
+            },
+            roleSelecting: true
         }),  // Снайпер
     
     Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча", usevents: "all"}),  // Саранча
