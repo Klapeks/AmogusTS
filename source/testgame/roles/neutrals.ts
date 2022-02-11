@@ -8,6 +8,7 @@ import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
 import { logic_kill } from "../logic/kill";
 import { killanimation_logic } from "../logic/kill/ka_logic";
+import { VoteMenu } from "../logic/meeting/tablet/votemenu";
 import { theend } from "../logic/meeting/theend";
 import { roles_impostors } from "./impostors";
 import { Role, RoleAction, RoleType } from "./role";
@@ -48,7 +49,39 @@ const createNoKill = (role: Role, win: Role = role) => {
 let shifterSound: Sound;
 let executionerTarget: Character;
 
+let swapperCharacter1: Character;
+let swapperCharacter2: Character;
+
 const roles_neutrals = {
+
+    // НЕ ДОДЕЛАНО
+    Swapper: new NeutralRole("Swapper")
+        .settings({ color: 'C0FF00', name: "Стрелочник" })
+        .setMeetingAction({
+            button_texture: 'buttons/background_of_button.png',
+            act: (ch) => {
+                if (!swapperCharacter1) swapperCharacter1 = ch;
+                else if (!swapperCharacter2) swapperCharacter2 = ch;
+                VoteMenu.hideButtons();
+            },
+            select: (ch) => {
+                if (swapperCharacter2) return false;
+                if (swapperCharacter1 === ch) return false;
+                return true;
+            }
+        })
+        .setOnLoad(() => {
+            GameLogic.eventListeners.onreset.addEvent(() => {
+                swapperCharacter1 = undefined;
+                swapperCharacter2 = undefined;
+            })
+            GameLogic.eventListeners.onkick.addEvent(() => {
+                swapperCharacter1 = undefined;
+                swapperCharacter2 = undefined;
+            })
+        }),  // Сваппер
+
+
     Arsonist: new NeutralRole("Arsonist")
         .settings({ color: 'FF9100', name: "Спалахуйка", countAsCrewmate: false })
         .setOnLoad(role_arsonist.load)
@@ -67,8 +100,6 @@ const roles_neutrals = {
         .setOnPick(() => {
             logic_buttons.AdditionalButton[0].unselect();
         }),  // Спалахуйка
-
-    Swapper: new NeutralRole("Swapper").settings({ color: 'C0FF00', name: "Стрелочник" }),  // Сваппер
 
     Executioner: new NeutralRole("Executioner")
         .settings({ color: '1DD579', name: "Палач" })
