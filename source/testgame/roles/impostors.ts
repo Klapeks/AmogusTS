@@ -98,10 +98,15 @@ const roles_impostors = {
             act: () => {
                 const f = (character: Character, o:number) => {
                     character.getSprite().setFilter('brightness', o);
-                    if (o!==1 && o !== 0 && o!==undefined) return;
-                    character.getTextPlates().forEach(s => {
-                        if (s) s.setFilter('opacity', o);
-                    })
+                    if (o >= 1 || o === undefined) {
+                        character.getTextPlates().forEach(s => {
+                            if (s) s.setFilter('opacity', undefined);
+                        })
+                    } else if (o <= 0) {
+                        character.getTextPlates().forEach(s => {
+                            if (s) s.setFilter('opacity', 0);
+                        })
+                    }
                 };
                 OpacityUtils.opacityAnimation(null, {time: 250, from: 1, to: 0, func: (i) => {
                     f(Characters.main, i);
