@@ -96,6 +96,10 @@ class Sprite {
         return this._tex;
     }
     upperThanDark = false;
+    setUpperThanDark(b: boolean) {
+        this.upperThanDark = b;
+        return this;
+    }
     private _hideInDark = false;
     isHideInDark() {
         return this._hideInDark;
@@ -171,7 +175,7 @@ class StaticSprite extends Sprite {
 }
 let FullscreenSprite = (texture: Texture | string, priority=100): StaticSprite => {
     return new StaticSprite(typeof texture === "string" ? new Texture(texture) : texture)
-            .setSize(Screen.width, Screen.height).setPriority(priority);
+            .setSize(Screen.width, Screen.height).setPriority(priority).setUpperThanDark(true);
 }
 
 let NullSprite: Sprite = new Sprite(null);

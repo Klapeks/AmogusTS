@@ -6,7 +6,7 @@ let defaultTaskTexture: Texture;
 
 class DiverPowerTask extends Task {
     constructor(location: BiLocation, texture?: Texture) {
-        super("diverpowertask", texture, location, true);
+        super("diverpowertask", texture, location, "back");
     }
     getDeafultTexture(): Texture {
         if (!defaultTaskTexture) defaultTaskTexture = new Texture('tasks/divert_power/task.png');

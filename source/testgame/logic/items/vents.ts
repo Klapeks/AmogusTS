@@ -25,7 +25,7 @@ let sounds: {
 
 class Vents extends InteractableItem {
     constructor(location: BiLocation) {
-        super(null, location, true);
+        super(null, location, "back");
         if (!sounds?.open) sounds = {
             move: new MultiSound('tasks/vent/move1.wav','tasks/vent/move2.wav','tasks/vent/move3.wav'),
             open: new Sound('tasks/vent/open.wav')

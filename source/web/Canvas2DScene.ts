@@ -19,8 +19,8 @@ class Canvas2DScene extends Scene {
         super({
             back: new CanvasLayer({canvas, context}),
             middle: new CanvasDynamicLayer({canvas, context}),
-            middleDarked: new CanvasDynamicLayer(),
-            upper: new CanvasLayer({canvas, context}),
+            middle_indarked: new CanvasDynamicLayer(),
+            upper_than_dark: new CanvasLayer({canvas, context}),
             light: new CanvasLayer({canvas: (() => {
                 let c = document.createElement('canvas');
                 c.width = canvas.width + 200;
@@ -37,7 +37,7 @@ class Canvas2DScene extends Scene {
         this.main_ctx.fillStyle = "black";
         this.main_ctx.fillRect(0, 0, Screen.width, Screen.height);
         if (EngineConfig.hide_sprites_under_dark) {
-            (this.layers.middleDarked as CanvasDynamicLayer).getContext()?.clearRect(0, 0, Screen.width, Screen.height);
+            (this.layers.middle_indarked as CanvasDynamicLayer).getContext()?.clearRect(0, 0, Screen.width, Screen.height);
         }
         super.render();
     }

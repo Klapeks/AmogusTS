@@ -40,7 +40,7 @@ let role_arsonist = {
         if (!role_arsonist.checkFire()) return;
 
         OpacityUtils.opacityAnimation(fire, {time: 500, from: 0, to: 1});
-        Game.getScene().LayerUpper.add(fire);
+        Game.getScene().addUpperSprite(fire);
         setTimeout(() => {
             theend.end(Roles.Arsonist, Characters.main);
         }, 250);
@@ -48,7 +48,7 @@ let role_arsonist = {
             OpacityUtils.opacityAnimation(fire, {time: 500, from: 1, to: 0});
         }, 750);
         setTimeout(() => {
-            Game.getScene().LayerUpper.remove(fire);
+            Game.getScene().removeUpperSprite(fire);
         }, 1500);
     }
 } 

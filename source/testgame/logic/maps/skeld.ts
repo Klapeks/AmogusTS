@@ -78,7 +78,7 @@ let skeld = {
 
         // Game.getScene().addBackSprite();
         Game.getScene().addBackSprite(animItem.adminMap.sprite);
-        Game.getScene().LayerUpper.add(animItem.secretWall, animItem.adminMap.uppersprite);
+        Game.getScene().addUpperSprite(animItem.secretWall, animItem.adminMap.uppersprite);
 
         let darkness_map: Texture = new Texture('maps/skeld/shadows.png',null,()=>{
             Game.getScene().filterImage(darkness_map.getImage(), (imgdata) => {

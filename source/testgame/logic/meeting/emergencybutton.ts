@@ -7,8 +7,8 @@ import { Retexturing } from "../../../engine/utils/Retexturing";
 import { logic_buttons } from "../buttons";
 import { Characters } from "../charslog";
 import { TaskMenu } from "../items/TaskMenu";
-import { meeting } from "../meeting/meeting";
-import { voting } from "../meeting/voting";
+import { meeting } from "./meeting";
+import { voting } from "./voting";
 import { tablet } from "./tablet/tablet";
 
 let buttonTexture: Texture;
@@ -19,7 +19,7 @@ let waitingHost: boolean = false;
 class EmergencyButton extends InteractableItem {
 
     constructor(location: BiLocation, range: number | Hitbox = 300) {
-        super(null, location, true);
+        super(null, location, "back");
         this.setRange(range);
         if (!clicksound) clicksound = new Sound('voting/embutton.wav');
         if (!menu) {

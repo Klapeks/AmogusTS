@@ -8,8 +8,8 @@ import { config } from "../../../config";
 
 abstract class Task extends InteractableItem{
     private _id: string;
-    constructor(id: string, texture: Texture, location: BiLocation, isBack: boolean = false) {
-        super(texture, location, isBack);
+    constructor(id: string, texture: Texture, location: BiLocation, type: "upper" | "dynamic" | "back" = "dynamic") {
+        super(texture, location, type);
         this._id = id;
         this.setRange(config.taskrange);
     }

@@ -83,7 +83,7 @@ let role_angel = {
                     .setSplitting(0, 0, saveBlowTextureInfo.width, saveBlowTextureInfo.height)
                     .setHideInDark(true);
         blowshield.hidden = true;
-        Game.getScene().addMiddleSprite(true, shield, blowshield);
+        Game.getScene().addDynamicSprite(shield, blowshield);
         
         
         for (let i = 0; i < saveTextureInfo.amount; i++) {
@@ -106,7 +106,7 @@ let role_angel = {
 
         setTimeout(() => {
             blowshield.hidden = true;
-            Game.getScene().removeMiddleSprite(shield, blowshield);
+            Game.getScene().removeDynamicSprite(shield, blowshield);
             savedCharacter.setNicknameColor(HexColor('FFFFFF'));
             savedCharacter = undefined;
         }, time);

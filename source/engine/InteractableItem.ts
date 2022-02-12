@@ -7,22 +7,24 @@ import { Retexturing } from "./utils/Retexturing";
 abstract class InteractableItem {
     protected _sprite: Sprite;
     protected _hilightsprite: Sprite;
-    private _isBack = false;
-    constructor(texture: Texture, location: BiLocation, isBack: boolean = false) {
+    private _type: "upper" | "dynamic" | "back" = "dynamic";
+    constructor(texture: Texture, location: BiLocation, type: "upper" | "dynamic" | "back" = "dynamic") {
         // this._loc = location;
         this._sprite = new Sprite(texture || this.getDeafultTexture(), new Location(location.x, location.y))
                 .setSize(location.width, location.height);
-        this._isBack = isBack;
+        this._type = type;
         this._hilightsprite = new Sprite(this.generateSelectedTexture(this._sprite.getTexture()), new Location(location.x, location.y))
                 .setSize(location.width, location.height);
     }
     abstract getDeafultTexture():Texture;
     abstract use():void;
     registerSprite() {
-        if (this._isBack) {
+        if (this._type === "back") {
             Game.getScene().addBackSprite(this._sprite, this._hilightsprite);
+        } else if (this._type === "upper") {
+            Game.getScene().addUpperSprite(this._sprite, this._hilightsprite);
         } else {
-            Game.getScene().addMiddleSprite("both", this._sprite, this._hilightsprite);
+            Game.getScene().addDynamicSprite(this._sprite, this._hilightsprite);
         }
         return this._sprite;
     }

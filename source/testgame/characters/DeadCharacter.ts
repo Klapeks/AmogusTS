@@ -18,7 +18,7 @@ class DeadCharacter {
             .setHideInDark(true)
             .setMargin(character.getSprite().margin);
 
-        Game.getScene().addMiddleSprite(true, this._sprite);
+        Game.getScene().addDynamicSprite(this._sprite);
         this.playDeath();
         this._character.deadbody = this;
     }
@@ -43,7 +43,7 @@ class DeadCharacter {
     }
     delete() {
         DeadCharacter.allDeadBodies = DeadCharacter.allDeadBodies.filter(ch => ch!==this);
-        Game.getScene().removeMiddleSprite(this._sprite);
+        Game.getScene().removeDynamicSprite(this._sprite);
         this._character.deadbody = null;
         this._character = null;
         this._sprite = null;
