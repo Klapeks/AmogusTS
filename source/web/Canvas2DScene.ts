@@ -7,7 +7,7 @@ import { SuperMath } from "../engine/utils/SuperMath";
 import { Texture } from "../engine/Texture";
 import { Canvas2DUtils } from "./Canvas2DUtils";
 import { Layer } from "../engine/Layer";
-import { CanvasLayer } from "./Canvas2DLayer";
+import { CanvasDynamicLayer, CanvasLayer } from "./Canvas2DLayer";
 
 let _lx: number, _ly: number, _lw: number, _lh: number;
 
@@ -17,17 +17,17 @@ class Canvas2DScene extends Scene {
 
     constructor(canvas: HTMLCanvasElement, context = canvas.getContext("2d")) {
         super({
-            back: new CanvasLayer("filter", {canvas, context}),
-            dynamic: new CanvasLayer("dynamic", {canvas, context}),
-            hideInDark: new CanvasLayer("dynamic"),
-            upper: new CanvasLayer("filter", {canvas, context}),
-            light: new CanvasLayer("filter", {canvas: (() => {
+            back: new CanvasLayer({canvas, context}),
+            middle: new CanvasDynamicLayer({canvas, context}),
+            middleDarked: new CanvasDynamicLayer(),
+            upper: new CanvasLayer({canvas, context}),
+            light: new CanvasLayer({canvas: (() => {
                 let c = document.createElement('canvas');
                 c.width = canvas.width + 200;
                 c.height = canvas.height + 200;
                 return c;
             })()}),
-            GUI: new CanvasLayer("filter", {canvas, context}),
+            GUI: new CanvasLayer({canvas, context}),
         });
         this.main_canvas = canvas;
         this.main_ctx = context;
@@ -37,7 +37,7 @@ class Canvas2DScene extends Scene {
         this.main_ctx.fillStyle = "black";
         this.main_ctx.fillRect(0, 0, Screen.width, Screen.height);
         if (EngineConfig.hide_sprites_under_dark) {
-            (this.layers.hideInDark as CanvasLayer).getContext()?.clearRect(0, 0, Screen.width, Screen.height);
+            (this.layers.middleDarked as CanvasDynamicLayer).getContext()?.clearRect(0, 0, Screen.width, Screen.height);
         }
         super.render();
     }

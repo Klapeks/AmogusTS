@@ -74,14 +74,16 @@ let role_angel = {
                     .setSize(saveTextureInfo.width*(reverse?-1:1), saveTextureInfo.height)
                     .setLocationByCenter(loc.x, loc.y)
                     .setLocationYaw(degrees*(reverse?-1:1))
-                    .setSplitting(0, 0, saveTextureInfo.width, saveTextureInfo.height);
+                    .setSplitting(0, 0, saveTextureInfo.width, saveTextureInfo.height)
+                    .setHideInDark(true);
         const blowshield = new Sprite(saveBlowTexture)
                     .setSize(saveBlowTextureInfo.width*(reverse?-1:1), saveBlowTextureInfo.height)
                     .setLocationByCenter(loc.x, loc.y)
                     .setLocationYaw(degrees*(reverse?-1:1))
-                    .setSplitting(0, 0, saveBlowTextureInfo.width, saveBlowTextureInfo.height);
+                    .setSplitting(0, 0, saveBlowTextureInfo.width, saveBlowTextureInfo.height)
+                    .setHideInDark(true);
         blowshield.hidden = true;
-        Game.getScene().addDynamicSprite(shield, blowshield);
+        Game.getScene().addMiddleSprite(true, shield, blowshield);
         
         
         for (let i = 0; i < saveTextureInfo.amount; i++) {
@@ -104,7 +106,7 @@ let role_angel = {
 
         setTimeout(() => {
             blowshield.hidden = true;
-            Game.getScene().removeDynamicSprite(shield, blowshield);
+            Game.getScene().removeMiddleSprite(shield, blowshield);
             savedCharacter.setNicknameColor(HexColor('FFFFFF'));
             savedCharacter = undefined;
         }, time);

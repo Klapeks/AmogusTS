@@ -8,23 +8,27 @@ interface Layer {
     draw(): void;
     drawSprite(sprite: Sprite): void;
     forEach(f: (sprite: Sprite) => void): void;
-    isFilter(): this is IFilterLayer;
-    isDynamic(): this is IDynamicLayer;
-}
-interface IFilterLayer {
+
+    isDynamic(): this is DynamicLayer;
+
     recalculate(): void;
     hasFullscreen(): boolean;
     isFullscreen(s: Sprite): boolean;
 }
-interface IDynamicLayer { }
+interface DynamicLayer {
+    addDynamic(...sprite: Sprite[]): void;
+    removeDynamic(...sprite: Sprite[]): void;
+    drawDynamic(): void;
+}
 
 
-type FilterLayerSettings = {checkFullscreen?: boolean};
-abstract class AbstractFilterLayer implements Layer, IFilterLayer {
+type LayerSettings = {checkFullscreen?: boolean};
+
+abstract class AbstractLayer implements Layer {
     protected _sprites: SpriteArray = new SpriteArray();
     protected _upperSprites: SpriteArray;
     fullscreenCheck = false;
-    constructor(settings?: FilterLayerSettings) {
+    constructor(settings?: LayerSettings) {
         if (!settings) return;
         this.fullscreenCheck ??= settings.checkFullscreen;
     }
@@ -65,45 +69,51 @@ abstract class AbstractFilterLayer implements Layer, IFilterLayer {
     }
     draw(): void {
         if (this.hasFullscreen()) {
-            this._upperSprites.forEach(this.drawSprite);
+            this._upperSprites.forEach(s => this.drawSprite(s));
             return;
         }
-        this.forEach(this.drawSprite);
+        this.forEach((s) => this.drawSprite(s));
     }
     forEach(f: (sprite:Sprite) => void) {
         this._sprites.forEach(f);
     }
     abstract drawSprite(sprite: Sprite): void;
-    isFilter(): this is IFilterLayer { return true; }
-    isDynamic(): this is IDynamicLayer { return false; }
+
+    isDynamic(): this is DynamicLayer { return false; }
 }
 
 
-abstract class AbstractDynamicLayer implements Layer, IDynamicLayer {
-    protected _sprites: Array<Sprite> = new Array();
-    add(...sprite: Sprite[]): void {
+abstract class AbstractDynamicLayer extends AbstractLayer implements DynamicLayer {
+    protected _sprites_dynamic: Array<Sprite> = new Array();
+
+    constructor() {
+        super();
+        this.fullscreenCheck = false;
+    }
+    
+    addDynamic(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(!s || this._sprites.includes(s)) continue;
-            this._sprites.push(s);
+            if(!s || this._sprites_dynamic.includes(s)) continue;
+            this._sprites_dynamic.push(s);
         }
     }
-    remove(...sprite: Sprite[]): void {
-        this._sprites = this._sprites.filter(s=>!sprite.includes(s));
+    removeDynamic(...sprite: Sprite[]): void {
+        this._sprites_dynamic = this._sprites_dynamic.filter(s=>!sprite.includes(s));
     }
     draw(): void {
+        this.drawDynamic();
+        super.draw();
+    }
+    drawDynamic(): void {
         let ts: TreeSprite;
-        for (let sprite of this._sprites) {
+        for (let sprite of this._sprites_dynamic) {
             if (ts) ts.add(new TreeSprite(sprite));
             else ts = new TreeSprite(sprite);
         }
-        if (ts) ts.foreach(this.drawSprite);
+        if (ts) ts.foreach((s) => this.drawSprite(s));
     }
-    forEach(f: (sprite:Sprite) => void) {
-        this._sprites.forEach(f);
-    }
-    abstract drawSprite(sprite: Sprite): void;
-    isFilter(): this is IFilterLayer { return false; }
-    isDynamic(): this is IDynamicLayer { return true; }
+
+    isDynamic(): this is DynamicLayer { return true; }
 }
 
-export { Layer, IDynamicLayer, IFilterLayer, AbstractFilterLayer, AbstractDynamicLayer, FilterLayerSettings };
+export { Layer, AbstractLayer, AbstractDynamicLayer, LayerSettings, DynamicLayer };

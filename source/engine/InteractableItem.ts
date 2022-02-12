@@ -22,7 +22,7 @@ abstract class InteractableItem {
         if (this._isBack) {
             Game.getScene().addBackSprite(this._sprite, this._hilightsprite);
         } else {
-            Game.getScene().addDynamicSprite(this._sprite, this._hilightsprite);
+            Game.getScene().addMiddleSprite("both", this._sprite, this._hilightsprite);
         }
         return this._sprite;
     }

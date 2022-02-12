@@ -1,11 +1,11 @@
 import { Camera } from "./Camera";
-import { Layer } from "./Layer";
+import { DynamicLayer, Layer } from "./Layer";
 import { Light } from "./Light";
 import { Location, Size } from "./Location";
 import { Splitting, Sprite } from "./Sprite";
 import { Texture } from "./Texture";
 
-type SceneLayers = {back: Layer, dynamic: Layer, hideInDark: Layer, upper: Layer, light: Layer, GUI: Layer};
+type SceneLayers = {back: Layer, middle: Layer&DynamicLayer, middleDarked: Layer&DynamicLayer, upper: Layer, light: Layer, GUI: Layer};
 abstract class Scene {
     // protected _additionalayers: {[key: string]: Layer} = {};
     protected layers: SceneLayers;
@@ -17,28 +17,36 @@ abstract class Scene {
         return this._camera;
     }
 
-    get LayerBack() { return this.layers.back; }
-    get LayerDynamic() { return this.layers.dynamic; }
-    get LayerHideInDark() { return this.layers.hideInDark; }
+    // get LayerBack() { return this.layers.back; }
+    // get DLayerDynamic() {return this.layers.dynamic}
+    // get DLayerDarking() { return this.layers.hideInDark; }
     get LayerUpper() { return this.layers.upper; }
     get LayerGUI() { return this.layers.GUI; }
 
-    removeDynamicSprite(...sprite: Sprite[]) {
-        this.layers.dynamic.remove(...sprite);
-        this.layers.hideInDark.remove(...sprite);
-    }
-    addDynamicSprite(...sprite: Sprite[]): void {
-        for (let s of sprite) {
-            if(!s) continue;
-            if (s.isHideInDark()) this.layers.hideInDark.add(s);
-            else this.layers.dynamic.add(s);
-        }
-    }
     addBackSprite(...sprite: Sprite[]): void {
         this.layers.back.add(...sprite);
     }
     removeBackSprite(...sprite: Sprite[]) {
         this.layers.back.remove(...sprite);
+    }
+    removeMiddleSprite(...sprite: Sprite[]) {
+        this.layers.middle.remove(...sprite);
+        this.layers.middle.removeDynamic(...sprite);
+        this.layers.middleDarked.remove(...sprite);
+        this.layers.middleDarked.removeDynamic(...sprite);
+    }
+    addMiddleSprite(isDynamic: true | false | "both", ...sprite: Sprite[]): void {
+        for (let s of sprite) {
+            if(!s) continue;
+            if (isDynamic===true||isDynamic==="both") {
+                if (s.isHideInDark()) this.layers.middleDarked.addDynamic(s);
+                else this.layers.middle.addDynamic(s);
+            }
+            if (isDynamic===false||isDynamic==="both"){
+                if (s.isHideInDark()) this.layers.middleDarked.add(s);
+                else this.layers.middle.add(s);
+            }
+        }
     }
     // addUpperSprite(...sprite: Sprite[]): void {
     //     this.layers.upper.addSprite(...sprite);
@@ -69,17 +77,16 @@ abstract class Scene {
     }
 
     render() {
-        if (this.layers.GUI.isFilter() && this.layers.GUI.hasFullscreen()) {
+        if (this.layers.GUI.hasFullscreen()) {
             this.layers.GUI.draw();
             return;
         }
         this.layers.back.draw();
-        this.layers.dynamic.draw();
+        this.layers.middle.draw();
         this.layers.upper.draw();
-        this.drawLights(this.layers.hideInDark);
+        this.drawLights(this.layers.middleDarked);
         this.layers.upper.forEach(s => {
-            if (!s.isHideInDark())
-                this.layers.upper.drawSprite(s);
+            if (!s.isHideInDark()) this.layers.upper.drawSprite(s);
         })
         this.layers.GUI.draw();
     }
