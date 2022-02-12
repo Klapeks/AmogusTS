@@ -43,7 +43,7 @@ let testgame = {
             Game.getCamera().getResolution().set(Game.getCamera().getResolution().x*0.85, Game.getCamera().getResolution().y*0.85);
             let border = new Sprite(new Texture('border.png'), new Location(-Screen.width/2, -Screen.height/2)).setSize(Screen.width, Screen.height);
             skeld.load();
-            Game.getScene().addUpperSprite(border);
+            Game.getScene().LayerGUI.add(border);/////
             logic.load();
             MainMenu.show();
 

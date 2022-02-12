@@ -11,7 +11,7 @@ let darking = {
             darkness = FullscreenSprite(new OnecolorTexture(HexColor('000000')));
         }
         darkness.opacity = time_ms===0 ? 1 : 0;
-        Game.getScene().addUpperSprite(darkness);
+        Game.getScene().LayerGUI.add(darkness);
         if (time_ms > 0) {
             for (let i = 1; i <= parts; i++) {
                 setTimeout(() => {
@@ -33,7 +33,7 @@ let darking = {
             }
         }
         setTimeout(() => {
-            Game.getScene().removeUpperSprite(darkness);
+            Game.getScene().LayerGUI.remove(darkness);
         }, time_ms);
         return time_ms;
     }

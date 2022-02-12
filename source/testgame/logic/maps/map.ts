@@ -92,7 +92,7 @@ class Map {
         this._sprite.hidden = true;
         this._uppersprite.hidden = true;
         Game.getScene().addBackSprite(this._sprite);
-        if (this._uppersprite) Game.getScene().addUpperSprite(this._uppersprite);
+        if (this._uppersprite) Game.getScene().LayerUpper.add(this._uppersprite);
 
         this._b.tasks.forEach(t=>t.registerSprite())
         this._b.vents.forEach(v=>v.registerSprite())

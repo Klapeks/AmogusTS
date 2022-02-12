@@ -30,7 +30,7 @@ let theend = {
             gui_sounds.select.play();
             reset(); reset = undefined;
             resetButton.hidden = true;
-            Game.getScene().removeUpperSprite(resetButton.getSprite());
+            Game.getScene().LayerGUI.remove(resetButton.getSprite());
             GameLogic.startGame();
         }).setOnHover(() => {
             gui_sounds.hover.play();
@@ -146,7 +146,7 @@ let theend = {
 
         setTimeout(() => {
             resetButton.hidden = false;
-            Game.getScene().addUpperSprite(resetButton.getSprite());
+            Game.getScene().LayerGUI.add(resetButton.getSprite());
         }, config.starting_time.apear_main);
     }
 }

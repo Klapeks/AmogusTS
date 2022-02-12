@@ -104,7 +104,7 @@ let ButtonFuncs = {
     addButton(...button: Button[]) {
         button.forEach(b => {
             allButtons.push(b);
-            Game.getScene().addUpperSprite(b.getSprite());
+            Game.getScene().LayerGUI.add(b.getSprite());
         });
     }
 }

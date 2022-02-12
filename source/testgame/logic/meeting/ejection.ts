@@ -86,7 +86,7 @@ let ejections = {
     isEjecting: false,
     eject(text: string, subtext: string = "", character?: Character) {
         ejections.isEjecting = true;
-        Game.getScene().addUpperSprite(darkness, stars, stars2);
+        Game.getScene().LayerGUI.add(darkness, stars, stars2);
         darkness.setSplitting(7*16, 7*16, 8, 8);
         // ejectanimation = 1;
         darkness.hidden = false;
@@ -100,7 +100,7 @@ let ejections = {
             iconSprite = new StaticSprite(character.getTextures().eject, new Location(-200, Screen.height/2))
                     .setSize(256*ejectTexts.iconSize, 256*ejectTexts.iconSize)
                     .setPriority(95);
-            Game.getScene().addUpperSprite(iconSprite);
+            Game.getScene().LayerGUI.add(iconSprite);
             for (let i = 0; i < ejectTexts.ejectRotation; i+=0.1) {
                 const ratio = i/ejectTexts.ejectRotation;
                 setTimeout(() => {
@@ -111,7 +111,7 @@ let ejections = {
             }
             character.setAlive(false);
         }
-        Game.getScene().addUpperSprite(subtextSprite, textSprite);
+        Game.getScene().LayerGUI.add(subtextSprite, textSprite);
 
         // Darkness: 0 - dark, 7 - not dark
         // Stage 1: make screen dark
@@ -193,7 +193,7 @@ let ejections = {
             (textSprite.getTexture() as TextTexture).text = '';
             (subtextSprite.getTexture() as TextTexture).text = '';
             (subtextSprite.getTexture() as TextTexture).fontsize = 0;
-            Game.getScene().removeUpperSprite(darkness, stars, stars2, subtextSprite, textSprite, iconSprite);
+            Game.getScene().LayerGUI.remove(darkness, stars, stars2, subtextSprite, textSprite, iconSprite);
             ejections.isEjecting = false;
             iconSprite = null;
         }, ejectTimings[ejectTimings.length-1]);

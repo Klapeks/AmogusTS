@@ -107,7 +107,7 @@ let introducing = {
                     .setOpacity(0)
                     .setPriority(75);
 
-        Game.getScene().addUpperSprite(blackRect, backcolorSprite, 
+        Game.getScene().LayerGUI.add(blackRect, backcolorSprite, 
                 ...settings.sprites, ...Object.values(dark), introduceText);
 
         const dap = settings.timings.apear_iteration_time/settings.timings.apear;
@@ -120,7 +120,7 @@ let introducing = {
         return {
             introduceText, dap,
             remove() {
-                Game.getScene().removeUpperSprite(blackRect, backcolorSprite, 
+                Game.getScene().LayerGUI.remove(blackRect, backcolorSprite, 
                         ...settings.sprites, ...Object.values(dark), introduceText);
                 introducing.isIntroducing = false;
             }

@@ -1,234 +1,66 @@
-import { Camera } from "../engine/Camera";
 import { EngineConfig } from "../engine/EngineConfig";
 import { Game } from "../engine/Game";
 import { Light } from "../engine/Light";
-import { BiLocation } from "../engine/Location";
 import { Scene } from "../engine/Scene";
 import { Screen } from "../engine/Screen";
-import { Splitting, Sprite, StaticSprite } from "../engine/Sprite";
 import { SuperMath } from "../engine/utils/SuperMath";
-import { OnecolorTexture, TextTexture, Texture } from "../engine/Texture";
+import { Texture } from "../engine/Texture";
+import { Canvas2DUtils } from "./Canvas2DUtils";
+import { Layer } from "../engine/Layer";
+import { CanvasLayer } from "./Canvas2DLayer";
 
 let _lx: number, _ly: number, _lw: number, _lh: number;
-// let _ctxFilter: string;
 
 class Canvas2DScene extends Scene {
-    private _canvas: HTMLCanvasElement;
-    private _ctx: CanvasRenderingContext2D;
-    constructor(canvas: HTMLCanvasElement) {
-        super();
-        this._canvas = canvas;
-        this._ctx = canvas.getContext("2d");
+    main_canvas: HTMLCanvasElement;
+    main_ctx: CanvasRenderingContext2D;
 
-        this._drawlight_canvas = document.createElement('canvas');
-        this._drawlight_canvas.width = this._canvas.width+200;
-        this._drawlight_canvas.height = this._canvas.height+200;
-        if (EngineConfig.hide_sprites_under_dark) {
-            this._hideindark_canvas = document.createElement('canvas');
-            this._hideindark_canvas.width = this._canvas.width;
-            this._hideindark_canvas.height = this._canvas.height;
-    
-            this._drawlight_ctx = this._drawlight_canvas.getContext('2d');
-            this._hideindark_ctx = this._hideindark_canvas.getContext('2d');
-        }
+    constructor(canvas: HTMLCanvasElement, context = canvas.getContext("2d")) {
+        super({
+            back: new CanvasLayer("filter", {canvas, context}),
+            dynamic: new CanvasLayer("dynamic", {canvas, context}),
+            hideInDark: new CanvasLayer("dynamic"),
+            upper: new CanvasLayer("filter", {canvas, context}),
+            light: new CanvasLayer("filter", {canvas: (() => {
+                let c = document.createElement('canvas');
+                c.width = canvas.width + 200;
+                c.height = canvas.height + 200;
+                return c;
+            })()}),
+            GUI: new CanvasLayer("filter", {canvas, context}),
+        });
+        this.main_canvas = canvas;
+        this.main_ctx = context;
     }
+    render(): void {
+        if (!Game.isLoaded) return;
+        this.main_ctx.fillStyle = "black";
+        this.main_ctx.fillRect(0, 0, Screen.width, Screen.height);
+        if (EngineConfig.hide_sprites_under_dark) {
+            (this.layers.hideInDark as CanvasLayer).getContext()?.clearRect(0, 0, Screen.width, Screen.height);
+        }
+        super.render();
+    }
+
     drawTextureFullScreen(texture: Texture): void {
         console.log("texture was drawed: ", texture)
-        Canvas2DScene.drawImage(this._ctx, texture.getImage(), 0, 0, Screen.width, Screen.height, null, 0);
+        Canvas2DUtils.drawImage(this.layers.GUI as CanvasLayer, texture.getImage(), 
+            {x: 0, y: 0, width: Screen.width, height: Screen.height});
     }
-    static _drawedSpritedPesPeriod: number = 0;
-    static _drawedSpritesSprite: TextTexture;
-    drawSprites(): void {
-        if (!Game.isLoaded) return;
-
-        Canvas2DScene._drawedSpritedPesPeriod = 0;
-        if (!Canvas2DScene._drawedSpritesSprite)
-            Canvas2DScene._drawedSpritesSprite 
-                = new TextTexture('Sprites: ', 'arial')
-                .setColor('white')
-                .setFontSize(30)
-                .setOutline('black', 1)
-                .setAlign('left');
-
-        this._ctx.fillStyle = "black";
-        this._ctx.fillRect(0, 0, Screen.width, Screen.height);
-        if (EngineConfig.hide_sprites_under_dark) {
-            this._hideindark_ctx?.clearRect(0, 0, Screen.width, Screen.height);
-        }
-        super.drawSprites();
-        Canvas2DScene._drawedSpritesSprite.setText(`Sprites: ${Canvas2DScene._drawedSpritedPesPeriod}`);
-        Canvas2DScene.drawText(this._ctx, Canvas2DScene._drawedSpritesSprite, 30, 40, 1000, 50);
-    }
-    drawSprite(sprite: Sprite, isBack = false): void {
-        if (sprite.hidden) return;
-        let img = sprite.getTexture().getImage();
-        const res = {
-            dx: this._camera.getResolution().x/Screen.width,
-            dy: this._camera.getResolution().y/Screen.height
-        };
-        if (sprite instanceof StaticSprite) {
-            _lx = sprite.getLocation().x;
-            _ly = sprite.getLocation().y;
-            if (sprite.margin) {
-                let margin = sprite.margin;
-                if (margin.x < 0) _lx = Screen.width - _lx + margin.x;
-                else _lx += margin.x;
-                if (margin.y < 0) _ly = Screen.height - _ly + margin.y;
-                else _ly += margin.y;
-            }
-            _lw = sprite.width;
-            _lh = sprite.height;
-        } else {
-            _lx = (sprite.getLocation().x - this._camera.getLocation().x)*res.dx + Screen.width/2;
-            _ly = (sprite.getLocation().y - this._camera.getLocation().y)*res.dy + Screen.height/2;
-            _lw = sprite.width*res.dx;
-            _lh = sprite.height*res.dy;
-            if (sprite.margin) {
-                _lx += sprite.margin.x;
-                _ly += sprite.margin.y;
-            }
-        }
-        const ctx = EngineConfig.hide_sprites_under_dark && sprite.isHideInDark() 
-                && Light.isLightsEnable() ? this._hideindark_ctx : this._ctx;
-        if (!img) {
-            if (sprite.getTexture() instanceof TextTexture) {
-                if (EngineConfig.hide_sprites_under_dark && !isBack && Light.isLightsEnable()){
-                    Canvas2DScene.drawText(this._hideindark_ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.getFilters())
-                    if (sprite.isHideInDark()) return;
-                }
-                Canvas2DScene.drawText(ctx, sprite.getTexture() as TextTexture, _lx, _ly, _lw, _lh, sprite.getFilters())
-            }
-            if (sprite.getTexture() instanceof OnecolorTexture) {
-                const {r,g,b} = (sprite.getTexture() as OnecolorTexture).color;
-                const rotation = sprite.getLocation().yaw;
-                this._ctx.save();
-                if (!Number.isNaN(sprite.opacity)) ctx.filter = `opacity(${sprite.opacity})`
-                this._ctx.fillStyle = `rgb(${r},${g},${b})`;
-                this._ctx.translate(_lx, _ly);
-                if (rotation) {
-                    this._ctx.translate(_lw/2, _ly/2);
-                    this._ctx.rotate(rotation);
-                    this._ctx.translate(-_lw/2, -_ly/2);
-                }
-                this._ctx.fillRect(0, 0, _lw, _lh);
-                this._ctx.restore();
-            }
+    drawLights(hideInDark: Layer): void {
+        hideInDark.draw();
+        if (!Light.isLightsEnable()){
+            if (!(hideInDark instanceof CanvasLayer)) return;
+            this.main_ctx.drawImage(hideInDark.getCanvas(), 0, 0, Screen.width, Screen.height);
             return;
-        } else {
-            if (!img.geIsLoaded) return;
-            if (EngineConfig.hide_sprites_under_dark && !isBack && Light.isLightsEnable()){
-                Canvas2DScene.drawImage(this._hideindark_ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.getFilters());
-                if (sprite.isHideInDark()) return;
-            }
-            Canvas2DScene.drawImage(ctx, img, _lx, _ly, _lw, _lh, sprite.splitting, sprite.getLocation().yaw, sprite.getFilters());
         }
-    }
-
-    static drawText(ctx: CanvasRenderingContext2D, tt: TextTexture, x: number, y: number, dx: number, dy: number, filter?: string) {
-        if (!ctx) return;
-        if (x+dx < 0 || y+dy+tt.fontsize < 0 || x-dx > Screen.width || y-dy-tt.fontsize > Screen.height) return;
-        if (filter && filter.includes('opacity(0)')) return;
-        Canvas2DScene._drawedSpritedPesPeriod += 1;
-        ctx.save();
-        ctx.filter = filter;
-        ctx.font = `${tt.fontsize}px ${tt.font}`;
-        ctx.textAlign = tt.align as CanvasTextAlign;
-        if (tt.outline.color && tt.outline.width) {
-            ctx.strokeStyle = tt.outline.color;
-            ctx.lineWidth = tt.outline.width;
-            ctx.strokeText(tt.text, x, y, dx);
-        }
-        ctx.fillStyle = tt.color;
-        ctx.fillText(tt.text, x, y, dx);
-        ctx.restore();
-    }
-    static drawImage(ctx: CanvasRenderingContext2D, image: any, x: number, y: number, dx: number, dy: number, s: Splitting | null, rotation: number, filter?: string) {
-        if (!ctx) return;
-        if (x+dx < 0 || y+dy < 0 || x > Screen.width || y > Screen.height) return;
-        if (filter && filter.includes('opacity(0)')) return;
-        Canvas2DScene._drawedSpritedPesPeriod += 1;
-        ctx.save();
-        // _ctxFilter = "";
-        // if (!Number.isNaN(opacity) && opacity!==undefined) _ctxFilter = `opacity(${opacity}) `;
-        // _ctxFilter += 'brightness(0.25)';
-        if (dx < 0) {
-            ctx.translate(x, y);
-            if (rotation) {
-                ctx.translate(-dx/2, dy/2);
-                ctx.rotate(rotation);
-                ctx.translate(dx/2, -dy/2);
-            }
-            ctx.scale(-1,1);
-            ctx.translate(dx, 0);
-            if (filter) ctx.filter = filter;
-            if (s) ctx.drawImage(image, s.x, s.y, s.width, s.height, 0, 0, -dx, dy);
-            else ctx.drawImage(image, 0, 0, -dx, dy);
-        } else {
-            ctx.translate(x, y);
-            if (rotation) {
-                ctx.translate(dx/2, dy/2);
-                ctx.rotate(rotation);
-                ctx.translate(-dx/2, -dy/2);
-            }
-            if (filter) ctx.filter = filter;
-            if (s) ctx.drawImage(image, s.x, s.y, s.width, s.height, 0, 0, dx, dy);
-            else ctx.drawImage(image, 0, 0, dx, dy);
-        }
-        ctx.restore();
-    }
-    filterImage(image: any, filter: (data: any) => any, splitting?: Splitting) {
-        let canvas = document.createElement('canvas');
-        if (image.width == 0) return image;
-        canvas.width = image.width;
-        canvas.height = image.height;
-        let ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0);
-        if (splitting) {
-            const data = filter(ctx.getImageData(splitting.x, splitting.y,
-                splitting.width, splitting.height));
-            canvas.remove();
-            canvas = document.createElement('canvas');
-            if (image.width == 0) return image;
-            canvas.width = splitting.width;
-            canvas.height = splitting.height;
-            ctx = canvas.getContext('2d');
-            ctx.putImageData(data, 0, 0);
-        } else {
-            ctx.putImageData(filter(ctx.getImageData(0, 0, canvas.width, canvas.height)), 0,0);
-        }
-        let img = new Image;
-        img.src = canvas.toDataURL("image/png");
-        img.width = splitting ? splitting.width : image.width;
-        img.height = splitting ? splitting.height : image.height;
-        Object.defineProperty(img, "geIsLoaded", {
-            get: function () { return true; },
-            enumerable: false,
-            configurable: true
-        });
-        canvas.remove();
-        return img;
-    }
-    getImageData(image: any): Uint8ClampedArray {
-        let canvas = document.createElement('canvas');
-        if (image.width == 0) return image;
-        canvas.width = image.width;
-        canvas.height = image.height;
-        let ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0);
-        let data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        canvas.remove();
-        return data;
-    }
-
-    private _drawlight_canvas: HTMLCanvasElement;
-    private _drawlight_ctx: CanvasRenderingContext2D;
-    private _hideindark_canvas: HTMLCanvasElement;
-    private _hideindark_ctx: CanvasRenderingContext2D;
-    drawLights(): void {
-        this._drawlight_ctx.clearRect(0,0,this._drawlight_canvas.width,this._drawlight_canvas.height);
+        if (!(this.layers.light instanceof CanvasLayer)) return;
+        const dlcanvas = this.layers.light.getCanvas();
+        const dlctx = this.layers.light.getContext();
+        dlctx.clearRect(0,0,dlcanvas.width,dlcanvas.height);
         
-        this._drawlight_ctx.fillStyle = "black";
-        this._drawlight_ctx.fillRect(0, 0, this._drawlight_canvas.width, this._drawlight_canvas.height);
+        dlctx.fillStyle = "black";
+        dlctx.fillRect(0, 0, dlcanvas.width, dlcanvas.height);
         const res = {
             dx: this._camera.getResolution().x/Screen.width,
             dy: this._camera.getResolution().y/Screen.height
@@ -242,39 +74,43 @@ class Canvas2DScene extends Scene {
                 _lx = (light.getLocation().x - this._camera.getLocation().x)*res.dx + Screen.half_width + 100;//+100
                 _ly = (light.getLocation().y - this._camera.getLocation().y)*res.dy + Screen.half_height + 100;
             }
-            this._drawlight_ctx.save();
-            this._drawlight_ctx.beginPath();
+            dlctx.save();
+            dlctx.beginPath();
             for (let i = 0; i < PI; i+=EngineConfig.graphic.light_angle_iteration) {
                 if (this.checkLightFunction(light, i, res)) {
-                    this._drawlight_ctx.lineTo(
+                    dlctx.lineTo(
                         light.radius*SuperMath.cos(i, 100)+_lx,
                         light.radius*SuperMath.sin(i, 100)+_ly
                     );
                 }
             }
-            this._drawlight_ctx.clip();
-            this._drawlight_ctx.clearRect(_lx-light.radius, _ly-light.radius, light.radius*2, light.radius*2);
-            this._drawlight_ctx.restore();
+            dlctx.clip();
+            dlctx.clearRect(_lx-light.radius, _ly-light.radius, light.radius*2, light.radius*2);
+            dlctx.restore();
         }
 
-        if (EngineConfig.hide_sprites_under_dark) {
-            this._hideindark_ctx.save();
-            this._hideindark_ctx.globalCompositeOperation = "destination-out";
-            this._hideindark_ctx.filter = `blur(${EngineConfig.graphic.light_blur})`;
-            this._hideindark_ctx.drawImage(this._drawlight_canvas, -100, -100, Screen.width+200, Screen.height+200);
-            this._hideindark_ctx.restore()
-            this._ctx.drawImage(this._hideindark_canvas, 0, 0, Screen.width, Screen.height);
+        if (EngineConfig.hide_sprites_under_dark && hideInDark instanceof CanvasLayer) {
+            const hidctx = hideInDark.getContext();
+            hidctx.save();
+            hidctx.globalCompositeOperation = "destination-out";
+            hidctx.filter = `blur(${EngineConfig.graphic.light_blur})`;
+            hidctx.drawImage(dlcanvas, -100, -100, Screen.width+200, Screen.height+200);
+            hidctx.restore()
+            this.main_ctx.drawImage(hideInDark.getCanvas(), 0, 0, Screen.width, Screen.height);
         }
 
-        this._ctx.save();
-        this._ctx.filter = `opacity(${EngineConfig.graphic.light_opacity})`;
-        this._ctx.filter += ` blur(${EngineConfig.graphic.light_blur})`;
-        this._ctx.drawImage(this._drawlight_canvas, -100, -100, Screen.width+200, Screen.height+200);
+        this.main_ctx.save();
+        this.main_ctx.filter = `opacity(${EngineConfig.graphic.light_opacity})`;
+        this.main_ctx.filter += ` blur(${EngineConfig.graphic.light_blur})`;
+        this.main_ctx.drawImage(dlcanvas, -100, -100, Screen.width+200, Screen.height+200);
 
-        // this._ctx.drawImage(this._drawlight_canvas, 0, 0, Screen.width, Screen.height);
-        this._ctx.restore();
+        // this._ctx.drawImage(dlcanvas, 0, 0, Screen.width, Screen.height);
+        this.main_ctx.restore();
     }
     checkLightFunction(light: Light, i: number, res: {dx:number,dy:number}): boolean {
+        if (!(this.layers.light instanceof CanvasLayer)) return;
+        // const dlcanvas = this.layers.light.getCanvas();
+        const dlctx = this.layers.light.getContext();
         let _llx = 0, _lly = 0, _lcos = 0, _lsin = 0;
         _lcos = SuperMath.cos(i, 100);
         _lsin = SuperMath.sin(i, 100);
@@ -290,38 +126,154 @@ class Canvas2DScene extends Scene {
             if (this.darkness_map.data.data[(_llx+this.darkness_map.data.width*_lly)*4+3] >= 100){
                 if (radius < 10) {
                     radius = 300;
-                    this._drawlight_ctx.lineTo(radius*_lcos*res.dx+_lx, radius*_lsin*res.dy+_ly);
+                    dlctx.lineTo(radius*_lcos*res.dx+_lx, radius*_lsin*res.dy+_ly);
                     return false;
                 }
                 hider = true;
             } else if (hider) {
-                this._drawlight_ctx.lineTo(radius*_lcos*res.dx+_lx, radius*_lsin*res.dy+_ly);
+                dlctx.lineTo(radius*_lcos*res.dx+_lx, radius*_lsin*res.dy+_ly);
                 return false;
             }
         }
         return true;
     }
-    // copyImageData(rule: {copy: BiLocation, paste: BiLocation, isStaticPaste: boolean}):
-    //                     {paste: BiLocation, data: ImageData, isStaticPaste: boolean} {
-    //     const res = this._camera.getResolution();
-    //     _lx = (rule.copy.x - this._camera.getLocation().x)*res.x/Screen.width + Screen.width/2;
-    //     _ly = (rule.copy.y - this._camera.getLocation().y)*res.y/Screen.height + Screen.height/2;
-    //     _lw = rule.copy.width*res.x/Screen.width;
-    //     _lh = rule.copy.height*res.y/Screen.height;
-    //     let data = this._ctx.getImageData(_lx, _ly, _lw, _lh);
-    //     return {paste: rule.paste, isStaticPaste: rule.isStaticPaste, data};
-    // }
-    // pasteImageData(data: {paste: BiLocation, data: ImageData, isStaticPaste: boolean}): void {
-    //     if (data.isStaticPaste) {
-    //         this._ctx.putImageData(data.data, data.paste.x, data.paste.y, 0, 0, data.paste.width, data.paste.height)
-    //     } else {
-    //         const res = this._camera.getResolution();
-    //         _lx = (data.paste.x - this._camera.getLocation().x)*res.x/Screen.width + Screen.width/2;
-    //         _ly = (data.paste.y - this._camera.getLocation().y)*res.y/Screen.height + Screen.height/2;
-    //         _lw = data.paste.width*res.x/Screen.width;
-    //         _lh = data.paste.height*res.y/Screen.height;
-    //         this._ctx.putImageData(data.data, _lx, _ly, 0, 0, _lw, _lh);
-    //     }
-    // }
+    
+    filterImage = Canvas2DUtils.filterImage;
+    getImageData = Canvas2DUtils.getImageData;
 }
+
+// let _ctxFilter: string;
+
+// class Canvas2DSceneOLd extends SceneOLD {
+//     private _canvas: HTMLCanvasElement;
+//     private _ctx: CanvasRenderingContext2D;
+//     constructor(canvas: HTMLCanvasElement) {
+//         super();
+//         this._canvas = canvas;
+//         this._ctx = canvas.getContext("2d");
+
+//         dlcanvas = document.createElement('canvas');
+//         dlcanvas.width = this._canvas.width+200;
+//         dlcanvas.height = this._canvas.height+200;
+//         if (EngineConfig.hide_sprites_under_dark) {
+//             this._hideindark_canvas = document.createElement('canvas');
+//             this._hideindark_canvas.width = this._canvas.width;
+//             this._hideindark_canvas.height = this._canvas.height;
+    
+//             dlctx = dlcanvas.getContext('2d');
+//             this._hideindark_ctx = this._hideindark_canvas.getContext('2d');
+//         }
+//     }
+//     drawTextureFullScreen(texture: Texture): void {
+//         console.log("texture was drawed: ", texture)
+//         Canvas2DScene.drawImage(this._ctx, texture.getImage(), 0, 0, Screen.width, Screen.height, null, 0);
+//     }
+//     // static _drawedSpritedPesPeriod: number = 0;
+//     // static _drawedSpritesSprite: TextTexture;
+//     drawSprites(): void {
+//         if (!Game.isLoaded) return;
+
+//         // Canvas2DScene._drawedSpritedPesPeriod = 0;
+//         // if (!Canvas2DScene._drawedSpritesSprite)
+//         //     Canvas2DScene._drawedSpritesSprite 
+//         //         = new TextTexture('Sprites: ', 'arial')
+//         //         .setColor('white')
+//         //         .setFontSize(30)
+//         //         .setOutline('black', 1)
+//         //         .setAlign('left');
+
+//         this._ctx.fillStyle = "black";
+//         this._ctx.fillRect(0, 0, Screen.width, Screen.height);
+//         if (EngineConfig.hide_sprites_under_dark) {
+//             this._hideindark_ctx?.clearRect(0, 0, Screen.width, Screen.height);
+//         }
+//         super.drawSprites();
+//         // Canvas2DScene._drawedSpritesSprite.setText(`Sprites: ${Canvas2DScene._drawedSpritedPesPeriod}`);
+//         // Canvas2DScene.drawText(this._ctx, Canvas2DScene._drawedSpritesSprite, 30, 40, 1000, 50);
+//     }
+
+//     private dlcanvas: HTMLCanvasElement;
+//     private dlctx: CanvasRenderingContext2D;
+//     private _hideindark_canvas: HTMLCanvasElement;
+//     private _hideindark_ctx: CanvasRenderingContext2D;
+//     drawLights(): void {
+//         dlctx.clearRect(0,0,dlcanvas.width,dlcanvas.height);
+        
+//         dlctx.fillStyle = "black";
+//         dlctx.fillRect(0, 0, dlcanvas.width, dlcanvas.height);
+//         const res = {
+//             dx: this._camera.getResolution().x/Screen.width,
+//             dy: this._camera.getResolution().y/Screen.height
+//         };
+//         const PI = SuperMath.PI_int(100)*2; // 314
+//         for (let light of this._lights) {
+//             if (light.isStatic) {
+//                 _lx = light.getLocation().x;
+//                 _ly = light.getLocation().y;
+//             } else {
+//                 _lx = (light.getLocation().x - this._camera.getLocation().x)*res.dx + Screen.half_width + 100;//+100
+//                 _ly = (light.getLocation().y - this._camera.getLocation().y)*res.dy + Screen.half_height + 100;
+//             }
+//             dlctx.save();
+//             dlctx.beginPath();
+//             for (let i = 0; i < PI; i+=EngineConfig.graphic.light_angle_iteration) {
+//                 if (this.checkLightFunction(light, i, res)) {
+//                     dlctx.lineTo(
+//                         light.radius*SuperMath.cos(i, 100)+_lx,
+//                         light.radius*SuperMath.sin(i, 100)+_ly
+//                     );
+//                 }
+//             }
+//             dlctx.clip();
+//             dlctx.clearRect(_lx-light.radius, _ly-light.radius, light.radius*2, light.radius*2);
+//             dlctx.restore();
+//         }
+
+//         if (EngineConfig.hide_sprites_under_dark) {
+//             this._hideindark_ctx.save();
+//             this._hideindark_ctx.globalCompositeOperation = "destination-out";
+//             this._hideindark_ctx.filter = `blur(${EngineConfig.graphic.light_blur})`;
+//             this._hideindark_ctx.drawImage(dlcanvas, -100, -100, Screen.width+200, Screen.height+200);
+//             this._hideindark_ctx.restore()
+//             this._ctx.drawImage(this._hideindark_canvas, 0, 0, Screen.width, Screen.height);
+//         }
+
+//         this._ctx.save();
+//         this._ctx.filter = `opacity(${EngineConfig.graphic.light_opacity})`;
+//         this._ctx.filter += ` blur(${EngineConfig.graphic.light_blur})`;
+//         this._ctx.drawImage(dlcanvas, -100, -100, Screen.width+200, Screen.height+200);
+
+//         // this._ctx.drawImage(dlcanvas, 0, 0, Screen.width, Screen.height);
+//         this._ctx.restore();
+//     }
+//     checkLightFunction(light: Light, i: number, res: {dx:number,dy:number}): boolean {
+//         let _llx = 0, _lly = 0, _lcos = 0, _lsin = 0;
+//         _lcos = SuperMath.cos(i, 100);
+//         _lsin = SuperMath.sin(i, 100);
+//         let hider = false;
+//         for (let radius = 0; radius <= light.radius*1.17; radius+=EngineConfig.graphic.light_radius_iteration) {
+//             _llx = light.getLocation().x - this.darkness_map.location.x + radius*_lcos;
+//             _lly = light.getLocation().y - this.darkness_map.location.y + radius*_lsin;
+//             _llx *= this.darkness_map.separate.sx;
+//             _lly *= this.darkness_map.separate.sy;
+            
+//             _llx = Math.floor(_llx);
+//             _lly = Math.floor(_lly);
+//             if (this.darkness_map.data.data[(_llx+this.darkness_map.data.width*_lly)*4+3] >= 100){
+//                 if (radius < 10) {
+//                     radius = 300;
+//                     dlctx.lineTo(radius*_lcos*res.dx+_lx, radius*_lsin*res.dy+_ly);
+//                     return false;
+//                 }
+//                 hider = true;
+//             } else if (hider) {
+//                 dlctx.lineTo(radius*_lcos*res.dx+_lx, radius*_lsin*res.dy+_ly);
+//                 return false;
+//             }
+//         }
+//         return true;
+//     }
+//     filterImage = Canvas2DUtils.filterImage;
+//     getImageData = Canvas2DUtils.getImageData;
+// }
 export { Canvas2DScene };

@@ -1,18 +1,14 @@
 import { HexColor } from "../../engine/Color";
-import { Location } from "../../engine/Location";
 import { Sound } from "../../engine/Sound";
 import { Character } from "../characters/Character";
-import { config } from "../config";
 import { logic_buttons } from "../logic/buttons";
 import { Characters } from "../logic/charslog";
 import { GameLogic } from "../logic/gamelogic";
-import { logic_kill } from "../logic/kill";
 import { killanimation_logic } from "../logic/kill/ka_logic";
 import { VoteMenu } from "../logic/meeting/tablet/votemenu";
 import { theend } from "../logic/meeting/theend";
 import { roles_impostors } from "./impostors";
-import { Role, RoleAction, RoleType } from "./role";
-import { Roles } from "./roles";
+import { Role } from "./role";
 import { role_arsonist } from "./special/role_arsonist";
 
 class NeutralRole extends Role {

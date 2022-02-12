@@ -42,11 +42,11 @@ let MainMenu = {
     isShowed: false,
     show() {
         MainMenu.isShowed = true;
-        Game.getScene().addUpperSprite(background, startButton.getSprite());
+        Game.getScene().LayerGUI.add(background, startButton.getSprite());
     },
     hide() {
         MainMenu.isShowed = false;
-        Game.getScene().removeUpperSprite(background, startButton.getSprite());
+        Game.getScene().LayerGUI.remove(background, startButton.getSprite());
     }
 }
 

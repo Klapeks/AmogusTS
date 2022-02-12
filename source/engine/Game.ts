@@ -68,7 +68,7 @@ let Game = {
 
         Game.eventListeners.onUpdate();
         ButtonFuncs.update();
-        mainscene.drawSprites();
+        mainscene.render();
     },
     functions: {
         texturePath(path: string): string {

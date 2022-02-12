@@ -57,7 +57,7 @@ let meeting = {
         meetingText.hidden = true;
         deadbodyText.hidden = true;
         table.hidden = true;
-        Game.getScene().removeUpperSprite(meetingText, deadbodyText, 
+        Game.getScene().LayerGUI.remove(meetingText, deadbodyText, 
             amogusSprite, table, additionSprite);
         amogusSprite = null;
         additionSprite = null;
@@ -81,7 +81,7 @@ let meeting = {
                     .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*2.5)
                     .setPriority(55);
                 
-                Game.getScene().addUpperSprite(deadbodyText, amogusSprite, additionSprite);
+                Game.getScene().LayerGUI.add(deadbodyText, amogusSprite, additionSprite);
             }
             else {
                 meetingText.hidden = false;
@@ -98,7 +98,7 @@ let meeting = {
                     .setLocationByCenter(Screen.width/2, Screen.height/2-position.dy*1.25)
                     .setPriority(55);
 
-                Game.getScene().addUpperSprite(meetingText, amogusSprite, table, additionSprite);
+                Game.getScene().LayerGUI.add(meetingText, amogusSprite, table, additionSprite);
             }
         }, 1500, () => meeting.clear());
         setTimeout(() => {

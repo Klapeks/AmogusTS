@@ -165,7 +165,7 @@ class Character {
         this._nickname = nickname;
         if (this._nicknameSprite) {
             color = this.getNicknameColor();
-            Game.getScene().removeUpperSprite(this._nicknameSprite);
+            Game.getScene().LayerUpper.remove(this._nicknameSprite);
             this._nicknameSprite = null;
             if (!nickname) return this;
         }
@@ -174,7 +174,7 @@ class Character {
                     new LinkedLocation(this.getLocation(), {dx:256*textures.character_ratio/2,dy:10}))
                     .setSize(Screen.width/2,50)
                     .setHideInDark(this._sprite.isHideInDark());
-        Game.getScene().addUpperSprite(this._nicknameSprite);
+        Game.getScene().LayerUpper.add(this._nicknameSprite);
         return this;
     }
     getNickname() {
@@ -221,14 +221,14 @@ class Character {
         (this._roleplateSprite.getTexture() as TextTexture).setColor(this._role.toCSS()).setText(this._role.name);
         if (this._roleplateSprite.hidden) {
             this._roleplateSprite.hidden = false;
-            Game.getScene().addUpperSprite(this._roleplateSprite);
+            Game.getScene().LayerUpper.add(this._roleplateSprite);
         }
     }
     hideRoleplate() {
         this._isShowedRoleplate = false;
         if (!this._roleplateSprite) return this;
         this._roleplateSprite.hidden = true;
-        Game.getScene().removeUpperSprite(this._roleplateSprite);
+        Game.getScene().LayerUpper.remove(this._roleplateSprite);
         return this;
     }
 

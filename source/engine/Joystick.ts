@@ -58,7 +58,7 @@ let Joystick = {
         joy.hidden = true;
         circle.hidden = true;
         Joystick.setSize(256);
-        Game.getScene().addUpperSprite(joy, circle)
+        Game.getScene().LayerGUI.add(joy, circle);
         Joystick.isCreated = true;
     },
     onclick(x:number,y:number, type: "mouse" | "touch" = "mouse"): boolean {

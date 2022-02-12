@@ -33,15 +33,15 @@ class VotingMenu extends TabletMenu {
         if (this.isShowed || this._sprite) return;
         super.show(priority);
         if (Characters.main.getRole().meetingAction?.roleSelecting) {
-            Game.getScene().addUpperSprite(...roleGuess.getSprites());
+            Game.getScene().LayerGUI.add(...roleGuess.getSprites());
         }
     }
     hide(extra: boolean = false) {
         if (!extra) if (!this.isShowed) return;
         super.hide(extra);
         acceptButton.hidden = additionalButton.hidden = true;
-        Game.getScene().removeUpperSprite(...roleGuess.getSprites());
-        Game.getScene().removeUpperSprite(acceptButton, additionalButton);
+        Game.getScene().LayerGUI.remove(...roleGuess.getSprites());
+        Game.getScene().LayerGUI.remove(acceptButton, additionalButton);
     }
     onMenuMoving(location: Location): void {
         super.onMenuMoving(location);
@@ -124,7 +124,7 @@ let onClick = (x: number, y: number) => {
     }
     if (!nameplate) {
         acceptButton.hidden = additionalButton.hidden = true;
-        Game.getScene().removeUpperSprite(acceptButton, additionalButton);
+        Game.getScene().LayerGUI.remove(acceptButton, additionalButton);
         return;
     }
     const mainrole = Characters.main.getRole();
@@ -169,7 +169,7 @@ let onClick = (x: number, y: number) => {
         acceptButton.setLocation(nameplate.getLocation().x+375, nameplate.getLocation().y+10);
         acceptButton.hidden = false;
         additionalButton.hidden = true;
-        Game.getScene().addUpperSprite(acceptButton, additionalButton);
+        Game.getScene().LayerGUI.add(acceptButton, additionalButton);
     }
     if (mainrole.meetingAction) {
         additionalButton.hidden = mainrole.meetingAction.select

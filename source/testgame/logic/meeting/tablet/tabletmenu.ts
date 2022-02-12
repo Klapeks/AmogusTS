@@ -30,7 +30,7 @@ class TabletMenu extends ApearableMenu {
                 .setLocation(this._sprite.getLocation().x,
                             this._sprite.getLocation().y)
                 .setPriority(55);
-        Game.getScene().addUpperSprite(this._glass);
+        Game.getScene().LayerGUI.add(this._glass);
         this.nameplates.push(new Nameplate(Characters.main).createSprite());
         Characters.another.filter(ch => {
             if (!ch.isAlive) return true;
@@ -45,7 +45,7 @@ class TabletMenu extends ApearableMenu {
                         .setSplitting(2, 78, 272, 64)
                         .setPriority(55);
         this._selectedNameplate.hidden = true;
-        Game.getScene().addUpperSprite(this._selectedNameplate);
+        Game.getScene().LayerGUI.add(this._selectedNameplate);
     }
     updateNameplate(character: Character) {
         this.nameplates.forEach(np => {
@@ -68,7 +68,7 @@ class TabletMenu extends ApearableMenu {
     onClose(): void {
         this.nameplates.forEach(np=>np.removeSpirte());
         this.nameplates = this.nameplates.filter(a=>false);
-        Game.getScene().removeUpperSprite(this._glass, this._selectedNameplate);
+        Game.getScene().LayerGUI.remove(this._glass, this._selectedNameplate);
         this._glass = null;
         this._selectedNameplate = null;
     }

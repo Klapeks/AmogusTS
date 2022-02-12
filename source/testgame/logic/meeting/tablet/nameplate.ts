@@ -66,7 +66,7 @@ class Nameplate {
                 .setSize(tabset.plateSize.width,0)
                 .setPriority(55));
         }
-        this.charplate.forEach((sprite) => Game.getScene().addUpperSprite(sprite));
+        this.charplate.forEach((sprite) => Game.getScene().LayerGUI.add(sprite));
         if (!this._character.isAlive) this.makeDead();
         return this;
     }
@@ -81,7 +81,7 @@ class Nameplate {
         if (_i) _i.opacity = 0.9;
         
         if (this.charplate.has('deadmark')){
-            Game.getScene().removeUpperSprite(this.charplate.get('deadmark'));
+            Game.getScene().LayerGUI.remove(this.charplate.get('deadmark'));
         }
         this.charplate.set('deadmark', 
             new StaticSprite(tabset.deadmarkTexture,
@@ -89,11 +89,11 @@ class Nameplate {
             .setSize(tabset.plateSize.height-25, tabset.plateSize.height-25)
             .setPriority(55));
             
-        Game.getScene().addUpperSprite(this.charplate.get('deadmark'));
+        Game.getScene().LayerGUI.add(this.charplate.get('deadmark'));
         return this;
     }
     removeSpirte() {
-        this.charplate.forEach((sprite) => Game.getScene().removeUpperSprite(sprite));
+        this.charplate.forEach((sprite) => Game.getScene().LayerGUI.remove(sprite));
         this.charplate = null;
     }
     getCharacter(){

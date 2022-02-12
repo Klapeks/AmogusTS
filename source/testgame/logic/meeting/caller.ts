@@ -22,7 +22,7 @@ let caller = {
         callSprite.hidden = true;
     },
     call(oncall: () => void, endcall: number = 2000, onend?: () => void): number {
-        Game.getScene().addUpperSprite(callSprite, redSprite);
+        Game.getScene().LayerGUI.add(callSprite, redSprite);
         tablet.tryChangeTexture();
         Characters.main.outVent(false);
         redSprite.hidden = false;
@@ -49,7 +49,7 @@ let caller = {
         }, calltime);
         setTimeout(() => {
             callSprite.hidden = true;
-            Game.getScene().removeUpperSprite(callSprite, redSprite);
+            Game.getScene().LayerGUI.remove(callSprite, redSprite);
             if (onend) onend();
         }, endcall+calltime);
         return endcall+calltime;

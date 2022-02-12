@@ -65,7 +65,7 @@ abstract class KillAnimation {
                         .setPriority(55);
 
         caller.call(() => {
-            Game.getScene().addUpperSprite(_killerSprite, _additionalSprite, _crewmateSprite);
+            Game.getScene().LayerGUI.add(_killerSprite, _additionalSprite, _crewmateSprite);
             for (let i = 0; i < this._frameInfo.amount; i++) {
                 setTimeout(() => {
                     if (i===0 && this._frameInfo.killSound) this._frameInfo.killSound.play();
@@ -75,7 +75,7 @@ abstract class KillAnimation {
                 }, this._frameInfo.waiting+this._frameInfo.time * i / (this._frameInfo.amount-1));
             }
         }, this._frameInfo.time+this._frameInfo.waiting*2, () => {
-            Game.getScene().removeUpperSprite(_killerSprite, _additionalSprite, _crewmateSprite);
+            Game.getScene().LayerGUI.remove(_killerSprite, _additionalSprite, _crewmateSprite);
             killanimation_logic.isAnimationPlaying = false;
             _killerSprite = null;
             _crewmateSprite = null;

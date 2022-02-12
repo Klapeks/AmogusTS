@@ -134,13 +134,13 @@ const roles_impostors = {
                 isFreeze = true;
                 const b = logic_buttons.AdditionalButton[0];
                 OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0, to: 0.3});
-                Game.getScene().addUpperSprite(freezeSprite);
+                Game.getScene().LayerUpper.add(freezeSprite);
                 freezeSound.play();
                 b.setModifiedCooldown('#00FFFF', () => {
                     isFreeze = false;
                     OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0.3, to: 0});
                     setTimeout(() => {
-                        Game.getScene().removeUpperSprite(freezeSprite);
+                        Game.getScene().LayerUpper.remove(freezeSprite);
                     }, 500);
                     b.resetModifiedCooldown();
                     b.cooldown(30);
@@ -151,7 +151,7 @@ const roles_impostors = {
                         isFreeze = false;
                         OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0.3, to: 0});
                         setTimeout(() => {
-                            Game.getScene().removeUpperSprite(freezeSprite);
+                            Game.getScene().LayerUpper.remove(freezeSprite);
                         }, 500);
                         b.resetModifiedCooldown();
                         b.cooldown(30);
@@ -171,7 +171,7 @@ const roles_impostors = {
             GameLogic.eventListeners.onreset.addEvent(() => {
                 if (!isFreeze) return;
                 isFreeze = false;
-                Game.getScene().removeUpperSprite(freezeSprite);
+                Game.getScene().LayerUpper.remove(freezeSprite);
             })
             GameLogic.eventListeners.character_canidle.addEvent(ch => { return !isFreeze; })
         }),  // Холодильник

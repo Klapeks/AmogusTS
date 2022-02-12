@@ -79,10 +79,10 @@ class VentArrow {
                     from.getLocation().y + 300*Math.sin(direction), direction))
                     .setSize(128, 128);
         this._sprite.upperThanDark = true;
-        Game.getScene().addUpperSprite(this._sprite);
+        Game.getScene().LayerGUI.add(this._sprite);
     }
     destroy() {
-        Game.getScene().removeUpperSprite(this._sprite);
+        Game.getScene().LayerGUI.remove(this._sprite);
         delete this._sprite;
     }
     isIn(qx: number, qy: number){

@@ -94,7 +94,7 @@ class UseButton extends Button {
     cooldown(time: number) {
         if (!time) {
             this.cooldown_time = 0;
-            Game.getScene().removeUpperSprite(this.cooldown_text);
+            Game.getScene().LayerGUI.remove(this.cooldown_text);
             this.cooldown_text = null;
             this.modifiedCooldown.afterEnd();
             this.vibe(false);
@@ -113,7 +113,7 @@ class UseButton extends Button {
             .setPriority(50);
         this.updateCD();
 
-        Game.getScene().addUpperSprite(this.cooldown_text);
+        Game.getScene().LayerGUI.add(this.cooldown_text);
     }
     modifiedCooldown: {
         color: string,

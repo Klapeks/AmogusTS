@@ -23,12 +23,12 @@ class Menu {
             .setLocationByCenter(Screen.width/2, Screen.height/2);
         if (priority) this._sprite.setPriority(priority);
         
-        Game.getScene().addUpperSprite(this._sprite);
+        Game.getScene().LayerGUI.add(this._sprite);
         MenusUtils.showedMenus.push(this);
     }
     hide() {
         MenusUtils.showedMenus = MenusUtils.showedMenus.filter(m => m!==this);
-        Game.getScene().removeUpperSprite(this._sprite);
+        Game.getScene().LayerGUI.remove(this._sprite);
         this._sprite = null;
         this.isShowed = false;
     }

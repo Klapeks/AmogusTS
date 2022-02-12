@@ -37,7 +37,7 @@ class TaskMenu extends ApearableMenu {
             this._sprite.getLocation().x - this._closeButton.width,
             this._sprite.getLocation().y);
         
-        Game.getScene().addUpperSprite(this._closeButton);
+        Game.getScene().LayerGUI.add(this._closeButton);
         
         if (!this._isEventAdded) {
             this._isEventAdded = true;
@@ -63,7 +63,7 @@ class TaskMenu extends ApearableMenu {
         super.hide(extra);
     }
     onClose(): void {
-        Game.getScene().removeUpperSprite(this._closeButton);
+        Game.getScene().LayerGUI.remove(this._closeButton);
     }
 }
 
