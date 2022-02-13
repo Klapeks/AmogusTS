@@ -10,13 +10,12 @@ abstract class InteractableItem {
     private _type: "upper" | "dynamic" | "back" = "dynamic";
     constructor(texture: Texture, location: BiLocation, type: "upper" | "dynamic" | "back" = "dynamic") {
         // this._loc = location;
-        this._sprite = new Sprite(texture || this.getDeafultTexture(), new Location(location.x, location.y))
+        this._sprite = new Sprite(texture, new Location(location.x, location.y))// || this.getDeafultTexture()
                 .setSize(location.width, location.height);
         this._type = type;
         this._hilightsprite = new Sprite(this.generateSelectedTexture(this._sprite.getTexture()), new Location(location.x, location.y))
                 .setSize(location.width, location.height);
     }
-    abstract getDeafultTexture():Texture;
     abstract use():void;
     registerSprite() {
         if (this._type === "back") {

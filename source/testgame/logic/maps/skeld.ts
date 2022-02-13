@@ -8,7 +8,7 @@ import { Location } from "../../../engine/Location";
 import { Game } from "../../../engine/Game";
 import { Characters } from "../charslog";
 import { Vents } from "../items/vents";
-import { EmergencyButton } from "../meeting/emergencybutton";
+import { EmergencyButton } from "../items/emergencybutton";
 import { Retexturing } from "../../../engine/utils/Retexturing";
 
 let skeldmap: Map;

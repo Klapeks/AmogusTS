@@ -6,20 +6,25 @@ import { Texture } from "../../../engine/Texture";
 import { Retexturing } from "../../../engine/utils/Retexturing";
 import { logic_buttons } from "../buttons";
 import { Characters } from "../charslog";
-import { TaskMenu } from "../items/TaskMenu";
-import { meeting } from "./meeting";
-import { voting } from "./voting";
-import { tablet } from "./tablet/tablet";
+import { TaskMenu } from "./TaskMenu";
+import { meeting } from "../meeting/meeting";
+import { voting } from "../meeting/voting";
+import { tablet } from "../meeting/tablet/tablet";
 
 let buttonTexture: Texture;
 let clicksound: Sound;
 let menu: TaskMenu;
 let waitingHost: boolean = false;
 
-class EmergencyButton extends InteractableItem {
+function texture() {
+    if (!buttonTexture) buttonTexture = new Texture('tasks/emergencybutton/button.png');
+    return buttonTexture;
+}
 
+class EmergencyButton extends InteractableItem {
+    
     constructor(location: BiLocation, range: number | Hitbox = 300) {
-        super(null, location, "back");
+        super(texture(), location, "back");
         this.setRange(range);
         if (!clicksound) clicksound = new Sound('voting/embutton.wav');
         if (!menu) {
@@ -39,11 +44,6 @@ class EmergencyButton extends InteractableItem {
             });
             menu.setApearTime(100);
         }
-    }
-
-    getDeafultTexture(): Texture {
-        if (!buttonTexture) buttonTexture = new Texture('tasks/emergencybutton/button.png');
-        return buttonTexture;
     }
     use(): void {
         tablet.tryChangeTexture();

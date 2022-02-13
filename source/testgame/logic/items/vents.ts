@@ -22,24 +22,24 @@ let sounds: {
     move: MultiSound,
     open: Sound
 };
+function texture() {
+    if (!textures.idle?.getPath()){
+        textures.idle = new Texture('tasks/vent/idle.png');
+        for (let i = 0; i < 7; i++) {
+            textures.animation.push(new Texture(`tasks/vent/anim${i+1}.png`));
+        }
+    }
+    return textures.idle;
+}
 
 class Vents extends InteractableItem {
     constructor(location: BiLocation) {
-        super(null, location, "back");
+        super(texture(), location, "back");
         if (!sounds?.open) sounds = {
             move: new MultiSound('tasks/vent/move1.wav','tasks/vent/move2.wav','tasks/vent/move3.wav'),
             open: new Sound('tasks/vent/open.wav')
         };
         this.setRange(config.taskrange);
-    }
-    getDeafultTexture(): Texture {
-        if (!textures.idle?.getPath()){
-            textures.idle = new Texture('tasks/vent/idle.png');
-            for (let i = 0; i < 7; i++) {
-                textures.animation.push(new Texture(`tasks/vent/anim${i+1}.png`));
-            }
-        }
-        return textures.idle;
     }
     directions: Array<Vents>;
     use(): void {

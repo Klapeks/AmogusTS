@@ -3,14 +3,14 @@ import { Texture } from "../../../../engine/Texture";
 import { Task } from "./task";
 
 let defaultTaskTexture: Texture;
+function texture(): Texture {
+    if (!defaultTaskTexture) defaultTaskTexture = new Texture('tasks/divert_power/task.png');
+    return defaultTaskTexture;
+}
 
 class DiverPowerTask extends Task {
-    constructor(location: BiLocation, texture?: Texture) {
-        super("diverpowertask", texture, location, "back");
-    }
-    getDeafultTexture(): Texture {
-        if (!defaultTaskTexture) defaultTaskTexture = new Texture('tasks/divert_power/task.png');
-        return defaultTaskTexture;
+    constructor(location: BiLocation) {
+        super("diverpowertask", texture(), location, "back");
     }
     use(): void {
         console.log("aboba");

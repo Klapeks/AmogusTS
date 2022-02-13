@@ -24,8 +24,7 @@ class TaskMenu extends ApearableMenu {
             isLoaded = true;
         }
         if (!closetexture) closetexture = new Texture('tasks/close.png');
-        this._closeButton = new StaticSprite(closetexture)
-                    .setSize(65*1.75, 65*1.75);
+        this._closeButton = new StaticSprite(closetexture).setSize(65*1.75, 65*1.75);
     }
     private _isEventAdded = false;
     show() {
