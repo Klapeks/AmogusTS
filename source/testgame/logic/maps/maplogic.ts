@@ -46,7 +46,12 @@ let logic_map = {
                 }
             }
         }
-        mapNow.tasks.forEach(trySelect);
+        mapNow.tasks.forEach(task => {
+            trySelect(task);
+            if (task.isOpened()){
+                task.update();
+            }
+        });
         mapNow.vents.forEach(trySelect);
         trySelect(mapNow.emergencybutton);
 

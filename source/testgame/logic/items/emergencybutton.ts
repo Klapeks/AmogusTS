@@ -1,5 +1,5 @@
 import { InteractableItem } from "../../../engine/InteractableItem";
-import { BiLocation, Hitbox, Location } from "../../../engine/Location";
+import { BiLocation, Hitbox } from "../../../engine/Location";
 import { Screen } from "../../../engine/Screen";
 import { Sound } from "../../../engine/Sound";
 import { Texture } from "../../../engine/Texture";

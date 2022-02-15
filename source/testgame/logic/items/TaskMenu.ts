@@ -1,10 +1,8 @@
 import { Game } from "../../../engine/Game";
 import { Location, Size } from "../../../engine/Location";
 import { ApearableMenu, Menu, MenusUtils } from "../../../engine/Menu";
-import { Screen } from "../../../engine/Screen";
 import { Sprite, StaticSprite } from "../../../engine/Sprite";
 import { Texture } from "../../../engine/Texture";
-import { logic_buttons } from "../buttons";
 import { Characters } from "../charslog";
 import { GameLogic } from "../gamelogic";
 import { voting } from "../meeting/voting";
@@ -31,7 +29,7 @@ class TaskMenu extends ApearableMenu {
         if (this.isShowed || this._sprite) return;
         Characters.main.idle();
         // logic_buttons.setCooldown(0.5, "use");
-        super.show();
+        super.show();-
         this._closeButton.setLocation(
             this._sprite.getLocation().x - this._closeButton.width,
             this._sprite.getLocation().y);

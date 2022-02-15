@@ -1,13 +1,12 @@
-import { Game } from "../../../../engine/Game";
 import { InteractableItem } from "../../../../engine/InteractableItem";
-import { BiLocation, Location } from "../../../../engine/Location";
-import { Sprite } from "../../../../engine/Sprite";
+import { BiLocation } from "../../../../engine/Location";
+import { Menu } from "../../../../engine/Menu";
 import { Texture } from "../../../../engine/Texture";
 import { Retexturing } from "../../../../engine/utils/Retexturing";
 import { config } from "../../../config";
 
-abstract class Task extends InteractableItem{
-    private _id: string;
+abstract class Task extends InteractableItem {
+    protected _id: string;
     constructor(id: string, texture: Texture, location: BiLocation, type: "upper" | "dynamic" | "back" = "dynamic") {
         super(texture, location, type);
         this._id = id;
@@ -19,6 +18,15 @@ abstract class Task extends InteractableItem{
         });
         return texture;
     }
+    isOpened(): boolean {
+        return this.getMenu()?.isShowed;
+    }
+    use(): void {
+        this.getMenu()?.show();
+    }
+    update(): void {};
+
+    abstract getMenu(): Menu;
 }
 
 export {Task};

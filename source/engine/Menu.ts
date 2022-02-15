@@ -14,7 +14,10 @@ class Menu {
     }
     protected _sprite: StaticSprite;
     isShowed = false;
-    show(priority?: number) {
+    setTexture(texture: Texture){
+        this._texture = texture;
+    }
+    show(priority: number = 100) {
         if (this.isShowed) return;
         if (this._sprite) return;
         this.isShowed = true;
@@ -37,6 +40,7 @@ class Menu {
         this._clickevents.unshift({hitbox, event, block_another});
         return this;
     }
+
     click(x: number, y: number): boolean {
         for (let e of this._clickevents) {
             if (Location.isInHitbox(x, y, e.hitbox)) {
@@ -45,9 +49,6 @@ class Menu {
             }
         }
         return false;
-    }
-    setTexture(texture: Texture){
-        this._texture = texture;
     }
 }
 

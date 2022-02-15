@@ -13,7 +13,8 @@ abstract class InteractableItem {
         this._sprite = new Sprite(texture, new Location(location.x, location.y))// || this.getDeafultTexture()
                 .setSize(location.width, location.height);
         this._type = type;
-        this._hilightsprite = new Sprite(this.generateSelectedTexture(this._sprite.getTexture()), new Location(location.x, location.y))
+        this._hilightsprite = new Sprite(this.generateSelectedTexture(this._sprite.getTexture()),
+                new Location(location.x, location.y))
                 .setSize(location.width, location.height);
     }
     abstract use():void;
@@ -35,10 +36,10 @@ abstract class InteractableItem {
     getSprite() {
         return this._sprite;
     }
-    getLocation(){
+    getLocation() {
         return this._sprite.getLocation();
     }
-    getCenter(){
+    getCenter() {
         return this._sprite.getCenter();
     }
     select() {

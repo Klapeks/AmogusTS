@@ -3,15 +3,12 @@ import { Camera } from "./Camera";
 import { Scene } from "./Scene";
 import { Texture } from "./Texture";
 
-type MouseClickEvent = (x: number, y:number) => void;
-type ResizeEvent = (x: number, y:number) => void;
-type SomeEvent = () => void;
 
-let events_mouseclick: Array<MouseClickEvent> = new Array();
-let events_resize: Array<ResizeEvent> = new Array();
+let events_mouseclick: Array<(x:number,y:number)=>void> = new Array();
+let events_resize: Array<(x:number,y:number)=>void> = new Array();
 // let events_onupdate: Array<SomeEvent> = new Array();
-let events_onload: Array<SomeEvent> = new Array();
-let events_ondone: Array<SomeEvent> = new Array();
+let events_onload: Array<() => void> = new Array();
+let events_ondone: Array<() => void> = new Array();
 
 let keys: Array<String> = new Array();
 let mainscene: Scene;
@@ -30,16 +27,16 @@ let Game = {
         posY: 0
     },
     eventListeners: {
-        addMouseClick(event: MouseClickEvent) {
+        addMouseClick(event: (x:number,y:number)=>void) {
             events_mouseclick.push(event);
         },
-        addLoad(event: SomeEvent) {
+        addLoad(event: () => void) {
             events_onload.push(event);
         },
-        addRezise(event: ResizeEvent) {
+        addRezise(event: (x:number,y:number)=>void) {
             events_resize.push(event);
         },
-        addDone(event: SomeEvent) {
+        addDone(event: () => void) {
             events_ondone.push(event);
         },
         async onUpdate(): Promise<void> {},
