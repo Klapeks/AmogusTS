@@ -18,14 +18,18 @@ const server = http.createServer(async (request, response) => {
         if (request.url) {
             let URL = url.parse(request.url, true);
             if (!URL.pathname || URL.pathname === '/') URL.pathname = '/index';
-            let filePath = path.join(__dirname, 'public', URL.pathname);
+            if (URL.pathname.startsWith('/')) URL.pathname = URL.pathname.substring(1);
+            let filePath = path.join(__dirname, '../public', URL.pathname);
             let contentType = utils.getContentType(filePath);
-            if (await handler.doHandle(request, response, {URL, contentType, filePath})) return;
-            if (!contentType) { contentType = 'text/html'; filePath += ".html" };
-            
+            if (await handler.doHandle(request, response, { URL, contentType, filePath })) return;
+            if (!contentType) { 
+                contentType = 'text/html'; 
+                filePath += ".html" 
+            };
+
             if (contentType.startsWith('video/')) {
                 const range = request.headers.range;
-                const videoSize  = fs.statSync(filePath).size;
+                const videoSize = fs.statSync(filePath).size;
                 const CHUNK_SIZE = 10 ** 6; // 1MB
                 const start = Number(range ? range.replace(/\D/g, "") : 0);
                 const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
@@ -37,31 +41,34 @@ const server = http.createServer(async (request, response) => {
                     "Content-Type": "video/mp4",
                 };
                 response.writeHead(206, headers);
-                let stream = fs.createReadStream(filePath, {start, end});
+                let stream = fs.createReadStream(filePath, { start, end });
                 stream.pipe(response);
                 return;
             }
-            if (!fs.existsSync(filePath) && filePath.endsWith(".html")) filePath = path.join(__dirname, 'public', 'error404.html');
+            if (!fs.existsSync(filePath) && filePath.endsWith(".html")) {
+                console.log("NOT FOUND:", filePath);
+                filePath = path.join(__dirname, 'public', 'error404.html');
+            }
             utils.debug(URL.query);
             fs.readFile(filePath, (err, data) => {
                 if (err) {
-                    try { response.writeHead(404); response.end("404 Not Found"); console.error(err); } catch (e) {}
+                    try { response.writeHead(404); response.end("404 Not Found"); console.error(err); } catch (e) { }
                     return;
                 }
-                response.writeHead(200, {'Content-Type': contentType});
+                response.writeHead(200, { 'Content-Type': contentType });
                 response.end(data);
             });
         }
-    } catch (err){
+    } catch (err) {
         console.log(err);
     }
 });
 handler.init();
 const _console_funcs = {
-    getDate: (seconds: number = Math.floor(Date.now()/1000)): string => {
-        let minutes = Math.floor(seconds/60);
+    getDate: (seconds: number = Math.floor(Date.now() / 1000)): string => {
+        let minutes = Math.floor(seconds / 60);
         seconds = seconds % 60;
-        let hours = Math.floor(minutes/60);
+        let hours = Math.floor(minutes / 60);
         minutes = minutes % 60;
         hours = hours % 24;
         let f = (num: number): string => `${num < 10 ? '0' : ''}${num}`;
@@ -81,7 +88,7 @@ console.log = (message?: any, ...optionalParams: any[]) => {
         message = `§7[${_console_funcs.getDate()}] ${message}`;
         message = _console_funcs.fixColor(message);
     }
-    if (optionalParams && Object.keys(optionalParams).length > 0) 
+    if (optionalParams && Object.keys(optionalParams).length > 0)
         return _oldconsole.log(message, optionalParams);
     return _oldconsole.log(message);
 }
@@ -90,7 +97,7 @@ console.error = (message?: any, ...optionalParams: any[]) => {
         message = `§4[${_console_funcs.getDate()} ERROR] ${message}`;
         message = _console_funcs.fixColor(message);
     }
-    if (optionalParams && Object.keys(optionalParams).length > 0) 
+    if (optionalParams && Object.keys(optionalParams).length > 0)
         return _oldconsole.error(message, optionalParams);
     return _oldconsole.error(message);
 }
@@ -98,7 +105,7 @@ process.on('uncaughtException', err => {
     console.error(`Uncaught Exception: §c${err.message}`);
     console.log(err);
 });
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout});
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 function console_command() {
     rl.question("", (command: string) => {
         while (command.includes('  ')) command = command.replace('  ', ' ');

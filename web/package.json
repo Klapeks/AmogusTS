@@ -2,9 +2,9 @@
     "name": "amomgus",
     "version": "1.0.0",
     "description": "AmongUs",
-    "main": "index.ts",
+    "main": "src/index.ts",
     "scripts": {
-        "start": "node --trace-warnings --require ts-node/register index.ts"
+        "start": "node --trace-warnings --require ts-node/register src/index.ts"
     },
     "author": "Klapeks",
     "license": "ISC",

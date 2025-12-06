@@ -1,9 +1,7 @@
 {
-    "compileOnSave": true,
     "compilerOptions": {
         "target": "es5",
-        "module": "es2020",
-        "moduleResolution": "bundler",
+        "module": "CommonJS",
         "strict": true,
         "declaration": false,
         "downlevelIteration": true,
@@ -12,11 +10,9 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": false,
-        "outDir": "script"
+        "outDir": "dist",
+        // "outFile": "index.js"
     },
-    "exclude": [
-        "textures/*",
-        "script/*",
-        "../node_modules"
-    ]
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts", "dist", "dist/**/*"]
 }

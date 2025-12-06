@@ -18,8 +18,8 @@ let dsc = 0;
 
 async function update() {
     dsc = 0;
-    if (Game.hasKey('keym')) dsc+=10;
-    if (Game.hasKey('keyn')) dsc-=10;
+    // if (Game.hasKey('keym')) dsc+=10;
+    // if (Game.hasKey('keyn')) dsc-=10;
     if (dsc!=0) {
         Game.getCamera().getResolution().add(dsc*1280/720, dsc);
     }

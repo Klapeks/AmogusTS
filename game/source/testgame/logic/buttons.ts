@@ -67,7 +67,7 @@ class UseButton extends Button {
             }
             return;
         }
-        let f = this._onclicking[this._nowtex];
+        let f = this._onclicking[this._nowtex + 1];
         if (!f) f = this._onclick;
         f();
     }
@@ -345,6 +345,7 @@ let logic_buttons = {
             })
             .setClick(() => {
                 const nt = logic_map.getNearInteractable();
+                console.log("INTERACT");
                 if (nt) {
                     interactButton.cooldown(0.3);
                     nt.use();

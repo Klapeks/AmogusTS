@@ -3,6 +3,7 @@ import url from 'url';
 import { main } from "./main";
 import fs from 'fs';
 import { utils } from "./utils";
+import mPath from 'path';
 
 interface Parametrs {
     URL: url.UrlWithParsedQuery;
@@ -50,7 +51,8 @@ let handler = {
                 response.writeHead(404); response.end("404 Not Found");
                 return true;
             }
-            fs.readFile(path, (err, data) => {
+            path = path.replace('//', '/');
+            fs.readFile(mPath.join(__dirname, '../../', path), (err, data) => {
                 if (err) {
                     try { response.writeHead(404); response.end("404 Not Found"); console.error(err); } catch (e) {}
                     return;

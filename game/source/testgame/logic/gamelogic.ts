@@ -48,7 +48,7 @@ let GameLogic = {
             const ch = i === 0 ? Characters.main : Characters.another[i - 1];
             ch.resetCharacter();
             // if (i===0) {
-            //     ch.setRole(Roles.Camouflager);
+            //     ch.setRole(Roles.Sniper);
             // } else
             // if (i===2) {
             //     ch.setRole(Roles.VIP);
