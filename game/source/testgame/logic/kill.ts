@@ -33,12 +33,12 @@ let logic_kill = {
         for (let dead of DeadCharacter.allDeadBodies) {
             if (dead.getSprite().getLocation().distanceSquared(location) <= config.deadrange*config.deadrange) return dead;
         }
-        return null;
+        return null as any;
     },
     checkAlive(darkness_time = 500) {
         let imps = 0;
         let crew = 0;
-        let neutral_character: Array<Character>;
+        let neutral_character: Array<Character> = undefined as any;
         let checkChar = (ch: Character) => {
             if (!ch.isAlive) return;
             const role = ch.getRole();
@@ -66,10 +66,10 @@ let logic_kill = {
             return;
         }
         if (imps >= crew) {
-            theend.end(Roles.Impostor, null, darkness_time);
+            theend.end(Roles.Impostor, null as any, darkness_time);
             return;
         } else if (imps === 0) {
-            theend.end(Roles.Crewmate, null, darkness_time);
+            theend.end(Roles.Crewmate, null as any, darkness_time);
             return;
         }
     }

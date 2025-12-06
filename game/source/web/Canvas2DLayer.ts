@@ -22,7 +22,7 @@ class CanvasLayer extends AbstractLayer {
         } else {
             this._canvas = settings?.canvas;
         }
-        this._ctx = settings?.context || this._canvas.getContext('2d');
+        this._ctx = settings?.context || this._canvas.getContext('2d')!;
     }
 
     drawSprite(sprite: Sprite): void {

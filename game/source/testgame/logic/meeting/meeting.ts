@@ -59,8 +59,8 @@ let meeting = {
         table.hidden = true;
         Game.getScene().LayerGUI.remove(meetingText, deadbodyText, 
             amogusSprite, table, additionSprite);
-        amogusSprite = null;
-        additionSprite = null;
+        amogusSprite = null as any;
+        additionSprite = null as any;
     },
     call(icon: Character, state: "meeting" | "dead") {
         voting.isVoting = true;

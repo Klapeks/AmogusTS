@@ -87,14 +87,14 @@ const VoteMenu = {
         if (!menu || !menu.isShowed) return;
         trySelectButton(acceptButton);
         trySelectButton(additionalButton);
-        let nameplate: Nameplate = null;
+        let nameplate: Nameplate = null as any;
         for (let np of menu.nameplates) {
             if (np.checkMouseMove()) {
                 nameplate = np;
                 break;
             }
         }
-        if (!nameplate) menu.setSelectedNameplateLocation(null);
+        if (!nameplate) menu.setSelectedNameplateLocation(null as any);
         else menu.setSelectedNameplateLocation(nameplate.getLocation());
     },
     hideButtons() {
@@ -115,7 +115,7 @@ let trySelectButton = (button: StaticSprite) => {
     }
 }
 let onClick = (x: number, y: number) => {
-    let nameplate: Nameplate = null;
+    let nameplate: Nameplate = null as any;
     for (let np of menu.nameplates) {
         if (np.checkMouseMove(x,y)) {
             nameplate = np;

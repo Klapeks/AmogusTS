@@ -38,10 +38,10 @@ let SoundsUtils = {
         soundCreator = sc;
     },
     setVolume(type: SoundType, vol: number) {
-        typeVolume.set(type, vol)
+        typeVolume.set(type, vol);
     },
-    getVolume(type: SoundType) {
-        return typeVolume.has(type) ? typeVolume.get(type) : GameConfig.volume;
+    getVolume(type: SoundType): number {
+        return typeVolume.has(type) ? typeVolume.get(type)! : GameConfig.volume;
     }
 }
 

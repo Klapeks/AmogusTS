@@ -9,7 +9,7 @@ type CanvasDrawSettings = {
     y: number,
     width: number,
     height: number,
-    splitting?: Splitting,
+    splitting?: Splitting | null,
     rotation?: number,
     filter?: string
 }
@@ -83,7 +83,7 @@ let Canvas2DUtils = {
         if (image.width == 0) return image;
         canvas.width = image.width;
         canvas.height = image.height;
-        let ctx = canvas.getContext('2d');
+        let ctx = canvas.getContext('2d')!;
         ctx.drawImage(image, 0, 0);
         if (splitting) {
             const data = filter(ctx.getImageData(splitting.x, splitting.y,
@@ -93,7 +93,7 @@ let Canvas2DUtils = {
             if (image.width == 0) return image;
             canvas.width = splitting.width;
             canvas.height = splitting.height;
-            ctx = canvas.getContext('2d');
+            ctx = canvas.getContext('2d')!;
             ctx.putImageData(data, 0, 0);
         } else {
             ctx.putImageData(filter(ctx.getImageData(0, 0, canvas.width, canvas.height)), 0,0);
@@ -115,7 +115,7 @@ let Canvas2DUtils = {
         if (image.width == 0) return image;
         canvas.width = image.width;
         canvas.height = image.height;
-        let ctx = canvas.getContext('2d');
+        let ctx = canvas.getContext('2d')!;
         ctx.drawImage(image, 0, 0);
         let data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         canvas.remove();

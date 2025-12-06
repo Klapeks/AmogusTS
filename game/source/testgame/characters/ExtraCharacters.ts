@@ -9,11 +9,11 @@ class SelectedCharacter extends Character {
     selcolor: Color;
     constructor(location?:Location, color: Color = {r:255, g:150, b:0}) {
         super(-128, location);
-        this.setColor(null, null, null);
+        this.setColor(null as any, null as any, null as any);
         this.selcolor = color;
     }
 
-    selectedCharacter: Character;
+    selectedCharacter: Character = undefined as any;
     select(character: Character){
         this.selectedCharacter = character;
         if (character) {
@@ -40,10 +40,12 @@ class SelectedCharacter extends Character {
         this._textures = {
             idle: this.cloneFiltering(textures.amogus.idle),
             walk: newwalk,
-            static: null,
-            dead: null, vent: null,
-            meeting: null, eject: null,
-            killanimations: null
+            static: null as any,
+            dead: null as any, 
+            vent: null as any,
+            meeting: null as any, 
+            eject: null as any,
+            killanimations: null as any
         }
         this.idle();
         return this;

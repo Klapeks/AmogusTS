@@ -28,7 +28,7 @@ let theend = {
         resetButton.hidden = true;
         resetButton.setOnClick(() => {
             gui_sounds.select.play();
-            reset(); reset = undefined;
+            reset(); reset = undefined as any;
             resetButton.hidden = true;
             Game.getScene().LayerGUI.remove(resetButton.getSprite());
             GameLogic.startGame();
@@ -59,7 +59,7 @@ let theend = {
     callend(role: Role, neutral_character?: Character) {
         if (introducing.isIntroducing) return;
         GameLogic.endGame();
-        reset = undefined;
+        reset = undefined as any;
         const characterSprites = new Array<StaticSprite>();
         let background: Color;
 
@@ -141,8 +141,8 @@ let theend = {
                 wait_dark_diffusion: 0
             }
         });
-        reset = opt.remove;
-        opt.introduceText.setOpacity(1);
+        reset = opt!.remove;
+        opt!.introduceText.setOpacity(1);
 
         setTimeout(() => {
             resetButton.hidden = false;

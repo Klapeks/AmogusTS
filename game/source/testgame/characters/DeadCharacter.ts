@@ -44,9 +44,9 @@ class DeadCharacter {
     delete() {
         DeadCharacter.allDeadBodies = DeadCharacter.allDeadBodies.filter(ch => ch!==this);
         Game.getScene().removeDynamicSprite(this._sprite);
-        this._character.deadbody = null;
-        this._character = null;
-        this._sprite = null;
+        this._character.deadbody = null as any;
+        this._character = null as any;
+        this._sprite = null as any;
     }
     static allDeadBodies: Array<DeadCharacter> = new Array();
 }

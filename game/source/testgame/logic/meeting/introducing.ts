@@ -59,8 +59,8 @@ let introducing = {
             left: new StaticSprite(darkT)
                 .setSize(-200, Screen.height)
                 .setPriority(75),
-            left_sq: null,
-            right_sq: null
+            left_sq: null as any,
+            right_sq: null as any
         }
         dark.right_sq = new StaticSprite(darkT2,
                 new LinkedLocation(dark.right.getLocation(), {dx:dark.right.width, dy:0}))

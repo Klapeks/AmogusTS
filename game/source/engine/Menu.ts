@@ -12,9 +12,9 @@ class Menu {
         this._size = size;
         this._texture = texture;
     }
-    protected _sprite: StaticSprite;
+    protected _sprite: StaticSprite = undefined as any;
     isShowed = false;
-    setTexture(texture: Texture){
+    setTexture(texture: Texture) {
         this._texture = texture;
     }
     show(priority: number = 100) {
@@ -23,28 +23,28 @@ class Menu {
         this.isShowed = true;
         this._sprite = new StaticSprite(this._texture)
             .setSize(this._size.width, this._size.height)
-            .setLocationByCenter(Screen.width/2, Screen.height/2);
+            .setLocationByCenter(Screen.width / 2, Screen.height / 2);
         if (priority) this._sprite.setPriority(priority);
-        
+
         Game.getScene().LayerGUI.add(this._sprite);
         MenusUtils.showedMenus.push(this);
     }
     hide() {
-        MenusUtils.showedMenus = MenusUtils.showedMenus.filter(m => m!==this);
+        MenusUtils.showedMenus = MenusUtils.showedMenus.filter(m => m !== this);
         Game.getScene().LayerGUI.remove(this._sprite);
-        this._sprite = null;
+        this._sprite = null as any;
         this.isShowed = false;
     }
-    protected _clickevents = new Array<{hitbox:Hitbox|HitboxLocation, event: (x:number,y:number) => void, block_another: boolean}>();
-    addClick(hitbox: Hitbox | HitboxLocation, event: (x:number,y:number) => void, block_another: boolean = false) {
-        this._clickevents.unshift({hitbox, event, block_another});
+    protected _clickevents = new Array<{ hitbox: Hitbox | HitboxLocation, event: (x: number, y: number) => void, block_another: boolean }>();
+    addClick(hitbox: Hitbox | HitboxLocation, event: (x: number, y: number) => void, block_another: boolean = false) {
+        this._clickevents.unshift({ hitbox, event, block_another });
         return this;
     }
 
     click(x: number, y: number): boolean {
         for (let e of this._clickevents) {
             if (Location.isInHitbox(x, y, e.hitbox)) {
-                e.event(x,y);
+                e.event(x, y);
                 if (e.block_another) return true;
             }
         }
@@ -53,28 +53,28 @@ class Menu {
 }
 
 class ApearableMenu extends Menu {
-    
-    constructor(texture: Texture, size: Size){
+
+    constructor(texture: Texture, size: Size) {
         super(texture, size);
     }
-    
-    onMenuMoving(location: Location) {}
-    onClose() {}
-    
+
+    onMenuMoving(location: Location) { }
+    onClose() { }
+
     show(priority?: number) {
-        if (this.isShowed || this._sprite) return;
+        if (this.isShowed || (this._sprite as any)) return;
         super.show(priority);
-        
+
         if (this.apeartime) {
             const ny = this._sprite.getLocation().y;
             this._sprite.getLocation().y = Screen.height;
             this.onMenuMoving(this._sprite.getLocation());
 
-            for (let i = 0; i < Screen.height-ny; i+=10){
+            for (let i = 0; i < Screen.height - ny; i += 10) {
                 setTimeout(() => {
                     if (this._sprite) this._sprite.getLocation().y -= 10;
                     this.onMenuMoving(this._sprite.getLocation());
-                }, this.apeartime*i/(Screen.height-ny));
+                }, this.apeartime * i / (Screen.height - ny));
             }
             setTimeout(() => {
                 this._sprite.getLocation().y = ny;
@@ -90,11 +90,11 @@ class ApearableMenu extends Menu {
             // logic_buttons.setCooldown(this.apeartime/1000+0.5, "use");
             const ny = this._sprite.getLocation().y;
 
-            for (let i = 0; i < Screen.height-ny; i+=10){
+            for (let i = 0; i < Screen.height - ny; i += 10) {
                 setTimeout(() => {
                     if (this._sprite) this._sprite.getLocation().y += 10;
                     this.onMenuMoving(this._sprite.getLocation());
-                }, this.apeartime*i/(Screen.height-ny));
+                }, this.apeartime * i / (Screen.height - ny));
             }
 
             setTimeout(() => {
@@ -117,18 +117,18 @@ class ApearableMenu extends Menu {
 let MenusUtils = {
     showedMenus: new Array<Menu>(),
     click(x: number, y: number) {
-        for (let i = MenusUtils.showedMenus.length-1; i >= 0; i--) {
-            if (MenusUtils.showedMenus[i].click(x,y)) break;
+        for (let i = MenusUtils.showedMenus.length - 1; i >= 0; i--) {
+            if (MenusUtils.showedMenus[i].click(x, y)) break;
         }
     },
     hideAll() {
         while (!MenusUtils.isNoMenu()) {
-            MenusUtils.showedMenus.shift().hide();
+            MenusUtils.showedMenus.shift()?.hide();
         }
     },
-    isNoMenu(){
+    isNoMenu() {
         return MenusUtils.showedMenus.length === 0
     }
 }
 
-export {MenusUtils, Menu, ApearableMenu}
+export { MenusUtils, Menu, ApearableMenu }

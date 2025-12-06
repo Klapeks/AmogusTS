@@ -13,30 +13,30 @@ class GuessRole {
     private _left_arrow: StaticSprite;
     private _right_arrow: StaticSprite;
     private _roletext: StaticSprite;
-    
+
     constructor(center: Location, length = 512, arrow_size = 128) {
         this._location = center;
-        if(!arrowTexture) {
+        if (!arrowTexture) {
             arrowTexture = new Texture('roles/arrow.png');
         }
         this._left_arrow = new StaticSprite(arrowTexture,
-                new LinkedLocation(center, {dx: -length/2, dy: 0}))
-                .setSize(-arrow_size/2, arrow_size);
+            new LinkedLocation(center, { dx: -length / 2, dy: 0 }))
+            .setSize(-arrow_size / 2, arrow_size);
         this._right_arrow = new StaticSprite(arrowTexture,
-                new LinkedLocation(center, {dx: (length-arrow_size)/2, dy: 0}))
-                .setSize(arrow_size/2, arrow_size);
-        this._roletext = new StaticSprite(Character.generateNicknameTexture('Угадай роль', 50), 
-                new LinkedLocation(center, {dx: 0, dy: arrow_size/2+13}))
-                .setSize(length-arrow_size, 50);
-        Game.eventListeners.addMouseClick((x,y) => {
+            new LinkedLocation(center, { dx: (length - arrow_size) / 2, dy: 0 }))
+            .setSize(arrow_size / 2, arrow_size);
+        this._roletext = new StaticSprite(Character.generateNicknameTexture('Угадай роль', 50),
+            new LinkedLocation(center, { dx: 0, dy: arrow_size / 2 + 13 }))
+            .setSize(length - arrow_size, 50);
+        Game.eventListeners.addMouseClick((x, y) => {
             if (this._left_arrow && !this._left_arrow.hidden) {
-                if (Location.isInHitbox(x,y,{
+                if (Location.isInHitbox(x, y, {
                     location: this._left_arrow.getLocation(),
                     size: this._right_arrow
                 })) this.nextRole(-1);
             }
             if (this._right_arrow && !this._right_arrow.hidden) {
-                if (Location.isInHitbox(x,y,{
+                if (Location.isInHitbox(x, y, {
                     location: this._right_arrow.getLocation(),
                     size: this._right_arrow
                 })) this.nextRole(1);
@@ -44,7 +44,7 @@ class GuessRole {
         })
     }
 
-    nowRole: number = undefined;
+    nowRole: number = undefined as any;
     nextRole(go = 1) {
         if (this.nowRole === undefined) this.nowRole = 0;
         else {
@@ -57,9 +57,10 @@ class GuessRole {
     }
 
     getSelectedRole(): Role {
-        if (this.nowRole===undefined) {
-            return undefined;
+        if (this.nowRole === undefined) {
+            return undefined as any;
         }
+        // @ts-ignore
         return Roles[Object.keys(Roles)[this.nowRole]];
     }
 
@@ -78,23 +79,23 @@ class GuessRole {
     }
 
     setPriority(priority: number) {
-        this._left_arrow.priority 
-            = this._right_arrow.priority 
+        this._left_arrow.priority
+            = this._right_arrow.priority
             = this._roletext.priority = priority;
         return this;
     }
-    
+
     get hidden() {
-        return this._left_arrow.hidden 
-            || this._right_arrow.hidden 
+        return this._left_arrow.hidden
+            || this._right_arrow.hidden
             || this._roletext.hidden;
     }
     set hidden(b: boolean) {
-        this._left_arrow.hidden 
-            = this._right_arrow.hidden 
+        this._left_arrow.hidden
+            = this._right_arrow.hidden
             = this._roletext.hidden = b;
     }
 }
 
 
-export {GuessRole};
+export { GuessRole };

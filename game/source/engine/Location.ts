@@ -28,8 +28,8 @@ class Location {
         if (this.yaw < 0) this.yaw = 360 - this.yaw;
         this.yaw %= 360;
     }
-    distanceSquared(loc: Location){
-        return Math.pow(loc.x-this.x, 2) + Math.pow(loc.y-this.y, 2);
+    distanceSquared(loc: Location) {
+        return Math.pow(loc.x - this.x, 2) + Math.pow(loc.y - this.y, 2);
     }
     clone(): Location {
         return new Location(this.x, this.y, this.yaw);
@@ -40,7 +40,7 @@ class Location {
     }
     static isInHitbox(x: number, y: number, hitbox: Hitbox | HitboxLocation): boolean {
         if (this.isHitboxLocation(hitbox)) {
-             return hitbox.location.x <= x && hitbox.location.y <= y 
+            return hitbox.location.x <= x && hitbox.location.y <= y
                 && x <= hitbox.location.x + hitbox.size.width
                 && y <= hitbox.location.y + hitbox.size.height;
         }
@@ -50,8 +50,8 @@ class Location {
     }
     static generateHitbox_Box(centerX: number, centerY: number, range: number): Hitbox {
         return {
-            x: centerX - range/2,
-            y: centerY - range/2,
+            x: centerX - range / 2,
+            y: centerY - range / 2,
             dx: range,
             dy: range
         }
@@ -60,14 +60,14 @@ class Location {
 
 class LinkedLocation extends Location {
     private _location: Location;
-    private _add: {dx: number, dy: number};
-    constructor(location: Location, add: {dx: number, dy: number} = {dx:0,dy:0}) {
-        super(null,null,null);
+    private _add: { dx: number, dy: number };
+    constructor(location: Location, add: { dx: number, dy: number } = { dx: 0, dy: 0 }) {
+        super(null as any, null as any, null as any);
         this._location = location;
         this._add = add;
     }
-    get x(): number { return this._location.x+this._add.dx; }
-    get y(): number { return this._location.y+this._add.dy; }
+    get x(): number { return this._location.x + this._add.dx; }
+    get y(): number { return this._location.y + this._add.dy; }
     set x(x: number) { this._location.x = x; }
     set y(y: number) { this._location.y = y; }
     get yaw(): number { return this._location.yaw; }
@@ -75,10 +75,10 @@ class LinkedLocation extends Location {
 }
 // type RoundHitbox = {x: number, y: number, rw: number, rh: number}
 type BiLocation = { x: number, y: number, width: number, height: number }
-type Hitbox = { x: number, y: number, dx: number, dy: number, fromto?: boolean}
-type HitboxLocation = { location: Location, size: Size}
+type Hitbox = { x: number, y: number, dx: number, dy: number, fromto?: boolean }
+type HitboxLocation = { location: Location, size: Size }
 type Point = { x: number, y: number }
-type Size = {width: number, height: number};
+type Size = { width: number, height: number };
 // type BiLocationFT = { fromX: number, fromY: number, toX: number, toY: number }
 // type BiLocation = BiLocationFT | BiLocationWH
 

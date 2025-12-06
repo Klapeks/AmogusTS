@@ -43,10 +43,10 @@ const createNoKill = (role: Role, win: Role = role) => {
 }
 
 let shifterSound: Sound;
-let executionerTarget: Character;
+let executionerTarget: Character | undefined;
 
-let swapperCharacter1: Character;
-let swapperCharacter2: Character;
+let swapperCharacter1: Character | undefined;
+let swapperCharacter2: Character | undefined;
 
 const roles_neutrals = {
 

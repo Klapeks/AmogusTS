@@ -3,7 +3,7 @@ import { Game } from "./Game";
 import { Splitting } from "./Sprite";
 
 function image_on_load(texture: Texture, image: any) {
-    if (!texture.getPath().includes("/amogus/"))console.log(`Texture ${texture.getPath()} was loaded`);
+    if (!texture.getPath().includes("/amogus/")) console.log(`Texture ${texture.getPath()} was loaded`);
     Object.defineProperty(image, "geIsLoaded", {
         get: function () {
             return true;
@@ -18,12 +18,12 @@ let TextureFuncs = {
     loadingTextures: 0
 };
 class Texture {
-    private _path: string;
+    private _path: string = undefined as any;
     private _image: any;
-    private _onload: ()=>void = () => {};
-    constructor(path: string, image?: any, onload?: (texture: Texture)=>void) {
+    private _onload: () => void = () => { };
+    constructor(path: string, image?: any, onload?: (texture: Texture) => void) {
         if (onload) this._onload = () => onload(this);
-        if (path){
+        if (path) {
             this._path = Game.functions.texturePath(path);
             if (image) {
                 this._image = image;
@@ -38,7 +38,7 @@ class Texture {
             }
         }
     }
-    set onload(l: ()=>void){
+    set onload(l: () => void) {
         this._onload = l;
     }
     get onload() {
@@ -48,37 +48,37 @@ class Texture {
         this._image = image;
         return this;
     }
-    getPath(){
+    getPath() {
         return this._path;
     }
     getImage(): any {
         return this._image;
     }
     isFulled = false;
-    settings(set: {isFulled?:boolean}){
-        this.isFulled ??= set.isFulled;
+    settings(set: { isFulled?: boolean }) {
+        this.isFulled ??= set.isFulled as any;
         return this;
     }
 }
 class SplittedTexture extends Texture {
-    constructor(path: string, splitting: Splitting, image?: any, onload?: ()=>void) {
+    constructor(path: string, splitting: Splitting, image?: any, onload?: () => void) {
         super(path, image, () => {
-            this.setImage(Game.getScene().filterImage(this.getImage(), i=>i, splitting));
-            onload();
+            this.setImage(Game.getScene().filterImage(this.getImage(), i => i, splitting));
+            onload?.();
         });
     }
 }
 class MultiTexture extends Texture {
     private _textures: Array<Texture> = new Array();
     private _textureID = 0;
-    constructor(...text : (Texture | string)[]) {
-        super (null,null)
+    constructor(...text: (Texture | string)[]) {
+        super(null as any, null)
         for (let t of text) {
             this._textures.push(typeof t === "string" ? new Texture(t) : t);
         }
         // this._textures = text;
     }
-    getPath(){
+    getPath() {
         return this._textures[this._textureID].getPath();
     }
     getImage(): any {
@@ -92,8 +92,8 @@ class MultiTexture extends Texture {
 }
 class OnecolorTexture extends Texture {
     color: Color;
-    constructor(color: Color){
-        super(null);
+    constructor(color: Color) {
+        super(null as any);
         this.color = color;
         this.isFulled = true;
     }
@@ -104,8 +104,8 @@ class TextTexture extends Texture {
     align = "start";
     color = "black";
     fontsize = 0;
-    constructor(text: string, font: string){
-        super(null);
+    constructor(text: string, font: string) {
+        super(null as any);
         this.text = text;
         this.font = font;
     }
@@ -118,7 +118,7 @@ class TextTexture extends Texture {
         return this;
     }
     setColor(color: string | Color) {
-        if (typeof color !== "string") 
+        if (typeof color !== "string")
             color = `rgb(${color.r}, ${color.g}, ${color.b})`;
         this.color = color;
         return this;
@@ -132,14 +132,20 @@ class TextTexture extends Texture {
         return this;
     }
 
-    outline = {color:null, width:null}; 
+    outline: {
+        color: string,
+        width: number
+    } = { 
+        color: null as any, 
+        width: null as any 
+    };
     setOutline(color: string, width: number): TextTexture {
-        this.outline = {color, width};
+        this.outline = { color, width };
         return this;
     }
 }
 
-type SplitingTexture = {texture: Texture, width: number, height: number, amount_per_line: number, amount: number};
-let NullTexture = new Texture(null);
+type SplitingTexture = { texture: Texture, width: number, height: number, amount_per_line: number, amount: number };
+let NullTexture = new Texture(null as any);
 
-export {Texture, TextTexture, TextureFuncs, NullTexture, SplitingTexture, MultiTexture, OnecolorTexture, SplittedTexture};
+export { Texture, TextTexture, TextureFuncs, NullTexture, SplitingTexture, MultiTexture, OnecolorTexture, SplittedTexture };

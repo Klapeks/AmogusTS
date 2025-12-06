@@ -64,7 +64,7 @@ let RoleFuncs = {
                         });
                     } else {
                         addact.button_state = logic_buttons.AdditionalButton[i]
-                            .addState(addact.button_texture, null);
+                            .addState(addact.button_texture!, null);
                     }
                 })
             }

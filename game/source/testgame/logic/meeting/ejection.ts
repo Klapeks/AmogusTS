@@ -76,7 +76,7 @@ let ejections = {
         subtextSprite.hidden = true;
     },
     update() {
-        if (!darkness.hidden){
+        if (!darkness.hidden && stars.splitting && stars2.splitting){
             stars.splitting.x += 1.5;
             if (stars.splitting.x > 1504) stars.splitting.x = 0;
             stars2.splitting.x += 1;
@@ -90,8 +90,8 @@ let ejections = {
         darkness.setSplitting(7*16, 7*16, 8, 8);
         // ejectanimation = 1;
         darkness.hidden = false;
-        stars.splitting.x = 0;
-        stars2.splitting.x = 0;
+        stars.splitting!.x = 0;
+        stars2.splitting!.x = 0;
 
         let afterKick = new Array<() => void | boolean>();
 
@@ -195,7 +195,7 @@ let ejections = {
             (subtextSprite.getTexture() as TextTexture).fontsize = 0;
             Game.getScene().LayerGUI.remove(darkness, stars, stars2, subtextSprite, textSprite, iconSprite);
             ejections.isEjecting = false;
-            iconSprite = null;
+            iconSprite = null as any;
         }, ejectTimings[ejectTimings.length-1]);
     }
 }

@@ -16,13 +16,13 @@ class TabletMenu extends ApearableMenu {
         super(tabset.tabletTexture, tabset.tabletSize);
         this.setApearTime(100)
     }
-    private _glass: StaticSprite;
+    private _glass: StaticSprite = undefined as any;
     nameplates: Array<Nameplate> = new Array();
-    private _selectedNameplate: StaticSprite;
+    private _selectedNameplate: StaticSprite = undefined as any;
 
     show(priority = 55) {
         tablet.tryChangeTexture();
-        if (this.isShowed || this._sprite) return;
+        if (this.isShowed || (this._sprite as any)) return;
         Nameplate.last_number = 0;
         super.show(priority);
         this._glass = new StaticSprite(tabset.glassTexture)
@@ -69,8 +69,8 @@ class TabletMenu extends ApearableMenu {
         this.nameplates.forEach(np=>np.removeSpirte());
         this.nameplates = this.nameplates.filter(a=>false);
         Game.getScene().LayerGUI.remove(this._glass, this._selectedNameplate);
-        this._glass = null;
-        this._selectedNameplate = null;
+        this._glass = null as any;
+        this._selectedNameplate = null as any;
     }
 
     onMenuMoving(location: Location): void {

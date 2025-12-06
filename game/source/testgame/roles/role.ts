@@ -37,12 +37,12 @@ class Role {
         this.name = name;
         return this;
     } 
-    description: string;
+    description: string = undefined as any;
     setDescription(desc: string) {
         this.description = desc;
         return this;
     }
-    usevents: boolean | "all";
+    usevents: boolean | "all" = undefined as any;
     setUseVents(b: boolean | "all") {
         this.usevents = b;
         return this;
@@ -83,12 +83,12 @@ class Role {
 
     countAsCrewmate = false;
 
-    onload: () => void;
+    onload: () => void = undefined as any;
     setOnLoad(f: () => void) {
         this.onload = f;
         return this;
     }
-    private _onpick: (character: Character) => void;
+    private _onpick: (character: Character) => void = undefined as any;
     setOnPick(f: (character: Character) => void) {
         this._onpick = f;
         return this;
@@ -143,7 +143,7 @@ class Role {
         }
     }
 
-    action: RoleAction;
+    action: RoleAction = undefined as any;
     setAction(act: RoleAction){
         this.action = act;
         return this;
@@ -186,14 +186,14 @@ class Role {
         return selection;
     }
 
-    additionalActions: Array<RoleAction>;
+    additionalActions: Array<RoleAction> = undefined as any;
     addAdditionalAction(action: RoleAction) {
         if (!this.additionalActions) this.additionalActions = new Array();
         this.additionalActions.push(action);
         return this;
     }
 
-    meetingAction: RoleMeetingAction;
+    meetingAction: RoleMeetingAction = undefined as any;
     setMeetingAction(action: RoleMeetingAction) {
         this.meetingAction = action;
         return this;

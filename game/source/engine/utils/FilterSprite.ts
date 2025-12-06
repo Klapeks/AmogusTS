@@ -4,21 +4,21 @@ import { Sprite } from "../Sprite";
 type SpriteFilter = (value: Sprite, next: Sprite) => number;
 
 class SpriteArray {
-    next: SpriteArray;
-    sprite: Sprite;
+    next: SpriteArray = undefined as any;
+    sprite: Sprite = undefined as any;
     constructor(sprite?: Sprite) {
         if (sprite) this.sprite = sprite;
     }
-    add(sprite: Sprite, filter: SpriteFilter = SpriteArray.PriorityFilter) {
-        if (this.sprite===sprite) return this;
-        if (!this.sprite){
+    add(sprite: Sprite, filter: SpriteFilter = SpriteArray.PriorityFilter): SpriteArray {
+        if (this.sprite === sprite) return this;
+        if (!this.sprite) {
             this.sprite = sprite;
             return this;
         }
         let f = filter(this.sprite, sprite);
         if (f < 0) {
             [this.sprite, sprite] = [sprite, this.sprite];
-            if (!this.next){
+            if (!this.next) {
                 this.next = new SpriteArray(sprite);
                 return this;
             }
@@ -28,7 +28,7 @@ class SpriteArray {
             return this;
         }
 
-        if (!this.next){
+        if (!this.next) {
             this.next = new SpriteArray(sprite);
             return this.next;
         }
@@ -37,10 +37,10 @@ class SpriteArray {
     remove(sprite: Sprite) {
         if (!this.next) {
             if (this.sprite === sprite)
-                this.sprite = null;
+                this.sprite = null as any;
             return;
         }
-        if (this.sprite !== sprite) {this.next.remove(sprite); return;}
+        if (this.sprite !== sprite) { this.next.remove(sprite); return; }
         this.sprite = this.next.sprite;
         this.next = this.next.next;
         return;
@@ -51,10 +51,10 @@ class SpriteArray {
     }
 
     getFirst(f: (s: Sprite) => boolean): SpriteArray {
-        if (!this.sprite) return null;
+        if (!this.sprite) return null as any;
         if (f(this.sprite)) return this;
         if (this.next) return this.next.getFirst(f);
-        return null;
+        return null as any;
     }
 
     static PriorityFilter: SpriteFilter = (now: Sprite, next: Sprite) => {
@@ -66,14 +66,14 @@ class SpriteArray {
 }
 
 class TreeSprite {
-    right: TreeSprite;
-    left: TreeSprite;
+    right: TreeSprite = undefined as any;
+    left: TreeSprite = undefined as any;
     value: Sprite;
     constructor(sprite: Sprite) {
         this.value = sprite;
     }
-    add(ts: TreeSprite){
-        if (ts.value.getCenter().y < this.value.getCenter().y){
+    add(ts: TreeSprite) {
+        if (ts.value.getCenter().y < this.value.getCenter().y) {
             if (this.left) this.left.add(ts);
             else this.left = ts;
         } else {
@@ -88,4 +88,4 @@ class TreeSprite {
     }
 }
 
-export {TreeSprite, SpriteArray}
+export { TreeSprite, SpriteArray }

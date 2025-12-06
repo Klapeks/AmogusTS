@@ -2,46 +2,46 @@ import { HitboxLocation, Location, Size } from "./Location";
 import { Screen } from "./Screen";
 import { Texture } from "./Texture";
 
-type Splitting = {x: number, y: number, width: number, height: number};
+type Splitting = { x: number, y: number, width: number, height: number };
 
 class Sprite {
-    private _tex: Texture;
-    private _loc: Location;
-    private _size: Size = {width:0, height:0};
+    private _tex: Texture = undefined as any;
+    private _loc: Location = undefined as any;
+    private _size: Size = { width: 0, height: 0 };
     private _split: Splitting | null = null;
     constructor(texture: Texture, location: Location = new Location(0, 0)) {
         if (!texture) return;
         this._tex = texture;
         this._loc = location;
     }
-    set splitting(sp: Splitting | null){
+    set splitting(sp: Splitting | null) {
         this._split = sp;
     }
     get splitting() {
         return this._split;
     }
     private _hidden = false;
-    set hidden(b: boolean){
+    set hidden(b: boolean) {
         this._hidden = b;
     }
     get hidden() {
         return this._hidden;
     }
     setSplitting(x: number, y: number, width: number, height: number) {
-        this._split = {x,y,width,height};
-        if (this._size.width==0&&this._size.height==0) this._size = {width, height};
+        this._split = { x, y, width, height };
+        if (this._size.width == 0 && this._size.height == 0) this._size = { width, height };
         return this;
     }
     setSplittingS(x: number, y: number, tox: number, toy: number) {
-        return this.setSplitting(x,y, tox-x, toy-y);
+        return this.setSplitting(x, y, tox - x, toy - y);
     }
     multiplySize(m: number) {
-        this._size.width*=m;
-        this._size.height*=m;
+        this._size.width *= m;
+        this._size.height *= m;
         return this;
     }
     setLocation(x: number, y: number) {
-        if (!this._loc) this._loc = new Location(x,y);
+        if (!this._loc) this._loc = new Location(x, y);
         else {
             this._loc.x = x;
             this._loc.y = y;
@@ -53,7 +53,7 @@ class Sprite {
         return this;
     }
     setSize(width: number, height: number) {
-        this._size = {width, height};
+        this._size = { width, height };
         return this;
     }
     get width(): number {
@@ -71,22 +71,22 @@ class Sprite {
     getHitboxPos(): HitboxLocation {
         return {
             location: this._loc,
-            size: {width: this.width, height: this.height}
+            size: { width: this.width, height: this.height }
         };
     }
     setLocationByCenter(x: number, y: number) {
-        this._loc.x = x - Math.abs(this.width)/2;
-        this._loc.y = y - Math.abs(this.height)/2;
+        this._loc.x = x - Math.abs(this.width) / 2;
+        this._loc.y = y - Math.abs(this.height) / 2;
         return this;
     }
     setLocationYaw(yaw: number) {
         this._loc.yaw = yaw;
         return this;
     }
-    getCenter(): {x: number, y: number} {
+    getCenter(): { x: number, y: number } {
         return {
-            x: this._loc.x + Math.abs(this.width)/2,
-            y: this._loc.y + Math.abs(this.height)/2,
+            x: this._loc.x + Math.abs(this.width) / 2,
+            y: this._loc.y + Math.abs(this.height) / 2,
         };
     }
     getLocation(): Location {
@@ -108,14 +108,14 @@ class Sprite {
         this._hideInDark = b;
         return this;
     }
-    
+
     get opacity(): number {
         return this.getFilter('opacity');
     }
     set opacity(o: number) {
         this.setFilter('opacity', o);
     }
-    setOpacity(opacity: number){
+    setOpacity(opacity: number) {
         this.opacity = opacity;
         return this;
     }
@@ -132,8 +132,8 @@ class Sprite {
     getFilter(filter: string) {
         return this._filter[filter];
     }
-    private _filters: string;
-    private regenFilter(){
+    private _filters: string = undefined as any;
+    private regenFilter() {
         this._filters = "";
         for (let key in this._filter) {
             this._filters += `${key}(${this._filter[key]}) `;
@@ -142,7 +142,7 @@ class Sprite {
     getFilters() {
         return this._filters;
     }
-    
+
     priority = 0;
     setPriority(priority: number) {
         this.priority = priority;
@@ -152,13 +152,13 @@ class Sprite {
     // set _deprecated_change_location_object(location: Location) {
     //     this._loc = location;
     // }
-    private _margin: {x: number, y: number};
+    private _margin: { x: number, y: number } = undefined as any;
 
-    setMargin(margin: {x:number, y:number}){
+    setMargin(margin: { x: number, y: number }) {
         this.margin = margin;
         return this;
     }
-    set margin(margin: {x:number, y:number}) {
+    set margin(margin: { x: number, y: number }) {
         this._margin = margin;
     }
     get margin() {
@@ -173,11 +173,11 @@ class StaticSprite extends Sprite {
         this.setMargin({ x: 0, y: 0 });
     }
 }
-let FullscreenSprite = (texture: Texture | string, priority=100): StaticSprite => {
+let FullscreenSprite = (texture: Texture | string, priority = 100): StaticSprite => {
     return new StaticSprite(typeof texture === "string" ? new Texture(texture) : texture)
-            .setSize(Screen.width, Screen.height).setPriority(priority).setUpperThanDark(true);
+        .setSize(Screen.width, Screen.height).setPriority(priority).setUpperThanDark(true);
 }
 
-let NullSprite: Sprite = new Sprite(null);
+let NullSprite: Sprite = new Sprite(null as any);
 
-export { Sprite, Splitting, StaticSprite, NullSprite, FullscreenSprite};
+export { Sprite, Splitting, StaticSprite, NullSprite, FullscreenSprite };

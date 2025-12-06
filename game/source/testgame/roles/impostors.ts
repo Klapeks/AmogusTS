@@ -26,7 +26,7 @@ const ImpostorAction: RoleAction = {
 }
 
 class ImpostorRole extends Role {
-    constructor(id: string){
+    constructor(id: string) {
         super(id);
         this._type = "impostor";
         this.setAction(ImpostorAction);
@@ -47,7 +47,7 @@ const roles_impostors = {
         .addAdditionalAction({
             select: "any",
             cooldown: 10,
-            button_texture: [2,4],
+            button_texture: [2, 4],
             act: (ch) => {
                 role_shapeshifter.setTarget(ch);
                 logic_buttons.AdditionalButton[1].select();
@@ -56,17 +56,17 @@ const roles_impostors = {
         .addAdditionalAction({
             select: "regulatable",
             cooldown: 10,
-            button_texture: [1,4],
+            button_texture: [1, 4],
             act: role_shapeshifter.clickShiftButton
         })
         .setOnPick((ch) => {
-            if (ch!==Characters.main) return;
+            if (ch !== Characters.main) return;
             logic_buttons.AdditionalButton[1].unselect();
         }),  // Оборотень
 
 
     Sniper: new ImpostorRole("Sniper")
-        .settings({ color: 'FF4822', name: "Снайпер"})
+        .settings({ color: 'FF4822', name: "Снайпер" })
         .setMeetingAction({
             button_texture: 'buttons/background_of_button.png',
             act: (ch, role) => {
@@ -86,17 +86,17 @@ const roles_impostors = {
             },
             roleSelecting: true
         }),  // Снайпер
-    
-    Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча", usevents: "all"}),  // Саранча
+
+    Saran4a: new ImpostorRole("Saran4a").settings({ color: '737373', name: "Саранча", usevents: "all" }),  // Саранча
 
     Camouflager: new ImpostorRole("Camouflager")
         .settings({ color: '029717', name: "Камуфляжер" })
         .addAdditionalAction({
             select: "noone",
             cooldown: 10,
-            button_texture: [1,3],
+            button_texture: [1, 3],
             act: () => {
-                const f = (character: Character, o:number) => {
+                const f = (character: Character, o: number) => {
                     character.getSprite().setFilter('brightness', o);
                     if (o >= 1 || o === undefined) {
                         character.getTextPlates().forEach(s => {
@@ -108,19 +108,23 @@ const roles_impostors = {
                         })
                     }
                 };
-                OpacityUtils.opacityAnimation(null, {time: 250, from: 1, to: 0, func: (i) => {
-                    f(Characters.main, i);
-                    Characters.another.forEach(ch => f(ch, i));
-                }})
+                OpacityUtils.opacityAnimation(null as any, {
+                    time: 250, from: 1, to: 0, func: (i) => {
+                        f(Characters.main, i);
+                        Characters.another.forEach(ch => f(ch, i));
+                    }
+                })
                 const b = logic_buttons.AdditionalButton[0];
                 b.resetModifiedCooldown({
                     color: "#555555",
                     afterEnd: () => {
-                        OpacityUtils.opacityAnimation(null, {time: 250, from: 0, to: 1, func: (i) => {
-                            if (i>=1) i = undefined;
-                            f(Characters.main, i);
-                            Characters.another.forEach(ch => f(ch, i));
-                        }})
+                        OpacityUtils.opacityAnimation(null as any, {
+                            time: 250, from: 0, to: 1, func: (i) => {
+                                if (i >= 1) i = undefined as any;
+                                f(Characters.main, i);
+                                Characters.another.forEach(ch => f(ch, i));
+                            }
+                        })
                         b.resetModifiedCooldown();
                         b.cooldown(30);
                     },
@@ -134,16 +138,16 @@ const roles_impostors = {
         .addAdditionalAction({
             select: "noone",
             cooldown: 10,
-            button_texture: [2,2],
+            button_texture: [2, 2],
             act: () => {
                 isFreeze = true;
                 const b = logic_buttons.AdditionalButton[0];
-                OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0, to: 0.3});
+                OpacityUtils.opacityAnimation(freezeSprite, { time: 250, from: 0, to: 0.3 });
                 Game.getScene().addUpperSprite(freezeSprite);
                 freezeSound.play();
                 b.setModifiedCooldown('#00FFFF', () => {
                     isFreeze = false;
-                    OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0.3, to: 0});
+                    OpacityUtils.opacityAnimation(freezeSprite, { time: 250, from: 0.3, to: 0 });
                     setTimeout(() => {
                         Game.getScene().removeUpperSprite(freezeSprite);
                     }, 500);
@@ -154,7 +158,7 @@ const roles_impostors = {
                     color: "#00FFFF",
                     afterEnd: () => {
                         isFreeze = false;
-                        OpacityUtils.opacityAnimation(freezeSprite, {time: 250, from: 0.3, to: 0});
+                        OpacityUtils.opacityAnimation(freezeSprite, { time: 250, from: 0.3, to: 0 });
                         setTimeout(() => {
                             Game.getScene().removeUpperSprite(freezeSprite);
                         }, 500);
@@ -164,11 +168,11 @@ const roles_impostors = {
                     vibing: 3
                 })
             }
-        }).setOnLoad(()=>{
+        }).setOnLoad(() => {
             freezeSound = new Sound('roles/freezer.mp3')
             freezeSprite = new StaticSprite(new OnecolorTexture(HexColor('00CDFF')))
-                    .setSize(Screen.width, Screen.height)
-                    .setOpacity(0.3).setPriority(10);
+                .setSize(Screen.width, Screen.height)
+                .setOpacity(0.3).setPriority(10);
             GameLogic.eventListeners.onmove.addEvent(ch => {
                 if (ch.getRole().type === "impostor") return true;
                 return !isFreeze;
@@ -186,7 +190,7 @@ const roles_impostors = {
         .addAdditionalAction({
             select: "noone",
             cooldown: 10,
-            button_texture: [2,1],
+            button_texture: [2, 1],
             act: () => {
                 role_vanisher.vanish(Characters.main);
             }
@@ -204,4 +208,4 @@ const roles_impostors = {
         }),  // Санитар
 }
 
-export {roles_impostors}
+export { roles_impostors }

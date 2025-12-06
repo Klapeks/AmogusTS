@@ -18,7 +18,7 @@ let starting = {
         if (introducing.isIntroducing) return;
         const characterSprites = new Array<StaticSprite>();
         const mainCharSprite = introducing.createCharacterSprite(Characters.main, 0)
-                .setOpacity(0).setPriority(80);
+            .setOpacity(0).setPriority(80);
         characterSprites.push(mainCharSprite);
 
         let background: Color;
@@ -30,10 +30,10 @@ let starting = {
                     if (ch.getRole().type !== "impostor") continue;
                     if (k > 0) {
                         characterSprites.push(introducing.createCharacterSprite(ch, k))
-                        k=-k-3
-                    }else if (k < 0) {
+                        k = -k - 3
+                    } else if (k < 0) {
                         characterSprites.push(introducing.createCharacterSprite(ch, k))
-                        k=-k;
+                        k = -k;
                     }
                 }
                 break;
@@ -41,20 +41,20 @@ let starting = {
             case "neutral": {
                 background = role.color;
                 if (role === Roles.Melok) {
-                    mainCharSprite.setSize(mainCharSprite.width/2, mainCharSprite.height/2)
-                            .setLocationByCenter(
-                                introducing.charactersLocation.centerx,
-                                introducing.charactersLocation.centery
-                            );
+                    mainCharSprite.setSize(mainCharSprite.width / 2, mainCharSprite.height / 2)
+                        .setLocationByCenter(
+                            introducing.charactersLocation.centerx,
+                            introducing.charactersLocation.centery
+                        );
                 }
                 break;
             }
             default: {
                 background = HexColor('00FFFF');
-                for (let i = 0; i < Characters.another.length; i+=2){
-                    characterSprites.push(introducing.createCharacterSprite(Characters.another[i], i+2))
-                    if (Characters.another.length > i+1) {
-                        characterSprites.push(introducing.createCharacterSprite(Characters.another[i+1], -i-2))
+                for (let i = 0; i < Characters.another.length; i += 2) {
+                    characterSprites.push(introducing.createCharacterSprite(Characters.another[i], i + 2))
+                    if (Characters.another.length > i + 1) {
+                        characterSprites.push(introducing.createCharacterSprite(Characters.another[i + 1], -i - 2))
                     }
                 }
                 break;
@@ -66,17 +66,18 @@ let starting = {
             sound: roundstartSound,
             sprites: characterSprites.reverse(),
             text: role.name,
-            timings: { ...config.starting_time,
-                wait_dark_diffusion: config.starting_time.apear_main/2
+            timings: {
+                ...config.starting_time,
+                wait_dark_diffusion: config.starting_time.apear_main / 2
             }
         })
 
-        const dap2 = config.starting_time.apear_main_iteration_time/config.starting_time.apear_main;
-        for (let i = 0; i < config.starting_time.apear_main; i+=config.starting_time.apear_main_iteration_time) {
+        const dap2 = config.starting_time.apear_main_iteration_time / config.starting_time.apear_main;
+        for (let i = 0; i < config.starting_time.apear_main; i += config.starting_time.apear_main_iteration_time) {
             setTimeout(() => {
                 mainCharSprite.opacity += dap2;
-                opt.introduceText.opacity += dap2;
-                opt.introduceText.getLocation().y += opt.dap*25;
+                opt!.introduceText.opacity += dap2;
+                opt!.introduceText.getLocation().y += opt!.dap * 25;
             }, i);
         }
 
@@ -84,10 +85,10 @@ let starting = {
             darking.show(0);
             setTimeout(() => {
                 darking.hide();
-                opt.remove();
+                opt!.remove();
             }, 1);
         }, config.starting_time.sum);
     }
 }
 
-export {starting};
+export { starting };

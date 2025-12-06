@@ -25,7 +25,7 @@ let logic_map = {
     update() {
         if (!mapNow) return;
         _wasminint = !!_mininteract;
-        _mininteract = null;
+        _mininteract = null as any;
         const charcenter = Characters.main.getCenter();
         let trySelect = (inter: InteractableItem) => {
             inter.unselect();

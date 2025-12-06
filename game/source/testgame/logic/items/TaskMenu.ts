@@ -26,7 +26,7 @@ class TaskMenu extends ApearableMenu {
     }
     private _isEventAdded = false;
     show() {
-        if (this.isShowed || this._sprite) return;
+        if (this.isShowed || (this._sprite as any)) return;
         Characters.main.idle();
         // logic_buttons.setCooldown(0.5, "use");
         super.show();-

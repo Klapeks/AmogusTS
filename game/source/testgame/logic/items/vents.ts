@@ -41,7 +41,7 @@ class Vents extends InteractableItem {
         };
         this.setRange(config.taskrange);
     }
-    directions: Array<Vents>;
+    directions: Array<Vents> = undefined as any;
     use(): void {
         if (!Characters.main.getRole().usevents) return;
         logic_buttons.setCooldown(0.6);
@@ -83,7 +83,7 @@ class VentArrow {
     }
     destroy() {
         Game.getScene().LayerGUI.remove(this._sprite);
-        delete this._sprite;
+        this._sprite = undefined as any;
     }
     isIn(qx: number, qy: number){
         return this._sprite.getLocation().x <= qx && this._sprite.getLocation().y <= qy
@@ -111,7 +111,7 @@ let vent_logic = {
                     }
                 }
             }
-            usedvents = null;
+            usedvents = null as any;
         } else {
             if (vent.directions) for (let v of vent.directions) {
                 vent_logic.showedArrows.push(new VentArrow(vent, v));
@@ -120,20 +120,20 @@ let vent_logic = {
     },
     hideArrows() {
         while (vent_logic.showedArrows.length > 0) {
-            vent_logic.showedArrows.shift().destroy();
+            vent_logic.showedArrows.shift()!.destroy();
         }
     },
     getDirection(vent1: Vents, vent2: Vents): number {
         const x = vent2.getLocation().x - vent1.getLocation().x;
         const y = vent2.getLocation().y - vent1.getLocation().y;
-        if (x==0 && y==0) return null;
+        if (x==0 && y==0) return null as any;
 		if (y==0) { if (x>0) return 0; else return Math.PI; }
 		if (x==0) { if (y>0) return Math.PI/2; else return Math.PI*1.5; }
 		if (x > 0 && y > 0) return Math.atan(y/x);
 		if (x < 0 && y > 0) return Math.PI + Math.atan(y/x);
 		if (x < 0 && y < 0) return Math.PI + Math.atan(y/x);
 		if (x > 0 && y < 0) return Math.PI*2 + Math.atan(y/x);
-        return null;
+        return null as any;
     },
     getMinVentByCharacterVent(ch: Character, direction: "up" | "left" | "right" | "down") {
         return vent_logic.getMinVentByDirection(ch.ventilation, ch.ventilation.directions, direction);
@@ -141,7 +141,7 @@ let vent_logic = {
     getMinVentByDirection(from: Vents, list: Vents[], direction: "up" | "left" | "right" | "down"): Vents {
         const a = [0,Math.PI/2,Math.PI,Math.PI*1.5][["right", "down", "left", "up"].findIndex(a=>a===direction)];
         let _direct: number;
-        let _thevent: Vents = null;
+        let _thevent: Vents = null as any;
         for (let vent of list) {
             if (from===vent) continue;
             _direct = vent_logic.getDirection(from,vent);

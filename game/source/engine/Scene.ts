@@ -7,8 +7,8 @@ import { Texture } from "./Texture";
 
 type SceneLayers = {
     back: Layer,
-    middle: Layer&DynamicLayer,
-    middle_indarked: Layer&DynamicLayer,
+    middle: Layer & DynamicLayer,
+    middle_indarked: Layer & DynamicLayer,
     light: Layer,
     upper_than_dark: Layer,
     GUI: Layer
@@ -75,20 +75,20 @@ abstract class Scene {
     protected _lights: Array<Light> = new Array();
     addLight(...lights: Light[]): void {
         for (let l of lights) {
-            if(l) this._lights.push(l);
+            if (l) this._lights.push(l);
         }
     }
     removeLight(...lights: Light[]): void {
-        this._lights = this._lights.filter(l=>!lights.includes(l));
+        this._lights = this._lights.filter(l => !lights.includes(l));
     }
 
-    darkness_map: {data: any, location: Location, size: Size, separate?: {sx:number, sy:number}};
-    setDarknessMap(dm: {data: any, location: Location, size: Size, separate?: {sx:number, sy:number}}) {
+    darkness_map: { data: any, location: Location, size: Size, separate?: { sx: number, sy: number } } = undefined as any;
+    setDarknessMap(dm: { data: any, location: Location, size: Size, separate?: { sx: number, sy: number } }) {
         this.darkness_map = dm;
         if (!this.darkness_map.separate) {
             this.darkness_map.separate = {
-                sx: this.darkness_map.data.width/this.darkness_map.size.width,
-                sy: this.darkness_map.data.height/this.darkness_map.size.height
+                sx: this.darkness_map.data.width / this.darkness_map.size.width,
+                sy: this.darkness_map.data.height / this.darkness_map.size.height
             }
         }
     }
@@ -104,7 +104,7 @@ abstract class Scene {
         this.layers.upper_than_dark.draw();
         this.layers.GUI.draw();
     }
-    abstract filterImage(image: any, filter: (data:any)=>any, splitting?: Splitting): any;
+    abstract filterImage(image: any, filter: (data: any) => any, splitting?: Splitting): any;
     abstract getImageData(image: any): Uint8ClampedArray;
     abstract drawTextureFullScreen(texture: Texture): void;
     abstract drawLights(layers: Layer): void;
@@ -227,7 +227,7 @@ abstract class Scene {
 //         if (Light.isLightsEnable()) this.drawLights();
 //         upper_than_dark.forEach(sprite => this.drawSprite(sprite));
 //     }
-    
+
 //     abstract drawSprite(sprite: Sprite, isBack?: boolean): void;
 //     abstract filterImage(image: any, filter: (data:any)=>any, splitting?: Splitting): any;
 //     abstract getImageData(image: any): Uint8ClampedArray;

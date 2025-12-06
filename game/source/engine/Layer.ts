@@ -22,19 +22,19 @@ interface DynamicLayer {
 }
 
 
-type LayerSettings = {checkFullscreen?: boolean};
+type LayerSettings = { checkFullscreen?: boolean };
 
 abstract class AbstractLayer implements Layer {
     protected _sprites: SpriteArray = new SpriteArray();
-    protected _upperSprites: SpriteArray;
+    protected _upperSprites: SpriteArray = undefined as any;
     fullscreenCheck = false;
     constructor(settings?: LayerSettings) {
         if (!settings) return;
-        this.fullscreenCheck ??= settings.checkFullscreen;
+        this.fullscreenCheck ??= settings.checkFullscreen as any;
     }
     add(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(!s) continue;
+            if (!s) continue;
             if (this.fullscreenCheck && this.isFullscreen(s)) {
                 this._upperSprites = this._sprites.add(s);
             } else {
@@ -44,9 +44,11 @@ abstract class AbstractLayer implements Layer {
     }
     remove(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(!s) continue;
+            if (!s) continue;
             this._sprites.remove(s);
-            if (this._upperSprites && this._upperSprites.sprite === s) this._upperSprites = undefined;
+            if (this._upperSprites && this._upperSprites.sprite === s) {
+                this._upperSprites = undefined as any;
+            }
         }
         if (this.fullscreenCheck && !this._upperSprites) this.recalculate();
     }
@@ -55,16 +57,16 @@ abstract class AbstractLayer implements Layer {
         this._upperSprites = this._sprites.getFirst(this.isFullscreen);
     }
     hasFullscreen(): boolean {
-        return this.fullscreenCheck && this._upperSprites 
+        return this.fullscreenCheck && this._upperSprites
             && this.isFullscreen(this._upperSprites.sprite);
     }
     isFullscreen(s: Sprite) {
         if (!(s instanceof StaticSprite)) return false;
-        const {x,y} = s.getLocation();
-        return x <= 0 && y <= 0 
-            && s.width + x >= Screen.width 
+        const { x, y } = s.getLocation();
+        return x <= 0 && y <= 0
+            && s.width + x >= Screen.width
             && s.height + y >= Screen.height
-            && !s.hidden && s.getTexture().isFulled 
+            && !s.hidden && s.getTexture().isFulled
             && (!Number.isFinite(s.opacity) || s.opacity >= 1);
     }
     draw(): void {
@@ -74,7 +76,7 @@ abstract class AbstractLayer implements Layer {
         }
         this.forEach((s) => this.drawSprite(s));
     }
-    forEach(f: (sprite:Sprite) => void) {
+    forEach(f: (sprite: Sprite) => void) {
         this._sprites.forEach(f);
     }
     abstract drawSprite(sprite: Sprite): void;
@@ -90,22 +92,22 @@ abstract class AbstractDynamicLayer extends AbstractLayer implements DynamicLaye
         super();
         this.fullscreenCheck = false;
     }
-    
+
     addDynamic(...sprite: Sprite[]): void {
         for (let s of sprite) {
-            if(!s || this._sprites_dynamic.includes(s)) continue;
+            if (!s || this._sprites_dynamic.includes(s)) continue;
             this._sprites_dynamic.push(s);
         }
     }
     removeDynamic(...sprite: Sprite[]): void {
-        this._sprites_dynamic = this._sprites_dynamic.filter(s=>!sprite.includes(s));
+        this._sprites_dynamic = this._sprites_dynamic.filter(s => !sprite.includes(s));
     }
     draw(): void {
         this.drawDynamic();
         super.draw();
     }
     drawDynamic(): void {
-        let ts: TreeSprite;
+        let ts: TreeSprite | undefined = undefined;
         for (let sprite of this._sprites_dynamic) {
             if (ts) ts.add(new TreeSprite(sprite));
             else ts = new TreeSprite(sprite);

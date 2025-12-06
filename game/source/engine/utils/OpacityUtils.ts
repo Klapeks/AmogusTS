@@ -12,16 +12,16 @@ let OpacityUtils = {
             const i_part = 1/(to-from);
             settings.func(from);
             for (let i = from; i < to; i+=settings.going) {
-                setTimeout(() => settings.func(i), time*(i-from)*i_part);
+                setTimeout(() => settings.func!(i), time*(i-from)*i_part);
             }
-            setTimeout(() => settings.func(to), time);
+            setTimeout(() => settings.func!(to), time);
         } else {
             const i_part = 1/(from-to);
             settings.func(from);
             for (let i = to; i < from; i+=settings.going) {
-                setTimeout(() => settings.func(i), time*(1-(i-to)*i_part));
+                setTimeout(() => settings.func!(i), time*(1-(i-to)*i_part));
             }
-            setTimeout(() => settings.func(to), time);
+            setTimeout(() => settings.func!(to), time);
         }
     }
 

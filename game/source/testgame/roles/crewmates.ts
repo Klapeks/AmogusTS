@@ -130,7 +130,7 @@ const roles_crew = {
             act: (character) => {
                 if (!character?.deadbody) return;
                 if (role_medic.getDragging()) {
-                    role_medic.setDragging(null);
+                    role_medic.setDragging(null as any);
                 } else {
                     role_medic.setDragging(character.deadbody);
                 }

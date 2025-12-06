@@ -15,7 +15,10 @@ import { voting } from "./meeting/voting";
 let Characters: {
     main: MainCharacter,
     another: Array<Character>
-} = {main:null, another:new Array()};
+} = { 
+    main: null as any, 
+    another: new Array()
+};
 
 let selection: SelectedCharacter;
 
@@ -28,7 +31,7 @@ let logic_character = {
         if (killanimation_logic.isAnimationPlaying) return;
         if (Characters.main.ventilation?.directions) {
             if (cooldownVladDown) return;
-            let ventto: Vents = null;
+            let ventto: Vents | null = null;
             if (Game.hasKey('keyw')) ventto = vent_logic.getMinVentByCharacterVent(Characters.main, "up");
             if (Game.hasKey('keya')) ventto = vent_logic.getMinVentByCharacterVent(Characters.main, "left");
             if (Game.hasKey('keys')) ventto = vent_logic.getMinVentByCharacterVent(Characters.main, "down");
@@ -40,19 +43,19 @@ let logic_character = {
             }
         } else {
             if (!Joystick.isJoystickOpen()) logic_character.updateMoveCharacter(Characters.main, {
-                x: (Game.hasKey('keyd')?1:0) - (Game.hasKey('keya')?1:0),
-                y: (Game.hasKey('keys')?1:0) - (Game.hasKey('keyw')?1:0)
+                x: (Game.hasKey('keyd') ? 1 : 0) - (Game.hasKey('keya') ? 1 : 0),
+                y: (Game.hasKey('keys') ? 1 : 0) - (Game.hasKey('keyw') ? 1 : 0)
             });
         }
         logic_character.updateMoveCharacter(Characters.another[0] as MainCharacter, {
-            x: (Game.hasKey('numpad6')?1:0) - (Game.hasKey('numpad4')?1:0),
-            y: (Game.hasKey('numpad5')?1:0) - (Game.hasKey('numpad8')?1:0)
+            x: (Game.hasKey('numpad6') ? 1 : 0) - (Game.hasKey('numpad4') ? 1 : 0),
+            y: (Game.hasKey('numpad5') ? 1 : 0) - (Game.hasKey('numpad8') ? 1 : 0)
         });
         logic_character.updateSelect();
     },
     load() {
         Characters.main = new MainCharacter(0, new Location(189, -806));
-        Characters.main.setColor({r:3,g:255,b:220},{r:0,g:172,b:190});
+        Characters.main.setColor({ r: 3, g: 255, b: 220 }, { r: 0, g: 172, b: 190 });
         Characters.main.setNickname("Klapeks");
         selection = new SelectedCharacter();
         selection.hidden = true;
@@ -60,24 +63,24 @@ let logic_character = {
             selection.hidden = true;
         })
 
-        Characters.another.push(new MainCharacter(1, new Location(500,-1800)).setColor({r:255,g:255,b:255},{r:255,g:255,b:255}).setNickname("aaaaaaaaaaaaaaaaaaaaaa"));
-        Characters.another.push(new Character(2, new Location(-300,-1550)).setColor({r:0,g:0,b:0},{r:255,g:255,b:255}).setNickname("Skepalk"));
-        Characters.another.push(new Character(3, new Location(200,-1800)).setColor({r:255,g:0,b:0},{r:255,g:0,b:0}).setNickname("1234"));
-        Characters.another.push(new Character(4, new Location(200,-2000)).setColor({r:0,g:0,b:0},{r:0,g:0,b:0}));
-        Characters.another.push(new Character(4, new Location(200,-1300)).setColor({r:255,g:0,b:0},{r:0,g:255,b:0}).setNickname("Vladushe4ek"));
-        Characters.another.push(new Character(5, new Location(700,-1550)).setColor({r:0,g:255,b:0},{r:0,g:255,b:0}).setNickname("huy"));
-        Characters.another.push(new Character(6, new Location(500,-1300)).setColor({r:0,g:0,b:255},{r:0,g:0,b:255}).setNickname("Аболтус"));
-        Characters.another.push(new Character(7, new Location(800,-1300)).setColor("C51111", "7A0838").setNickname("Vladik"));
-        
+        Characters.another.push(new MainCharacter(1, new Location(500, -1800)).setColor({ r: 255, g: 255, b: 255 }, { r: 255, g: 255, b: 255 }).setNickname("aaaaaaaaaaaaaaaaaaaaaa"));
+        Characters.another.push(new Character(2, new Location(-300, -1550)).setColor({ r: 0, g: 0, b: 0 }, { r: 255, g: 255, b: 255 }).setNickname("Skepalk"));
+        Characters.another.push(new Character(3, new Location(200, -1800)).setColor({ r: 255, g: 0, b: 0 }, { r: 255, g: 0, b: 0 }).setNickname("1234"));
+        Characters.another.push(new Character(4, new Location(200, -2000)).setColor({ r: 0, g: 0, b: 0 }, { r: 0, g: 0, b: 0 }));
+        Characters.another.push(new Character(4, new Location(200, -1300)).setColor({ r: 255, g: 0, b: 0 }, { r: 0, g: 255, b: 0 }).setNickname("Vladushe4ek"));
+        Characters.another.push(new Character(5, new Location(700, -1550)).setColor({ r: 0, g: 255, b: 0 }, { r: 0, g: 255, b: 0 }).setNickname("huy"));
+        Characters.another.push(new Character(6, new Location(500, -1300)).setColor({ r: 0, g: 0, b: 255 }, { r: 0, g: 0, b: 255 }).setNickname("Аболтус"));
+        Characters.another.push(new Character(7, new Location(800, -1300)).setColor("C51111", "7A0838").setNickname("Vladik"));
+
         Characters.another.forEach(i => Game.getScene().addDynamicSprite(i.getSprite()));
         Game.getScene().addDynamicSprite(selection.getSprite());
         Game.getScene().addDynamicSprite(Characters.main.getSprite());
-        
+
         Game.getScene().addLight(new Light(
             new LinkedLocation(
                 Characters.main.getLocation(), {
-                dx: Math.abs(Characters.main.getSprite().width/2),
-                dy: Math.abs(Characters.main.getSprite().height/2)
+                dx: Math.abs(Characters.main.getSprite().width / 2),
+                dy: Math.abs(Characters.main.getSprite().height / 2)
             }), 700)
         );
 
@@ -85,7 +88,7 @@ let logic_character = {
         Joystick.onJoystick = (x, y) => {
             if (voting.isVoting) return;
             if (Math.abs(x) < 20 && Math.abs(y) < 20) [x, y] = [0, 0];
-            logic_character.updateMoveCharacter(Characters.main, {x:x/100, y:y/100});
+            logic_character.updateMoveCharacter(Characters.main, { x: x / 100, y: y / 100 });
         }
 
     },
@@ -93,16 +96,16 @@ let logic_character = {
         const canselect = Characters.main.getRole().canSelectSomeoneAll();
         if (!canselect || canselect.length === 0) return;
         // const oneselect = canselect.length === 1 ? canselect[0] : null;
-        let character = logic_character.trySelectCharacter(true, 
+        let character = logic_character.trySelectCharacter(true,
             canselect.includes("notimpostor") && !canselect.includes("any"),
             canselect.includes("notinfected") && !canselect.includes("any"));
         if (character) logic_character.selectCharacter(character);
         else logic_character.unSelectCharacter();
     },
     trySelectCharacter(onlyAlive: boolean = true, excludeImpostors = false, excludeInfected = false) {
-        let character: Character = undefined;
+        let character: Character | undefined = undefined;
         for (let ch of Characters.another) {
-            if (excludeImpostors && ch.getRole().type==="impostor") continue;
+            if (excludeImpostors && ch.getRole().type === "impostor") continue;
             if (excludeInfected && ch.isInfected) continue;
             if (ch.hidden) continue;
             if (!character || Characters.main.distanceSquared(ch) < Characters.main.distanceSquared(character)) {
@@ -110,64 +113,64 @@ let logic_character = {
                 else if (ch.isAlive) character = ch;
             }
         }
-        if (character && Characters.main.getLocation().distanceSquared(character.getLocation()) < config.killrange*config.killrange) return character;
+        if (character && Characters.main.getLocation().distanceSquared(character.getLocation()) < config.killrange * config.killrange) return character;
         return undefined;
     },
     selectCharacter(character: Character) {
         selection.select(character);
     },
     unSelectCharacter() {
-        selection.select(null);
+        selection.select(null as any);
     },
-    getSelectedCharacter(){
+    getSelectedCharacter() {
         return selection.selectedCharacter;
     },
-    isWall(iteration: number, addx:number, addy:number) {
+    isWall(iteration: number, addx: number, addy: number) {
         // return false;
         _colorofmap = logic_map.getMap().getHitboxColor({
-            x: _charloc.x + _hitbox[iteration] + addx,
-            y: _charloc.y + _hitbox[iteration+1] + addy
+            x: _charloc!.x + _hitbox![iteration] + addx,
+            y: _charloc!.y + _hitbox![iteration + 1] + addy
         });
         return _colorofmap && _colorofmap[3] > 250;
     },
-    updateMoveCharacter(character: MainCharacter, direction: {x: number, y:number}) {
+    updateMoveCharacter(character: MainCharacter, direction: { x: number, y: number }) {
         if (!GameLogic.isGameStarted) return;
         if (character.isVentedAnim) return;
         if (!GameLogic.eventListeners.onmove.check(character)) return;
-        const deltaSpeed = config.speed * Game.deltaTime*58.8;
+        const deltaSpeed = config.speed * Game.deltaTime * 58.8;
         direction.x *= deltaSpeed;
         direction.y *= deltaSpeed;
-        if (direction.x!=0 || direction.y!=0) {
+        if (direction.x != 0 || direction.y != 0) {
             if ((direction.x < 0 && character.getSprite().width > 0) || (direction.x > 0 && character.getSprite().width < 0)) {
                 character.getSprite().width = -character.getSprite().width;
             }
             _hitbox = character.getHitboxPoints();
             _charloc = character.getLocation();
-            
-            for (let i = 0; i < _hitbox.length; i+=2) {
-                if (direction.y===0) {
+
+            for (let i = 0; i < _hitbox.length; i += 2) {
+                if (direction.y === 0) {
                     if (logic_character.isWall(i, direction.x, 0)) {
-                        if (logic_character.isWall(i, direction.x, deltaSpeed*1.25)) {
-                            if (logic_character.isWall(i, direction.x, -deltaSpeed*1.25)) {
+                        if (logic_character.isWall(i, direction.x, deltaSpeed * 1.25)) {
+                            if (logic_character.isWall(i, direction.x, -deltaSpeed * 1.25)) {
                                 direction.x = 0;
                             } else {
-                                direction.y = -deltaSpeed*1.25;
+                                direction.y = -deltaSpeed * 1.25;
                             }
                         } else {
-                            direction.y = deltaSpeed*1.25;
+                            direction.y = deltaSpeed * 1.25;
                         }
                     }
                 }
-                else if (direction.x===0) {
+                else if (direction.x === 0) {
                     if (logic_character.isWall(i, 0, direction.y)) {
-                        if (logic_character.isWall(i, deltaSpeed*1.25, direction.y)) {
-                            if (logic_character.isWall(i, -deltaSpeed*1.25, direction.y)) {
+                        if (logic_character.isWall(i, deltaSpeed * 1.25, direction.y)) {
+                            if (logic_character.isWall(i, -deltaSpeed * 1.25, direction.y)) {
                                 direction.y = 0;
                             } else {
-                                direction.x = -deltaSpeed*1.25;
+                                direction.x = -deltaSpeed * 1.25;
                             }
                         } else {
-                            direction.x = deltaSpeed*1.25;
+                            direction.x = deltaSpeed * 1.25;
                         }
                     }
                 } else if (logic_character.isWall(i, direction.x, direction.y)) {
@@ -176,9 +179,9 @@ let logic_character = {
                 }
             }
 
-            if (direction.x!=0 || direction.y!=0) {
+            if (direction.x != 0 || direction.y != 0) {
                 character.getLocation().add(direction.x, direction.y);
-                character.playWalkAnimation(23.5*Game.deltaTime);
+                character.playWalkAnimation(23.5 * Game.deltaTime);
             } else {
                 character.idle();
             }
@@ -187,8 +190,8 @@ let logic_character = {
         }
     },
 }
-let _hitbox: number[];
-let _charloc: Location;
-let _colorofmap: number[];
+let _hitbox: number[] | null;
+let _charloc: Location | null;
+let _colorofmap: number[] | null;
 
-export {logic_character, Characters}
+export { logic_character, Characters }

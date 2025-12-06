@@ -10,7 +10,7 @@ import { Texture } from "./Texture";
 class Button {
     protected _sprite: StaticSprite;
     private _texture: Texture;
-    private _seltexture: Texture;
+    private _seltexture: Texture = undefined as any;
     constructor(texture: Texture, location: Location = new Location(0,0)) {
         this._texture = texture;
         this._sprite = new StaticSprite(texture, location).setPriority(50);
@@ -22,7 +22,7 @@ class Button {
     get margin() {
         return this._sprite.margin;
     }
-    private _altkey: string;
+    private _altkey: string = undefined as any;
     setAltKey(key: string) {
         this._altkey = key;
         return this;
@@ -112,7 +112,7 @@ let ButtonFuncs = {
 class ClickingButton {
     protected _sprite: StaticSprite;
     private _texture: Texture;
-    private _hoverT: Texture;
+    private _hoverT: Texture = undefined as any;
     constructor(texture: Texture, location: Location = new Location(0,0)) {
         this._texture = texture;
         this._sprite = new StaticSprite(texture, location);
@@ -151,12 +151,12 @@ class ClickingButton {
             if (this.onclick) this.onclick();
         }
     }
-    onclick: () => void;
+    onclick() {};
     setOnClick(c: () => void) {
         this.onclick = c;
         return this;
     }
-    onhover: () => void;
+    onhover() {};
     setOnHover(h: () => void) {
         this.onhover = h;
         return this;

@@ -25,15 +25,15 @@ const convertToGray = (t: Texture) => {
 class UseButton extends Button {
     private _textures: Array<Texture> = new Array();
     private _unselectedtextures: Array<Texture> = new Array();
-    private _onclicking: Array<()=>void> = new Array();
+    private _onclicking: Array<() => void> = new Array();
     private _nowtex: number = 0;
-    constructor(defaultTexture: Texture, location: Location = new Location(0,0)) {
+    constructor(defaultTexture: Texture, location: Location = new Location(0, 0)) {
         super(defaultTexture, location);
         this.resetModifiedCooldown();
         this.addState(defaultTexture, null);
         this.setState(0);
     }
-    addState(texture: Texture | string, onclick: () => void, selected?: Texture) {
+    addState(texture: Texture | string, onclick: (() => void) | null, selected?: Texture | null) {
         if (typeof texture === "string") texture = new Texture(texture);
         this._textures.push(texture);
         if (!selected) {
@@ -41,18 +41,18 @@ class UseButton extends Button {
             selected = new Texture(texture.getPath(), img, convertToGray);
         }
         this._unselectedtextures.push(selected);
-        this._onclicking.push(onclick);
-        return this._textures.length-1;
+        if (onclick) this._onclicking.push(onclick);
+        return this._textures.length - 1;
     }
-    setState(state: number){
-        if (state===-1) state = this.defaultState;
+    setState(state: number) {
+        if (state === -1) state = this.defaultState;
         if (state < 0 || state >= this._textures.length) return this;
         this._nowtex = state;
         if (this._isselected) this._sprite.setTexture(this._textures[this._nowtex]);
         else this._sprite.setTexture(this._unselectedtextures[this._nowtex]);
         return this;
     }
-    clickRule: () => boolean;
+    clickRule: () => boolean = () => false;
     setClickRule(rule: () => boolean) {
         this.clickRule = rule;
         return this;
@@ -71,20 +71,20 @@ class UseButton extends Button {
         if (!f) f = this._onclick;
         f();
     }
-    select(){
+    select() {
         this._sprite.opacity = 1;
         if (this._isselected) return;
         this._isselected = true;
         this._sprite.setTexture(this._textures[this._nowtex]);
     }
-    unselect(){
+    unselect() {
         this._sprite.opacity = 0.5;
         if (!this._isselected) return;
         this._sprite.setTexture(this._unselectedtextures[this._nowtex]);
         this._isselected = false;
     }
 
-    cooldown_text: StaticSprite;
+    cooldown_text: StaticSprite | null | undefined;
     cooldown_time: number = 0;
     private _showcd = true;
     showCooldown(b: boolean) {
@@ -94,26 +94,32 @@ class UseButton extends Button {
     cooldown(time: number) {
         if (!time) {
             this.cooldown_time = 0;
-            Game.getScene().LayerGUI.remove(this.cooldown_text);
+            if (this.cooldown_text) {
+                Game.getScene().LayerGUI.remove(this.cooldown_text);
+            }
             this.cooldown_text = null;
             this.modifiedCooldown.afterEnd();
             this.vibe(false);
             return;
         }
         this.cooldown_time = time;
-        if (!this.cooldown_text && this._showcd) this.cooldown_text 
+        if (!this.cooldown_text && this._showcd) this.cooldown_text
             = new StaticSprite(new TextTexture("", "arial")
-            .setFontSize(100).setColor(this.modifiedCooldown.color)
-            .setAlign("center").setOutline('black', 10),
-            new LinkedLocation(this._sprite.getLocation(),
-                {dx:this._sprite.margin.x < 0 ? -100 : 100,
-                dy:this._sprite.margin.y < 0 ? -125 : 125}))
-            .setMargin(this._sprite.margin)
-            .setSize(200, 200)
-            .setPriority(50);
+                .setFontSize(100).setColor(this.modifiedCooldown.color)
+                .setAlign("center").setOutline('black', 10),
+                new LinkedLocation(this._sprite.getLocation(),
+                    {
+                        dx: this._sprite.margin.x < 0 ? -100 : 100,
+                        dy: this._sprite.margin.y < 0 ? -125 : 125
+                    }))
+                .setMargin(this._sprite.margin)
+                .setSize(200, 200)
+                .setPriority(50);
         this.updateCD();
 
-        Game.getScene().LayerGUI.add(this.cooldown_text);
+        if (this.cooldown_text) {
+            Game.getScene().LayerGUI.add(this.cooldown_text);
+        }
     }
     modifiedCooldown: {
         color: string,
@@ -121,7 +127,7 @@ class UseButton extends Button {
         noopacity?: boolean,
         cd_action?: () => void,
         vibing?: number
-    };
+    } = undefined as any;
     resetModifiedCooldown(modifiedCooldown?: typeof this.modifiedCooldown) {
         this.vibe(false);
         if (modifiedCooldown) {
@@ -130,12 +136,12 @@ class UseButton extends Button {
                 (this.cooldown_text.getTexture() as TextTexture).setColor(this.modifiedCooldown.color);
             }
         } else {
-            this.setModifiedCooldown("white", () => {})
+            this.setModifiedCooldown("white", () => { })
         }
     }
     setModifiedCooldown(color: string, afterEnd: () => void) {
         this.vibe(false);
-        this.modifiedCooldown = {color, afterEnd};
+        this.modifiedCooldown = { color, afterEnd };
         if (this.cooldown_text) {
             (this.cooldown_text.getTexture() as TextTexture).setColor(this.modifiedCooldown.color);
         }
@@ -154,22 +160,22 @@ class UseButton extends Button {
         }
     }
     defaultState = 0;
-    setDefaultState(stage: number){
+    setDefaultState(stage: number) {
         this.defaultState = stage;
         return this;
     }
 
-    private _previbeMargin: {x: number, y: number};
+    private _previbeMargin: { x: number, y: number } = undefined as any;
     vibe(b: boolean = true) {
         if (b) {
             if (!this._previbeMargin) this._previbeMargin = this._sprite.margin;
             this._sprite.margin = {
-                x: Math.random()*10-5+this._previbeMargin.x,
-                y: Math.random()*10-5+this._previbeMargin.y
+                x: Math.random() * 10 - 5 + this._previbeMargin.x,
+                y: Math.random() * 10 - 5 + this._previbeMargin.y
             }
-        } else if (this._previbeMargin){
+        } else if (this._previbeMargin) {
             this._sprite.margin = this._previbeMargin;
-            this._previbeMargin = undefined;
+            this._previbeMargin = undefined as any;
         }
     }
 }
@@ -191,7 +197,7 @@ let logic_buttons = {
         else interactButton.cooldown(seconds);
     },
     isCooldown(button: "use" | "action" = "use") {
-        if (button==="action") 
+        if (button === "action")
             return actionButton.cooldown_time > 0;
         return interactButton.cooldown_time > 0
     },
@@ -227,7 +233,7 @@ let logic_buttons = {
                 button.unselect();
                 return;
             }
-            if (act.select === "notimpostor" && selchar.getRole().type === "impostor"){
+            if (act.select === "notimpostor" && selchar.getRole().type === "impostor") {
                 button.unselect();
                 return;
             }
@@ -244,16 +250,16 @@ let logic_buttons = {
         const neardead = logic_kill.getDeadNear(Characters.main.getLocation());
         logic_buttons.buttonSelectUpdate(true, neardead);
         for (let i = additionalButton.length; i > 0; i--) {
-            logic_buttons.buttonSelectUpdate(i-1, neardead);
+            logic_buttons.buttonSelectUpdate(i - 1, neardead);
         }
         if (neardead) reportButton.select()
         else reportButton.unselect();
-        
+
         interactButton.updateCD();
-        if (interactButton.cooldown_time===0 && !MenusUtils.isNoMenu() 
+        if (interactButton.cooldown_time === 0 && !MenusUtils.isNoMenu()
             && (Game.hasKey("escape") || Game.hasKey("keye"))) {
             for (let m of MenusUtils.showedMenus) {
-                if (m instanceof TaskMenu){
+                if (m instanceof TaskMenu) {
                     logic_buttons.setCooldown(0.5, "use");
                     m.hide();
                     return;
@@ -264,89 +270,89 @@ let logic_buttons = {
     load() {
         ['Digit1', 'Digit2', 'Digit3'].forEach((key, i) => {
             const b = new UseButton(new Texture('missingo.png'))
-                    .setMargin({x: 50+i*250, y: -250})
-                    .setSize(200,200)
-                    .setAltKey(key)
-                    .setClickRule(() => {
-                        return !voting.isVoting && GameLogic.isGameStarted;
-                    })
-                    .setClick(() => {
-                        const role = Characters.main.getRole();
-                        if (role.additionalActions.length <= i && !role.additionalActions[i]) return;
-                        const selection = role.canSelectSomeone(false, i);
-                        if (!selection) {
-                            role.additionalActions[i].act(null);
-                            additionalButton[i].cooldown(role.additionalActions[i].cooldown);
-                            return;
-                        }
-                        if (role.additionalActions[i].select === "deadbody") {
-                            let ch = logic_kill.getDeadNear(Characters.main.getLocation());
-                            if (ch) {
-                                role.additionalActions[i].act(ch.getCharacter());
-                                additionalButton[i].cooldown(role.additionalActions[i].cooldown);
-                            }
-                            return;
-                        }
-                        let ch = logic_character.trySelectCharacter(true, selection === "notimpostor", selection === "notinfected");
-                        if (ch) {
-                            role.additionalActions[i].act(ch);
-                            additionalButton[i].cooldown(role.additionalActions[i].cooldown);
-                        }
-                    });
-            additionalButton.push(b);
-        })
-        actionButton = new UseButton(new Texture('buttons/kill.png'), new Location(200,200))
-                .setMargin({x: -300, y: -50})
-                .setSize(200,200)
-                .setAltKey('KeyQ')
+                .setMargin({ x: 50 + i * 250, y: -250 })
+                .setSize(200, 200)
+                .setAltKey(key)
                 .setClickRule(() => {
-                    return !voting.isVoting
-                        && GameLogic.isGameStarted
-                        && !Characters.main.isVentedAnim;
+                    return !voting.isVoting && GameLogic.isGameStarted;
                 })
                 .setClick(() => {
                     const role = Characters.main.getRole();
-                    if (!role.action?.act) return;
-                    const selection = role.canSelectSomeone(false, true);
+                    if (role.additionalActions.length <= i && !role.additionalActions[i]) return;
+                    const selection = role.canSelectSomeone(false, i);
                     if (!selection) {
-                        role.action.act(null);
-                        actionButton.cooldown(role.action.cooldown);
+                        role.additionalActions[i].act(null as any);
+                        additionalButton[i].cooldown(role.additionalActions[i].cooldown);
                         return;
                     }
-                    if (role.action.select === "deadbody") {
+                    if (role.additionalActions[i].select === "deadbody") {
                         let ch = logic_kill.getDeadNear(Characters.main.getLocation());
                         if (ch) {
-                            role.action.act(ch.getCharacter());
-                            actionButton.cooldown(role.action.cooldown);
+                            role.additionalActions[i].act(ch.getCharacter());
+                            additionalButton[i].cooldown(role.additionalActions[i].cooldown);
                         }
                         return;
                     }
                     let ch = logic_character.trySelectCharacter(true, selection === "notimpostor", selection === "notinfected");
                     if (ch) {
-                        role.action.act(ch);
-                        actionButton.cooldown(role.action.cooldown);
+                        role.additionalActions[i].act(ch);
+                        additionalButton[i].cooldown(role.additionalActions[i].cooldown);
                     }
                 });
+            additionalButton.push(b);
+        })
+        actionButton = new UseButton(new Texture('buttons/kill.png'), new Location(200, 200))
+            .setMargin({ x: -300, y: -50 })
+            .setSize(200, 200)
+            .setAltKey('KeyQ')
+            .setClickRule(() => {
+                return !voting.isVoting
+                    && GameLogic.isGameStarted
+                    && !Characters.main.isVentedAnim;
+            })
+            .setClick(() => {
+                const role = Characters.main.getRole();
+                if (!role.action?.act) return;
+                const selection = role.canSelectSomeone(false, true);
+                if (!selection) {
+                    role.action.act(null as any);
+                    actionButton.cooldown(role.action.cooldown);
+                    return;
+                }
+                if (role.action.select === "deadbody") {
+                    let ch = logic_kill.getDeadNear(Characters.main.getLocation());
+                    if (ch) {
+                        role.action.act(ch.getCharacter());
+                        actionButton.cooldown(role.action.cooldown);
+                    }
+                    return;
+                }
+                let ch = logic_character.trySelectCharacter(true, selection === "notimpostor", selection === "notinfected");
+                if (ch) {
+                    role.action.act(ch);
+                    actionButton.cooldown(role.action.cooldown);
+                }
+            });
         actionButton.unselect();
 
-        interactButton = new UseButton(new Texture('buttons/use.png'), new Location(200,200))
-                .setMargin({x: -50, y: -50})
-                .setSize(200,200)
-                .setAltKey('KeyE')
-                .setClickRule(() => {
-                    return !voting.isVoting
-                        && GameLogic.isGameStarted;
-                })
-                .setClick(() => {
-                    const nt = logic_map.getNearInteractable();
-                    if (nt) {
-                        interactButton.cooldown(0.3);
-                        nt.use();
-                    }
-                })
-                .showCooldown(false);
+        interactButton = new UseButton(new Texture('buttons/use.png'), new Location(200, 200))
+            .setMargin({ x: -50, y: -50 })
+            .setSize(200, 200)
+            .setAltKey('KeyE')
+            .setClickRule(() => {
+                return !voting.isVoting
+                    && GameLogic.isGameStarted;
+            })
+            .setClick(() => {
+                const nt = logic_map.getNearInteractable();
+                if (nt) {
+                    interactButton.cooldown(0.3);
+                    nt.use();
+                }
+            })
+            .showCooldown(false);
         interactButton.unselect();
-        
+
         interactButton.addState('buttons/sabotage.png', () => {
             console.log('sabotage go brrrrrrrrrrr');
         })
@@ -354,37 +360,37 @@ let logic_buttons = {
 
         RoleFuncs.load();
 
-        reportButton = new Button(new Texture('buttons/noreport.png'), new Location(200,200))
-                .setMargin({x: -50, y: -300})
-                .setSize(200,200)
-                .setAltKey('KeyR')
-                .setClick(() => {
-                    if (!GameLogic.isGameStarted) return;
-                    if (voting.isVoting) return;
-                    const dc = logic_kill.getDeadNear(Characters.main.getLocation());
-                    if (!dc) return;
-                    meeting.call(dc.getCharacter(), "dead");
-                    dc.getCharacter().hidden = false;
-                    dc.delete();
-                })
-                .setSelected(new Texture('buttons/report.png'));
-        
-        fullscreenbutton = new Button(new Texture('buttons/fullscreen.png'), new Location(0,0))
-                .setMargin({x: -125, y: 25})
-                .setSize(100,100)
-                .setClick(() => {
-                    if (anytimeout) return;
-                    anytimeout = true;
-                    setTimeout(() => { anytimeout = false; }, 500);
-                    Game.eventListeners.tryFullScreen();
-                    if (Game.gameinfo.isFullScreen) fullscreenbutton.select();
-                    else fullscreenbutton.unselect();
-                })
-                .setSelected(new Texture('buttons/nofullscreen.png'));
+        reportButton = new Button(new Texture('buttons/noreport.png'), new Location(200, 200))
+            .setMargin({ x: -50, y: -300 })
+            .setSize(200, 200)
+            .setAltKey('KeyR')
+            .setClick(() => {
+                if (!GameLogic.isGameStarted) return;
+                if (voting.isVoting) return;
+                const dc = logic_kill.getDeadNear(Characters.main.getLocation());
+                if (!dc) return;
+                meeting.call(dc.getCharacter(), "dead");
+                dc.getCharacter().hidden = false;
+                dc.delete();
+            })
+            .setSelected(new Texture('buttons/report.png'));
+
+        fullscreenbutton = new Button(new Texture('buttons/fullscreen.png'), new Location(0, 0))
+            .setMargin({ x: -125, y: 25 })
+            .setSize(100, 100)
+            .setClick(() => {
+                if (anytimeout) return;
+                anytimeout = true;
+                setTimeout(() => { anytimeout = false; }, 500);
+                Game.eventListeners.tryFullScreen();
+                if (Game.gameinfo.isFullScreen) fullscreenbutton.select();
+                else fullscreenbutton.unselect();
+            })
+            .setSelected(new Texture('buttons/nofullscreen.png'));
         fullscreenbutton.getSprite().priority = 999;
 
         ButtonFuncs.addButton(actionButton, reportButton, interactButton, fullscreenbutton, ...additionalButton);
     }
 }
 
-export {logic_buttons};
+export { logic_buttons };

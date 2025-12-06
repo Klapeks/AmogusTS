@@ -16,8 +16,8 @@ import { DeadCharacter } from "./DeadCharacter";
 class Character {
     protected _id: number;
     protected _sprite: Sprite;
-    protected _textures: AmogusTextures;
-    protected _color: CharacterColor = null;
+    protected _textures: AmogusTextures = undefined as any;
+    protected _color: CharacterColor = null as any;
     constructor(id: number, location?: Location) {
         this._id = id;
         this._sprite = new Sprite(textures.amogus.idle, location)
@@ -26,13 +26,13 @@ class Character {
         this.resetSize();
     }
     resetSize() {
-        this._sprite.margin = undefined;
-        this._sprite.setSize(256*textures.character_ratio, 256*textures.character_ratio);
+        this._sprite.margin = undefined as any;
+        this._sprite.setSize(256 * textures.character_ratio, 256 * textures.character_ratio);
     }
-    setColor(foreground: Color | string, background: Color | string, mask: Color = {r:120,g:200,b:220}) {
+    setColor(foreground: Color | string, background: Color | string, mask: Color = { r: 120, g: 200, b: 220 }) {
         if (typeof foreground === "string") foreground = HexColor(foreground);
         if (typeof background === "string") background = HexColor(background);
-        this._color = {mask, foreground, background};
+        this._color = { mask, foreground, background };
         this._textures = {
             idle: CharacterFuncs.cloneFiltering(textures.amogus.idle, this._color),
             static: CharacterFuncs.cloneFiltering(textures.amogus.static, this._color),
@@ -70,21 +70,21 @@ class Character {
 
     idle() {
         if (!GameLogic.eventListeners.character_canidle.check(this)
-                    && !this.isVentedAnim) return;
+            && !this.isVentedAnim) return;
         this.isVentedAnim = false;
         this._walkanimation = 0;
         this._sprite.splitting = null;
         this._sprite.setTexture(this._textures.idle);
     }
-    
-    protected _walkanimation: number;
+
+    protected _walkanimation: number = undefined as any;
     playWalkAnimation(frame: number = 1) {
         this._sprite.setTexture(this._textures.walk.texture);
         this._walkanimation += frame;
         if (this._walkanimation >= this._textures.walk.amount) this._walkanimation %= this._textures.walk.amount;
         this._sprite.setSplitting(
-            Math.floor(this._walkanimation)%this._textures.walk.amount_per_line*this._textures.walk.width,
-            Math.floor(Math.floor(this._walkanimation)/this._textures.walk.amount_per_line)*this._textures.walk.height,
+            Math.floor(this._walkanimation) % this._textures.walk.amount_per_line * this._textures.walk.width,
+            Math.floor(Math.floor(this._walkanimation) / this._textures.walk.amount_per_line) * this._textures.walk.height,
             this._textures.walk.width, this._textures.walk.height
         );
     }
@@ -92,10 +92,10 @@ class Character {
         return this._walkanimation;
     }
 
-    ventilation: Vents;
+    ventilation: Vents = undefined as any;
     jumpVent(vent: Vents) {
         const cloc = vent.getCenter();
-        this._sprite.setLocationByCenter(cloc.x, cloc.y-50);
+        this._sprite.setLocationByCenter(cloc.x, cloc.y - 50);
         if (!this.isVentedAnim) {
             vent.playVenting();
             this.playVentAnimation();
@@ -108,7 +108,7 @@ class Character {
         }
         vent_logic.showArrows(vent, this._role.usevents === "all");
     }
-    outVent(isAnimation: boolean = true){
+    outVent(isAnimation: boolean = true) {
         vent_logic.hideArrows();
         if (isAnimation && this.isVentedAnim && this.ventilation) {
             this.ventilation.playVenting();
@@ -118,7 +118,7 @@ class Character {
             this.idle();
             Joystick.isDisabled = false;
         }
-        this.ventilation = null;
+        this.ventilation = null as any;
     }
 
     isVentedAnim = false;
@@ -130,7 +130,7 @@ class Character {
         for (let i = 1; i < this._textures.vent.length; i++) {
             setTimeout(() => {
                 this._sprite.setTexture(this._textures.vent[i]);
-            }, i*vent_logic.impostorVentAnimTime/this._textures.vent.length);
+            }, i * vent_logic.impostorVentAnimTime / this._textures.vent.length);
         }
         setTimeout(() => {
             this.hidden = true;
@@ -140,40 +140,40 @@ class Character {
         this.hidden = false;
         for (let i = 0; i < this._textures.vent.length; i++) {
             setTimeout(() => {
-                this._sprite.setTexture(this._textures.vent[this._textures.vent.length-i-1]);
-            }, i*vent_logic.impostorVentAnimTime/this._textures.vent.length);
+                this._sprite.setTexture(this._textures.vent[this._textures.vent.length - i - 1]);
+            }, i * vent_logic.impostorVentAnimTime / this._textures.vent.length);
         }
         setTimeout(() => {
             this.idle();
             Joystick.isDisabled = false;
         }, vent_logic.impostorVentAnimTime);
     }
-    set hidden(b: boolean){
+    set hidden(b: boolean) {
         this._sprite.hidden = b;
         if (this._nicknameSprite) this._nicknameSprite.hidden = b;
         if (this._roleplateSprite) {
-            if(this._isShowedRoleplate) this._roleplateSprite.hidden = b;
+            if (this._isShowedRoleplate) this._roleplateSprite.hidden = b;
         }
     }
     get hidden() {
         return this._sprite.hidden;
     }
 
-    private _nickname: string;
-    private _nicknameSprite: Sprite;
+    private _nickname: string = undefined as any;
+    private _nicknameSprite: Sprite = undefined as any;
     setNickname(nickname: string | undefined, color = "white") {
-        this._nickname = nickname;
+        this._nickname = nickname || '';
         if (this._nicknameSprite) {
             color = this.getNicknameColor();
             Game.getScene().removeUpperSprite(this._nicknameSprite);
-            this._nicknameSprite = null;
+            this._nicknameSprite = null as any;
             if (!nickname) return this;
         }
 
-        this._nicknameSprite = new Sprite(Character.generateNicknameTexture(nickname).setColor(color),
-                    new LinkedLocation(this.getLocation(), {dx:256*textures.character_ratio/2,dy:10}))
-                    .setSize(Screen.width/2,50)
-                    .setHideInDark(this._sprite.isHideInDark());
+        this._nicknameSprite = new Sprite(Character.generateNicknameTexture(nickname || '').setColor(color),
+            new LinkedLocation(this.getLocation(), { dx: 256 * textures.character_ratio / 2, dy: 10 }))
+            .setSize(Screen.width / 2, 50)
+            .setHideInDark(this._sprite.isHideInDark());
         Game.getScene().addUpperSprite(this._nicknameSprite);
         return this;
     }
@@ -188,9 +188,9 @@ class Character {
     getNicknameColor(): string {
         return (this._nicknameSprite?.getTexture() as TextTexture)?.color || 'white';
     }
-    
+
     protected _role: Role = Roles.Crewmate;
-    private _roleplateSprite: Sprite;
+    private _roleplateSprite: Sprite = undefined as any;
     getRole() {
         return this._role;
     }
@@ -211,10 +211,10 @@ class Character {
     showRoleplate() {
         this._isShowedRoleplate = true;
         if (!this._role) return;
-        if (!this._roleplateSprite){
+        if (!this._roleplateSprite) {
             this._roleplateSprite = new Sprite(Character.generateNicknameTexture('none', 25),
-                new LinkedLocation(this.getLocation(), {dx:256*textures.character_ratio/2,dy:-30}))
-                .setSize(Screen.width/2,50)
+                new LinkedLocation(this.getLocation(), { dx: 256 * textures.character_ratio / 2, dy: -30 }))
+                .setSize(Screen.width / 2, 50)
                 .setHideInDark(this._sprite.isHideInDark());
             this._roleplateSprite.hidden = true;
         }
@@ -232,7 +232,7 @@ class Character {
         return this;
     }
 
-    deadbody: DeadCharacter;
+    deadbody: DeadCharacter = undefined as any;
 
     isAlive: boolean = true;
     setAlive(alive: boolean) {
@@ -249,7 +249,7 @@ class Character {
         this.isInfected = false;
         if (this.deadbody) {
             this.deadbody.delete();
-            this.deadbody = null;
+            this.deadbody = null as any;
         }
     }
 
@@ -257,11 +257,11 @@ class Character {
 
     static generateNicknameTexture(nickname: string, fontsize = 32, align = "center") {
         return new TextTexture(nickname, 'Comic Sans MS, Comic Sans')
-                    .setFontSize(fontsize)
-                    .setColor("white")
-                    .setAlign(align)
-                    .setOutline('black', 5);
+            .setFontSize(fontsize)
+            .setColor("white")
+            .setAlign(align)
+            .setOutline('black', 5);
     }
 }
 
-export {Character}
+export { Character }

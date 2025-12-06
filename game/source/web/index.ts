@@ -10,24 +10,24 @@ import { WebAPISoundPlayer } from "./WebAPISoundPlayer";
 ///////////////////////////////////////
 // Legacy full screen
 ///////////////////////////////////////
-var makeFullScreen = (elem:any) => {
-  if (elem.requestFullscreen) elem.requestFullscreen();
-  else if (elem.mozRequestFullscreen) elem.mozRequestFullscreen();
-  else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-  else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+var makeFullScreen = (elem: any) => {
+    if (elem.requestFullscreen) elem.requestFullscreen();
+    else if (elem.mozRequestFullscreen) elem.mozRequestFullscreen();
+    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
 }
-(function() {
+(function () {
     var win: any = window;
-    var requestAnimationFrame = win.requestAnimationFrame 
-      || win.mozRequestAnimationFrame 
-      || win.webkitRequestAnimationFrame 
-      || win.msRequestAnimationFrame;
+    var requestAnimationFrame = win.requestAnimationFrame
+        || win.mozRequestAnimationFrame
+        || win.webkitRequestAnimationFrame
+        || win.msRequestAnimationFrame;
     window.requestAnimationFrame = requestAnimationFrame;
     win = document;
-    var closeFullScreen = win.exitFullscreen 
-      || win.mozExitFullscreen 
-      || win.webkitExitFullscreen 
-      || win.msExitFullscreen;
+    var closeFullScreen = win.exitFullscreen
+        || win.mozExitFullscreen
+        || win.webkitExitFullscreen
+        || win.msExitFullscreen;
     document.exitFullscreen = closeFullScreen;
     win = window;
 })();
@@ -39,7 +39,7 @@ var makeFullScreen = (elem:any) => {
 let fps;
 let requestTime;
 
-function drawStuff(time) {
+function drawStuff(time: any) {
     // if (requestTime) {
     //   fps = Math.round(1000/((performance.now() - requestTime)));
     // }
@@ -47,10 +47,10 @@ function drawStuff(time) {
     // requestTime = time;
     window.requestAnimationFrame(time => drawStuff(time));
     try {
-      Game.update();
-    } catch (e){
-      console.log(e);
-      alert(e);
+        Game.update();
+    } catch (e) {
+        console.log(e);
+        alert(e);
     }
 }
 
@@ -61,7 +61,7 @@ var scene: Scene;
 ///////////////////////////////////////
 window.onload = () => {
     SoundsUtils.setSoundCreator(new WebAPISoundPlayer());
-    window.addEventListener('resize', function(event) {
+    window.addEventListener('resize', function (event) {
         Game.eventListeners.callResize(window.innerWidth, window.innerHeight);
     }, true);
     Game.eventListeners.addDone(() => {
@@ -88,14 +88,14 @@ window.onload = () => {
     }
     scene = new Canvas2DScene(canvas);
     Game.setScene(scene);
-    
+
     loadWebEvents();
 
     try {
-      testgame.load();
-    } catch (e){
-      console.log(e);
-      alert(e);
+        testgame.load();
+    } catch (e) {
+        console.log(e);
+        alert(e);
     }
 
     window.requestAnimationFrame(time => drawStuff(time));

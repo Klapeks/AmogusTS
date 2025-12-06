@@ -26,13 +26,13 @@ let role_angel = {
         savingSound = new Sound('roles/angel/saving.wav');
         saveTexture = new Texture('roles/angel/killsave.png');
         saveBlowTexture = new Texture('roles/angel/killsave_blow.png');
-        GameLogic.eventListeners.onkill.addEvent(({character, killer}) => {
-            if (savedCharacter && character === savedCharacter) {
+        GameLogic.eventListeners.onkill.addEvent(({ character, killer }) => {
+            if (killer && savedCharacter && character === savedCharacter) {
                 const kiloc = killer.getLocation();
                 const crloc = character.getLocation();
                 role_angel.playSave(character,
-                    killer ? (kiloc.x < crloc.x) : false, 
-                    Math.atan((kiloc.y - crloc.y)/Math.abs(kiloc.x - crloc.x)),
+                    killer ? (kiloc.x < crloc.x) : false,
+                    Math.atan((kiloc.y - crloc.y) / Math.abs(kiloc.x - crloc.x)),
                 );
                 return false;
             }
@@ -43,74 +43,74 @@ let role_angel = {
             return true;
         })
         GameLogic.eventListeners.onreset.addEvent(() => {
-            if (savedCharacter){
-                savedCharacter = undefined;
+            if (savedCharacter) {
+                savedCharacter = undefined as any;
             }
         })
     },
     save(character: Character) {
-        if (Characters.main.getRole() === Roles.Angel){
+        if (Characters.main.getRole() === Roles.Angel) {
             savingSound.play();
             if (savedCharacter) {
                 savedCharacter.setNicknameColor(HexColor('FFFFFF'));
             }
         }
         savedCharacter = character;
-        if (Characters.main.getRole() === Roles.Angel){
+        if (Characters.main.getRole() === Roles.Angel) {
             savedCharacter.setNicknameColor(HexColor('73BAFF'));
         }
     },
     playSave(character: Character, reverse: boolean = false, degrees: number = 0) {
         const sumamount = saveTextureInfo.amount + saveBlowTextureInfo.amount;
         character.idle();
-        if (character===Characters.main) {
+        if (character === Characters.main) {
             role_angel.isAnimationOnMain = true;
             setTimeout(() => {
                 role_angel.isAnimationOnMain = false;
-            }, time*saveTextureInfo.amount/sumamount);
+            }, time * saveTextureInfo.amount / sumamount);
         }
         const loc = character.getCenter();
         const shield = new Sprite(saveTexture)
-                    .setSize(saveTextureInfo.width*(reverse?-1:1), saveTextureInfo.height)
-                    .setLocationByCenter(loc.x, loc.y)
-                    .setLocationYaw(degrees*(reverse?-1:1))
-                    .setSplitting(0, 0, saveTextureInfo.width, saveTextureInfo.height)
-                    .setHideInDark(true);
+            .setSize(saveTextureInfo.width * (reverse ? -1 : 1), saveTextureInfo.height)
+            .setLocationByCenter(loc.x, loc.y)
+            .setLocationYaw(degrees * (reverse ? -1 : 1))
+            .setSplitting(0, 0, saveTextureInfo.width, saveTextureInfo.height)
+            .setHideInDark(true);
         const blowshield = new Sprite(saveBlowTexture)
-                    .setSize(saveBlowTextureInfo.width*(reverse?-1:1), saveBlowTextureInfo.height)
-                    .setLocationByCenter(loc.x, loc.y)
-                    .setLocationYaw(degrees*(reverse?-1:1))
-                    .setSplitting(0, 0, saveBlowTextureInfo.width, saveBlowTextureInfo.height)
-                    .setHideInDark(true);
+            .setSize(saveBlowTextureInfo.width * (reverse ? -1 : 1), saveBlowTextureInfo.height)
+            .setLocationByCenter(loc.x, loc.y)
+            .setLocationYaw(degrees * (reverse ? -1 : 1))
+            .setSplitting(0, 0, saveBlowTextureInfo.width, saveBlowTextureInfo.height)
+            .setHideInDark(true);
         blowshield.hidden = true;
         Game.getScene().addDynamicSprite(shield, blowshield);
-        
-        
+
+
         for (let i = 0; i < saveTextureInfo.amount; i++) {
             setTimeout(() => {
-                if (i==0) saveSound.play();
-                shield.setSplitting(0, i*saveTextureInfo.height, saveTextureInfo.width, saveTextureInfo.height);
-            }, time*i/sumamount);
+                if (i == 0) saveSound.play();
+                shield.setSplitting(0, i * saveTextureInfo.height, saveTextureInfo.width, saveTextureInfo.height);
+            }, time * i / sumamount);
         }
 
         setTimeout(() => {
             shield.hidden = true;
             blowshield.hidden = false;
-        }, time*saveTextureInfo.amount/sumamount);
+        }, time * saveTextureInfo.amount / sumamount);
 
         for (let i = 0; i < saveBlowTextureInfo.amount; i++) {
             setTimeout(() => {
-                blowshield.setSplitting(0, i*saveBlowTextureInfo.height, saveBlowTextureInfo.width, saveBlowTextureInfo.height);
-            }, time*(saveTextureInfo.amount+i)/sumamount);
+                blowshield.setSplitting(0, i * saveBlowTextureInfo.height, saveBlowTextureInfo.width, saveBlowTextureInfo.height);
+            }, time * (saveTextureInfo.amount + i) / sumamount);
         }
 
         setTimeout(() => {
             blowshield.hidden = true;
             Game.getScene().removeDynamicSprite(shield, blowshield);
             savedCharacter.setNicknameColor(HexColor('FFFFFF'));
-            savedCharacter = undefined;
+            savedCharacter = undefined as any;
         }, time);
     }
 }
 
-export {role_angel};
+export { role_angel };

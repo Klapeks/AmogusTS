@@ -13,7 +13,7 @@ let role_medic = {
     update() {
         if (!dragging) return;
         if (!dragging.getSprite()) {
-            dragging = undefined;
+            dragging = undefined as any;
             return;
         }
         const x = Characters.main.getLocation().x - dragging.getSprite().getLocation().x;

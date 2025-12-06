@@ -21,8 +21,8 @@ let role_shapeshifter = {
     unshift(character: Character) {
         character.setAmogusTextures(shapeshifterDefaultTexture);
         character.setNickname(shapeshifterDefaultNickname);
-        shapeshifterDefaultTexture = null;
-        shapeshifterDefaultNickname = null;
+        shapeshifterDefaultTexture = null as any;
+        shapeshifterDefaultNickname = null as any;
     },
     clickShiftButton() {
         if (!shapeshifterCharacter) return;

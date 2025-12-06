@@ -13,20 +13,22 @@ let textures: {
 } = {
     character_ratio: 0.8,
     amogus: {
-        idle: null, walk: null,
-        dead: null, eject: null,
-        static: null,
+        idle: null as any, 
+        walk: null as any,
+        dead: null as any, 
+        eject: null as any,
+        static: null as any,
         vent: new Array(),
-        meeting: null,
+        meeting: null as any,
         killanimations: {
             // alien_crewmate: null,
-            alien: null
+            alien: null as any
         }
     },
     crewkillanimation: {
-        alien: null
+        alien: null as any
     },
-    missingo: null
+    missingo: null as any
 };
 
 function loadTextures() {

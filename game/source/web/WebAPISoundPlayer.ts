@@ -16,7 +16,7 @@ class WebAPISoundPlayer implements ISoundPlayer {
             gainNode.connect(ctx.destination);
             gainNodes.set(type, gainNode);
         }
-        const gainNode = gainNodes.get(type);
+        const gainNode = gainNodes.get(type)!;
         gainNode.gain.value = SoundsUtils.getVolume(type);
         let source = ctx.createBufferSource();
         source.buffer = sound;
